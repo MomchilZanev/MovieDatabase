@@ -52,6 +52,32 @@ namespace MovieDatabase.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    AvatarLink = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genres",
                 columns: table => new
                 {
@@ -61,17 +87,6 @@ namespace MovieDatabase.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genres", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Watchlists",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Watchlists", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,110 +108,6 @@ namespace MovieDatabase.Data.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    AvatarLink = table.Column<string>(nullable: true),
-                    WatchlistId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Watchlists_WatchlistId",
-                        column: x => x.WatchlistId,
-                        principalTable: "Watchlists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Movies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    ReleaseDate = table.Column<DateTime>(nullable: true),
-                    Description = table.Column<string>(nullable: false),
-                    Length = table.Column<int>(nullable: false),
-                    GenreId = table.Column<string>(nullable: true),
-                    CoverImageLink = table.Column<string>(nullable: true),
-                    DirectorId = table.Column<string>(nullable: false),
-                    WatchlistId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Movies", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Movies_Artists_DirectorId",
-                        column: x => x.DirectorId,
-                        principalTable: "Artists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Movies_Genres_GenreId",
-                        column: x => x.GenreId,
-                        principalTable: "Genres",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Movies_Watchlists_WatchlistId",
-                        column: x => x.WatchlistId,
-                        principalTable: "Watchlists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TVShows",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
-                    GenreId = table.Column<string>(nullable: true),
-                    CreatorId = table.Column<string>(nullable: false),
-                    WatchlistId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TVShows", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TVShows_Artists_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "Artists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TVShows_Genres_GenreId",
-                        column: x => x.GenreId,
-                        principalTable: "Genres",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TVShows_Watchlists_WatchlistId",
-                        column: x => x.WatchlistId,
-                        principalTable: "Watchlists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -285,6 +196,63 @@ namespace MovieDatabase.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Movies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    ReleaseDate = table.Column<DateTime>(nullable: true),
+                    Description = table.Column<string>(nullable: false),
+                    Length = table.Column<int>(nullable: false),
+                    GenreId = table.Column<string>(nullable: true),
+                    CoverImageLink = table.Column<string>(nullable: true),
+                    DirectorId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Movies_Artists_DirectorId",
+                        column: x => x.DirectorId,
+                        principalTable: "Artists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Movies_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TVShows",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    GenreId = table.Column<string>(nullable: true),
+                    CreatorId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TVShows", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TVShows_Artists_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Artists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TVShows_Genres_GenreId",
+                        column: x => x.GenreId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MovieReviews",
                 columns: table => new
                 {
@@ -337,6 +305,30 @@ namespace MovieDatabase.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MovieUsers",
+                columns: table => new
+                {
+                    MovieId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieUsers", x => new { x.MovieId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_MovieUsers_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovieUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Seasons",
                 columns: table => new
                 {
@@ -356,6 +348,30 @@ namespace MovieDatabase.Data.Migrations
                         principalTable: "TVShows",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TVShowUsers",
+                columns: table => new
+                {
+                    TVShowId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TVShowUsers", x => new { x.TVShowId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_TVShowUsers_TVShows_TVShowId",
+                        column: x => x.TVShowId,
+                        principalTable: "TVShows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TVShowUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -450,11 +466,6 @@ namespace MovieDatabase.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_WatchlistId",
-                table: "AspNetUsers",
-                column: "WatchlistId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MovieReviews_UserId",
                 table: "MovieReviews",
                 column: "UserId");
@@ -475,9 +486,9 @@ namespace MovieDatabase.Data.Migrations
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Movies_WatchlistId",
-                table: "Movies",
-                column: "WatchlistId");
+                name: "IX_MovieUsers_UserId",
+                table: "MovieUsers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SeasonReviews_UserId",
@@ -505,9 +516,9 @@ namespace MovieDatabase.Data.Migrations
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TVShows_WatchlistId",
-                table: "TVShows",
-                column: "WatchlistId");
+                name: "IX_TVShowUsers_UserId",
+                table: "TVShowUsers",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -537,10 +548,16 @@ namespace MovieDatabase.Data.Migrations
                 name: "MovieRoles");
 
             migrationBuilder.DropTable(
+                name: "MovieUsers");
+
+            migrationBuilder.DropTable(
                 name: "SeasonReviews");
 
             migrationBuilder.DropTable(
                 name: "SeasonRoles");
+
+            migrationBuilder.DropTable(
+                name: "TVShowUsers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -549,10 +566,10 @@ namespace MovieDatabase.Data.Migrations
                 name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Seasons");
 
             migrationBuilder.DropTable(
-                name: "Seasons");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "TVShows");
@@ -562,9 +579,6 @@ namespace MovieDatabase.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Genres");
-
-            migrationBuilder.DropTable(
-                name: "Watchlists");
         }
     }
 }

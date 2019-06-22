@@ -10,7 +10,7 @@ using MovieDatabase.Data;
 namespace MovieDatabase.Data.Migrations
 {
     [DbContext(typeof(MovieDatabaseDbContext))]
-    [Migration("20190622133538_InitialCreate")]
+    [Migration("20190622160455_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -203,15 +203,11 @@ namespace MovieDatabase.Data.Migrations
 
                     b.Property<DateTime?>("ReleaseDate");
 
-                    b.Property<string>("WatchlistId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DirectorId");
 
                     b.HasIndex("GenreId");
-
-                    b.HasIndex("WatchlistId");
 
                     b.ToTable("Movies");
                 });
@@ -256,8 +252,6 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
-                    b.Property<string>("WatchlistId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -267,8 +261,6 @@ namespace MovieDatabase.Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("WatchlistId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -307,6 +299,19 @@ namespace MovieDatabase.Data.Migrations
                     b.HasIndex("ArtistId");
 
                     b.ToTable("MovieRoles");
+                });
+
+            modelBuilder.Entity("MovieDatabase.Domain.MovieUser", b =>
+                {
+                    b.Property<string>("MovieId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("MovieId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MovieUsers");
                 });
 
             modelBuilder.Entity("MovieDatabase.Domain.Season", b =>
@@ -384,27 +389,26 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("WatchlistId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
 
                     b.HasIndex("GenreId");
 
-                    b.HasIndex("WatchlistId");
-
                     b.ToTable("TVShows");
                 });
 
-            modelBuilder.Entity("MovieDatabase.Domain.Watchlist", b =>
+            modelBuilder.Entity("MovieDatabase.Domain.TVShowUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("TVShowId");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UserId");
 
-                    b.ToTable("Watchlists");
+                    b.HasKey("TVShowId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TVShowUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -462,17 +466,6 @@ namespace MovieDatabase.Data.Migrations
                     b.HasOne("MovieDatabase.Domain.Genre", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreId");
-
-                    b.HasOne("MovieDatabase.Domain.Watchlist")
-                        .WithMany("MoviesToWatch")
-                        .HasForeignKey("WatchlistId");
-                });
-
-            modelBuilder.Entity("MovieDatabase.Domain.MovieDatabaseUser", b =>
-                {
-                    b.HasOne("MovieDatabase.Domain.Watchlist", "Watchlist")
-                        .WithMany()
-                        .HasForeignKey("WatchlistId");
                 });
 
             modelBuilder.Entity("MovieDatabase.Domain.MovieReview", b =>
@@ -498,6 +491,19 @@ namespace MovieDatabase.Data.Migrations
                     b.HasOne("MovieDatabase.Domain.Movie", "Movie")
                         .WithMany("Cast")
                         .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("MovieDatabase.Domain.MovieUser", b =>
+                {
+                    b.HasOne("MovieDatabase.Domain.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MovieDatabase.Domain.MovieDatabaseUser", "User")
+                        .WithMany("WatchlistedMovies")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -545,10 +551,19 @@ namespace MovieDatabase.Data.Migrations
                     b.HasOne("MovieDatabase.Domain.Genre", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreId");
+                });
 
-                    b.HasOne("MovieDatabase.Domain.Watchlist")
-                        .WithMany("TVShowsToWatch")
-                        .HasForeignKey("WatchlistId");
+            modelBuilder.Entity("MovieDatabase.Domain.TVShowUser", b =>
+                {
+                    b.HasOne("MovieDatabase.Domain.TVShow", "TVShow")
+                        .WithMany()
+                        .HasForeignKey("TVShowId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MovieDatabase.Domain.MovieDatabaseUser", "User")
+                        .WithMany("WatchlistedTVShows")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

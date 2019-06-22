@@ -11,18 +11,18 @@ namespace MovieDatabase.Data
         {
         }
 
-
+        public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Artist> Artists { get; set; }
-        public DbSet<MovieRole> MovieRoles { get; set; }
-        public DbSet<SeasonRole> SeasonRoles { get; set; }
+        public DbSet<Genre> Genres { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieReview> MovieReviews { get; set; }
-        public DbSet<TVShow> TVShows { get; set; }
-        public DbSet<Season> Seasons { get; set; }
+        public DbSet<MovieRole> MovieRoles { get; set; }
+        public DbSet<MovieUser> MovieUsers { get; set; }
+        public DbSet<Season> Seasons { get; set; }        
         public DbSet<SeasonReview> SeasonReviews { get; set; }
-        public DbSet<Genre> Genres { get; set; }
-        public DbSet<Watchlist> Watchlists { get; set; }
-        public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<SeasonRole> SeasonRoles { get; set; }
+        public DbSet<TVShow> TVShows { get; set; }
+        public DbSet<TVShowUser> TVShowUsers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -59,6 +59,22 @@ namespace MovieDatabase.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<MovieUser>(movieUser =>
+            {
+                movieUser
+                    .HasKey(k => new { k.MovieId, k.UserId });
+
+                movieUser
+                    .HasOne(m => m.Movie)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                movieUser
+                    .HasOne(u => u.User)
+                    .WithMany(w => w.WatchlistedMovies)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             modelBuilder.Entity<SeasonRole>(seasonRole =>
             {
                 seasonRole
@@ -88,6 +104,22 @@ namespace MovieDatabase.Data
                 seasonReview
                     .HasOne(u => u.User)
                     .WithMany(sr => sr.SeasonReviews)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<TVShowUser>(tvShowUser =>
+            {
+                tvShowUser
+                    .HasKey(k => new { k.TVShowId, k.UserId });
+
+                tvShowUser
+                    .HasOne(m => m.TVShow)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                tvShowUser
+                    .HasOne(u => u.User)
+                    .WithMany(w => w.WatchlistedTVShows)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

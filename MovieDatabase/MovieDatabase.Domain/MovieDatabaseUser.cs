@@ -10,6 +10,8 @@ namespace MovieDatabase.Domain
         {
             this.MovieReviews = new HashSet<MovieReview>();
             this.SeasonReviews = new HashSet<SeasonReview>();
+            this.WatchlistedMovies = new HashSet<MovieUser>();
+            this.WatchlistedTVShows = new HashSet<TVShowUser>();
         }
 
         public string AvatarLink { get; set; }
@@ -18,6 +20,8 @@ namespace MovieDatabase.Domain
 
         public ICollection<SeasonReview> SeasonReviews { get; set; }
 
-        public Watchlist Watchlist { get; set; }
+        //Watchlist
+        public ICollection<MovieUser> WatchlistedMovies { get; set; }
+        public ICollection<TVShowUser> WatchlistedTVShows { get; set; }
     }
 }

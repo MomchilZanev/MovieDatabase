@@ -15,7 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MovieDatabase.Domain;
 
-namespace MovieDatabase
+namespace MovieDatabase.Web
 {
     public class Startup
     {
@@ -58,6 +58,66 @@ namespace MovieDatabase
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {                
+                using (var context = serviceScope.ServiceProvider.GetRequiredService<MovieDatabaseDbContext>())
+                {
+                    //Bad Temporary DB seeding for Testing
+                    context.Database.Migrate();
+                    if (!context.Artists.Any())
+                    {
+                        var artist1 = new Artist
+                        {
+                            FullName = "Arist 1",
+                            BirthDate = DateTime.Now,
+                            Biography = "Some stuff"
+                        };
+                        context.Artists.Add(artist1);
+                        var artist2 = new Artist
+                        {
+                            FullName = "Arist 2",
+                            BirthDate = DateTime.Now,
+                            Biography = "Biography"
+                        };
+                        context.Artists.Add(artist2);
+
+                        context.SaveChanges();
+                    }
+                    if (!context.Movies.Any())
+                    {
+                        var movie1 = new Movie
+                        {
+                            Name = "Movie 1",
+                            ReleaseDate = DateTime.UtcNow,
+                            Description = "Some Desc.",
+                            Length = 144,
+                            Genre = new Genre { Name = "Genre 1" },
+                            Director = context.Artists.First(),
+                            Cast = new List<MovieRole>()
+                            {
+                                new MovieRole
+                                {
+                                    Artist = context.Artists.FirstOrDefault(x => x.FullName == "Arist 2"),
+                                    CharacterPlayed = "Some Character"
+                                }
+                            },
+                            Reviews = new List<MovieReview>()
+                            {
+                                new MovieReview
+                                {
+                                    User = context.Users.FirstOrDefault(x => x.UserName == "Pesho"),
+                                    Content = "Nice movie",
+                                    Rating = 8,
+                                    Date = DateTime.UtcNow
+                                }
+                            }
+                        };
+                        context.Movies.Add(movie1);
+                        context.SaveChanges();
+                    }                
+                }                
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

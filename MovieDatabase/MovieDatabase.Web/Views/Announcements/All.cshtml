@@ -1,0 +1,12 @@
+﻿@model List<MovieDatabase.Web.ViewModels.Announcement.AnnouncementViewModel>
+
+@foreach (var announcement in Model)
+{
+    <h2 class="text-center text-warning">@announcement.Title</h2>
+    <article class="text-center text-warning">
+        <font size="5">
+            <img class="figure-img" src="@announcement.ImageLink" height="200" width="250">
+            <div>@announcement.Content</div>
+        </font>
+    </article>
+}

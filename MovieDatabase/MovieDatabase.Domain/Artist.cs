@@ -27,12 +27,13 @@ namespace MovieDatabase.Domain
 
         public string PhotoLink { get; set; }
 
-        public ICollection<Movie> MoviesDirected { get; set; }
+        public virtual ICollection<Movie> MoviesDirected { get; set; }
 
-        public ICollection<MovieRole> MovieRoles { get; set; }
+        public virtual ICollection<MovieRole> MovieRoles { get; set; }
 
-        public ICollection<TVShow> TVShowsCreated { get; set; }
+        public virtual ICollection<TVShow> TVShowsCreated { get; set; }
 
-        public ICollection<SeasonRole> SeasonRoles { get; set; }
+        public virtual ICollection<SeasonRole> SeasonRoles { get; set; }
+
     }
 }

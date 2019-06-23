@@ -28,10 +28,10 @@ namespace MovieDatabase.Domain
 
         [Required]
         public string TVShowId { get; set; }
-        public TVShow TVShow { get; set; }
+        public virtual TVShow TVShow { get; set; }
 
-        public ICollection<SeasonRole> Cast { get; set; }
+        public virtual ICollection<SeasonRole> Cast { get; set; }
 
-        public ICollection<SeasonReview> Reviews { get; set; }
+        public virtual ICollection<SeasonReview> Reviews { get; set; }
     }
 }

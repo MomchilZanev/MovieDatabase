@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using MovieDatabase.Domain
+@model List<MovieDatabase.Web.ViewModels.Announcement.AnnouncementViewModel>
 
 @inject SignInManager<MovieDatabaseUser> SignInManager
 @inject UserManager<MovieDatabaseUser> UserManager
@@ -8,17 +9,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-
-@if (!SignInManager.IsSignedIn(User))
-{
-    <span>Hello.</span>
-}
-else
-{
-    <span>Hello @User.Identity.Name.</span>
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center text-warning">
+    <h1 class="display-4">Welcome @User.Identity.Name</h1>
+    <p>Find Movies, TV Shows, Celebrities and more...</p>
 </div>

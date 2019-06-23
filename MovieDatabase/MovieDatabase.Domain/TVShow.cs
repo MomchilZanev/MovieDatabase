@@ -19,14 +19,16 @@ namespace MovieDatabase.Domain
         [Required]
         public string Description { get; set; }        
 
-        public Genre Genre { get; set; }
+        public virtual Genre Genre { get; set; }
+
+        public string CoverImageLink { get; set; }
 
         public double OverallRating => this.Seasons.Average(season => season.Rating);
 
         [Required]
         public string CreatorId { get; set; }
-        public Artist Creator { get; set; }
+        public virtual Artist Creator { get; set; }
 
-        public ICollection<Season> Seasons { get; set; }        
+        public virtual ICollection<Season> Seasons { get; set; }        
     }
 }

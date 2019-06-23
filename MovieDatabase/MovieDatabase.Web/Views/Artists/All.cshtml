@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MovieDatabase.Domain
+@model List<MovieDatabase.Web.ViewModels.Artist.ArtistAllViewModel>
+
+@{
+    ViewData["Title"] = "All Artists";
+}
+
+@foreach (var artist in Model)
+{
+    <article class="text-justify text-warning">
+        <img class="img-thumbnail" src="@artist.PhotoLink" height="150" width="100">
+        <font size="7">
+            <span>@artist.FullName</span>
+        </font>
+    </article>
+    <br/>
+}

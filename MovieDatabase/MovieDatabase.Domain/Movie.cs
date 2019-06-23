@@ -26,7 +26,7 @@ namespace MovieDatabase.Domain
 
         public int Length { get; set; }
 
-        public Genre Genre { get; set; }
+        public virtual Genre Genre { get; set; }
 
         public string CoverImageLink { get; set; }
 
@@ -34,10 +34,10 @@ namespace MovieDatabase.Domain
 
         [Required]
         public string DirectorId { get; set; }
-        public Artist Director { get; set; }
+        public virtual Artist Director { get; set; }
 
-        public ICollection<MovieRole> Cast { get; set; }
+        public virtual ICollection<MovieRole> Cast { get; set; }
 
-        public ICollection<MovieReview> Reviews { get; set; }
+        public virtual ICollection<MovieReview> Reviews { get; set; }
     }
 }

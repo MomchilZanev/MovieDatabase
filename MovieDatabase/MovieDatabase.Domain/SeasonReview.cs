@@ -7,11 +7,11 @@ namespace MovieDatabase.Domain
     {
         [Required]
         public string SeasonId { get; set; }
-        public Season Season { get; set; }
+        public virtual Season Season { get; set; }
 
         [Required]
         public string UserId { get; set; }
-        public MovieDatabaseUser User { get; set; }        
+        public virtual MovieDatabaseUser User { get; set; }        
 
         [Required]
         public string Content { get; set; }

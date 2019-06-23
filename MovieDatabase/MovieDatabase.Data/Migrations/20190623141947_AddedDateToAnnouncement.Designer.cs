@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieDatabase.Data;
 
 namespace MovieDatabase.Data.Migrations
 {
     [DbContext(typeof(MovieDatabaseDbContext))]
-    partial class MovieDatabaseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190623141947_AddedDateToAnnouncement")]
+    partial class AddedDateToAnnouncement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

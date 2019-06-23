@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MovieDatabase.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
+using MovieDatabase.Services;
+using MovieDatabase.Services.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MovieDatabase.Web
 {
@@ -36,8 +35,9 @@ namespace MovieDatabase.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<MovieDatabaseDbContext>(options =>
-                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<MovieDatabaseDbContext>(options => 
+                        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                        .UseLazyLoadingProxies());
 
             services.AddIdentity<MovieDatabaseUser, IdentityRole>(options =>
             {
@@ -51,6 +51,10 @@ namespace MovieDatabase.Web
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<MovieDatabaseDbContext>();
+
+            services.AddTransient<IAnnouncementService, AnnouncementService>();
+            services.AddTransient<IArtistService, ArtistService>();
+            services.AddTransient<IMovieService, MovieService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -68,16 +72,18 @@ namespace MovieDatabase.Web
                     {
                         var artist1 = new Artist
                         {
-                            FullName = "Arist 1",
+                            FullName = "Artist 1",
                             BirthDate = DateTime.Now,
-                            Biography = "Some stuff"
+                            Biography = "Some stuff",
+                            PhotoLink = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Al_Pacino.jpg/220px-Al_Pacino.jpg",
                         };
                         context.Artists.Add(artist1);
                         var artist2 = new Artist
                         {
-                            FullName = "Arist 2",
+                            FullName = "Artist 2",
                             BirthDate = DateTime.Now,
-                            Biography = "Biography"
+                            Biography = "Biography",
+                            PhotoLink = "https://img.discogs.com/OTJ2a6_ebzFgKzJwiauHQocwJU8=/fit-in/300x300/filters:strip_icc():format(jpeg):mode_rgb():quality(40)/discogs-images/A-259648-1551034602-5617.jpeg.jpg",
                         };
                         context.Artists.Add(artist2);
 
@@ -114,7 +120,28 @@ namespace MovieDatabase.Web
                         };
                         context.Movies.Add(movie1);
                         context.SaveChanges();
-                    }                
+                    }
+                    if (!context.Announcements.Any())
+                    {
+                        var announcement1 = new Announcement
+                        {
+                            Title = "Some title",
+                            Content = "sahfgakjdgsdjgvfoeg",
+                            ImageLink = "https://cdn-images-1.medium.com/max/1600/1*ZVYpEAxnObj7kWNnyKr_nQ.jpeg",
+                            Date = DateTime.UtcNow,
+                        };
+                        context.Announcements.Add(announcement1);
+
+                        var announcement2 = new Announcement
+                        {
+                            Title = "Other title",
+                            Content = "asfasfabfytrohiewrobiweiobvgioewrhgviwelsufvaouse",
+                            ImageLink = "https://publicrelationssydney.com.au/wp-content/uploads/2012/09/Breaking-news-loudspeaker.jpg",
+                            Date = DateTime.UtcNow,
+                        };
+                        context.Announcements.Add(announcement2);
+                        context.SaveChanges();
+                    }
                 }                
             }
 

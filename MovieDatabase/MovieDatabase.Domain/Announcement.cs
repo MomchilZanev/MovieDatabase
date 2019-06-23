@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Domain
 {
@@ -12,6 +13,8 @@ namespace MovieDatabase.Domain
 
         [Required]
         public string Content { get; set; }
+
+        public DateTime Date { get; set; }
 
         public string ImageLink { get; set; }
     }

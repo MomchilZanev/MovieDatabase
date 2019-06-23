@@ -16,12 +16,12 @@ namespace MovieDatabase.Domain
 
         public string AvatarLink { get; set; }
 
-        public ICollection<MovieReview> MovieReviews { get; set; }
-
-        public ICollection<SeasonReview> SeasonReviews { get; set; }
+        //Reviews
+        public virtual ICollection<MovieReview> MovieReviews { get; set; }
+        public virtual ICollection<SeasonReview> SeasonReviews { get; set; }
 
         //Watchlist
-        public ICollection<MovieUser> WatchlistedMovies { get; set; }
-        public ICollection<TVShowUser> WatchlistedTVShows { get; set; }
+        public virtual ICollection<MovieUser> WatchlistedMovies { get; set; }
+        public virtual ICollection<TVShowUser> WatchlistedTVShows { get; set; }
     }
 }

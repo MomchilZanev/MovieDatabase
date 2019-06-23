@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MovieDatabase.Data;
+﻿using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;

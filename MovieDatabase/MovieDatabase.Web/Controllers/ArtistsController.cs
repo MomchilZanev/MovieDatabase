@@ -20,7 +20,8 @@ namespace MovieDatabase.Web.Controllers
                 .Select(a => new ArtistAllViewModel
                 {
                     FullName = a.FullName,
-                    PhotoLink = a.PhotoLink
+                    PhotoLink = a.PhotoLink,
+                    Biography = a.Biography,
                 })
                 .ToList();
 

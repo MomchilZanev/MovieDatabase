@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using MovieDatabase.Domain
-@model List<MovieDatabase.Web.ViewModels.Artist.ArtistAllViewModel>
+﻿@model List<MovieDatabase.Web.ViewModels.Artist.ArtistAllViewModel>
 
 @{
     ViewData["Title"] = "All Artists";
@@ -9,10 +7,9 @@
 @foreach (var artist in Model)
 {
     <article class="text-justify text-warning">
-        <img class="img-thumbnail" src="@artist.PhotoLink" height="150" width="100">
-        <font size="7">
-            <span>@artist.FullName</span>
-        </font>
+        <h2>@artist.FullName</h2>
+        <img class="img-thumbnail" src="@artist.PhotoLink" height="300" width="150">
+        <font size="6"><span class="align-top">@artist.Biography</span></font>
     </article>
-    <br/>
+    <br />
 }

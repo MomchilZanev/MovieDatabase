@@ -1,5 +1,9 @@
 ﻿@model List<MovieDatabase.Web.ViewModels.Announcement.AnnouncementViewModel>
 
+@{
+    ViewData["Title"] = "All Announcements";
+}
+
 @foreach (var announcement in Model)
 {
     <h2 class="text-center text-warning">@announcement.Title</h2>

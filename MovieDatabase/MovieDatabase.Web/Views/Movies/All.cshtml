@@ -1,0 +1,15 @@
+﻿@model List<MovieDatabase.Web.ViewModels.Movie.MovieAllViewModel>
+
+@{
+    ViewData["Title"] = "All Movies";
+}
+
+@foreach (var movie in Model)
+{
+    <article class="text-justify text-warning">
+        <h2>@movie.Name</h2>
+        <img class="img-thumbnail" src="@movie.CoverImageLink" height="350" width="175">
+        <font size="6"><span class="align-top">@movie.Description</span></font>
+    </article>
+    <br/>
+}

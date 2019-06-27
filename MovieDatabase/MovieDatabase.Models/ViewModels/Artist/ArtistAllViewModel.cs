@@ -1,4 +1,4 @@
-﻿namespace MovieDatabase.Web.ViewModels.Artist
+﻿namespace MovieDatabase.Models.ViewModels.Artist
 {
     public class ArtistAllViewModel
     {

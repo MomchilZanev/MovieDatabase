@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MovieDatabase.Web.ViewModels.TVShow
+namespace MovieDatabase.Models.ViewModels.TVShow
 {
     public class TVShowDetailsViewModel
     {

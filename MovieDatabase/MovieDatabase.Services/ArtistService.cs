@@ -1,5 +1,6 @@
 ﻿using MovieDatabase.Data;
 using MovieDatabase.Domain;
+using MovieDatabase.Models.ViewModels.Artist;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,18 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public List<Artist> GetAllArtists()
+        public List<ArtistAllViewModel> GetAllArtists()
         {
-            return this.dbContext.Artists.ToList();
+            var allArtists = this.dbContext.Artists
+                .Select(a => new ArtistAllViewModel
+                {
+                    FullName = a.FullName,
+                    PhotoLink = a.PhotoLink,
+                    Biography = a.Biography,
+                })
+                .ToList();
+
+            return allArtists;
         }
     }
 }

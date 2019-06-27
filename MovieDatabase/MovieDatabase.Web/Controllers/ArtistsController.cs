@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Models.ViewModels.Artist;
 using MovieDatabase.Services.Contracts;
-using MovieDatabase.Web.ViewModels.Artist;
 using System.Linq;
 
 namespace MovieDatabase.Web.Controllers
@@ -16,14 +16,7 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All()
         {
-            var allArtists = this.artistService.GetAllArtists()
-                .Select(a => new ArtistAllViewModel
-                {
-                    FullName = a.FullName,
-                    PhotoLink = a.PhotoLink,
-                    Biography = a.Biography,
-                })
-                .ToList();
+            var allArtists = this.artistService.GetAllArtists();
 
             return View(allArtists);
         }

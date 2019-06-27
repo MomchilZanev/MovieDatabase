@@ -1,4 +1,4 @@
-﻿namespace MovieDatabase.Web.ViewModels.Movie
+﻿namespace MovieDatabase.Models.ViewModels.Movie
 {
     public class MovieCastViewModel
     {

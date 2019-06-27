@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MovieDatabase.Web.ViewModels.Movie
+namespace MovieDatabase.Models.ViewModels.TVShow
 {
-    public class MovieAllViewModel
+    public class TVShowAllViewModel
     {
         public string Id { get; set; }
 
@@ -14,7 +14,7 @@ namespace MovieDatabase.Web.ViewModels.Movie
 
         public double Rating { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime FirstSeasonReleaseDate { get; set; }
 
         public int TotalReviews { get; set; }
     }

@@ -1,5 +1,6 @@
 ﻿using MovieDatabase.Data;
 using MovieDatabase.Domain;
+using MovieDatabase.Models.ViewModels.Announcement;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,20 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public List<Announcement> GetAllAnnouncements()
+        public List<AnnouncementViewModel> GetAllAnnouncementsOrderedByDateAscending()
         {
-            return this.dbContext.Announcements.ToList();
+            var allAnnouncements = dbContext.Announcements
+                .Select(a => new AnnouncementViewModel
+                {
+                    Title = a.Title,
+                    Content = a.Content,
+                    ImageLink = a.ImageLink,
+                    Date = a.Date
+                })
+                .OrderBy(a => a.Date)
+                .ToList();
+
+            return allAnnouncements;
         }
     }
 }

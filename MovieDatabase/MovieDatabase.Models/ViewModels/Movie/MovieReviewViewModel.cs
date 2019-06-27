@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace MovieDatabase.Web.ViewModels.TVShow
+namespace MovieDatabase.Models.ViewModels.Movie
 {
-    public class SeasonReviewViewModel
+    public class MovieReviewViewModel
     {
-        public int Season { get; set; }
+        public string Movie { get; set; }
 
         public string User { get; set; }
 

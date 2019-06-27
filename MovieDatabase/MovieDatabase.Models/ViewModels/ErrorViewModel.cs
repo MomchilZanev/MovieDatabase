@@ -1,6 +1,4 @@
-using System;
-
-namespace MovieDatabase.Web.Models
+namespace MovieDatabase.Models.ViewModels
 {
     public class ErrorViewModel
     {

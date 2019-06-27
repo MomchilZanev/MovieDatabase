@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieDatabase.Services", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieDatabase.Web", "MovieDatabase.Web\MovieDatabase.Web.csproj", "{50D931BD-F24E-40CB-A842-0265086FFAB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDatabase.Models", "MovieDatabase.Models\MovieDatabase.Models.csproj", "{B407F082-187A-4002-8373-4A4F5B0A8586}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{50D931BD-F24E-40CB-A842-0265086FFAB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50D931BD-F24E-40CB-A842-0265086FFAB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50D931BD-F24E-40CB-A842-0265086FFAB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B407F082-187A-4002-8373-4A4F5B0A8586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B407F082-187A-4002-8373-4A4F5B0A8586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B407F082-187A-4002-8373-4A4F5B0A8586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B407F082-187A-4002-8373-4A4F5B0A8586}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,12 +1,12 @@
-﻿using MovieDatabase.Domain;
+﻿using MovieDatabase.Models.ViewModels.Movie;
 using System.Collections.Generic;
 
 namespace MovieDatabase.Services.Contracts
 {
     public interface IMovieService
     {
-        List<Movie> GetAllMovies();
+        List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy);
 
-        Movie GetMovieById(string movieId);
+        MovieDetailsViewModel GetMovieAndDetailsById(string movieId);
     }
 }

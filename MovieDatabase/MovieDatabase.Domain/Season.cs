@@ -18,7 +18,7 @@ namespace MovieDatabase.Domain
 
         public int SeasonNumber { get; set; }
 
-        public DateTime? ReleaseDate { get; set; }
+        public DateTime ReleaseDate { get; set; }
 
         public int Episodes { get; set; }
 

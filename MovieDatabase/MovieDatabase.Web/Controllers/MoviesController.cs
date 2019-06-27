@@ -17,11 +17,47 @@ namespace MovieDatabase.Web.Controllers
             this.movieService = movieService;
         }
 
+        public IActionResult Details(string id)
+        {
+            var movie = this.movieService.GetMovieById(id);
+
+            //TODO: Implement AutoMapper
+            var movieViewModel = new MovieDetailsViewModel
+            {
+                Id = movie.Id,
+                Name = movie.Name,
+                Director = movie.Director.FullName,
+                CoverImageLink = movie.CoverImageLink,
+                Description = movie.Description,
+                Genre = movie.Genre.Name,
+                Length = movie.Length,
+                Rating = movie.Rating,
+                ReleaseDate = movie.ReleaseDate,
+                Cast = movie.Cast.Select(x => new MovieCastViewModel
+                {
+                    Actor = x.Artist.FullName,
+                    MovieCharacter = x.CharacterPlayed,
+                }).ToList(),
+                Reviews = movie.Reviews.Select(x => new MovieReviewViewModel
+                {
+                    Movie = movie.Name,
+                    User = x.User.UserName,
+                    Content = x.Content,
+                    Rating = x.Rating,
+                    Date = x.Date,
+                }).ToList(),
+            };
+
+            return View(movieViewModel);
+        }
+
         public IActionResult All(string orderBy)
         {
+            //TODO: Implement AutoMapper
             var allMovies = this.movieService.GetAllMovies()
                 .Select(m => new MovieAllViewModel
                 {
+                    Id = m.Id,
                     Name = m.Name,
                     Description = m.Description,
                     CoverImageLink = m.CoverImageLink,

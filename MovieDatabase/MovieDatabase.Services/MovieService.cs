@@ -19,5 +19,10 @@ namespace MovieDatabase.Services
         {
             return this.dbContext.Movies.ToList();
         }
+
+        public Movie GetMovieById(string movieId)
+        {
+            return this.dbContext.Movies.Find(movieId);
+        }
     }
 }

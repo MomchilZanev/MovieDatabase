@@ -19,5 +19,10 @@ namespace MovieDatabase.Services
         {
             return this.dbContext.TVShows.ToList();
         }
+
+        public TVShow GetTVShowById(string tvShowId)
+        {
+            return this.dbContext.TVShows.Find(tvShowId);
+        }
     }
 }

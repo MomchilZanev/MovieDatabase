@@ -17,11 +17,54 @@ namespace MovieDatabase.Web.Controllers
             this.tvShowService = tvShowService;
         }
 
+        public IActionResult Details(string id)
+        {
+            var tvShow = this.tvShowService.GetTVShowById(id);
+
+            //TODO: Implement AutoMapper
+            var tvShowViewModel = new TVShowDetailsViewModel
+            {
+                Id = tvShow.Id,
+                Name = tvShow.Name,
+                Creator = tvShow.Creator.FullName,
+                CoverImageLink = tvShow.CoverImageLink,
+                Description = tvShow.Description,
+                Genre = tvShow.Genre.Name,
+                Rating = tvShow.OverallRating,
+                FirstSeasonReleaseDate = tvShow.Seasons.First().ReleaseDate,
+                Seasons = tvShow.Seasons.Select(s => new SeasonDetailsViewModel
+                {
+                    Id = s.Id,
+                    TVShow = tvShow.Name,
+                    SeasonNumber = s.SeasonNumber,
+                    Episodes = s.Episodes,
+                    LengthPerEpisode = s.LengthPerEpisode,
+                    Rating = s.Rating,
+                    ReleaseDate = s.ReleaseDate,
+                    Cast = s.Cast.Select(a => new SeasonCastViewModel
+                    {
+                        Actor = a.Artist.FullName,
+                        TVShowCharacter = a.CharacterPlayed,
+                    }).ToList(),
+                    Reviews = s.Reviews.Select(r => new SeasonReviewViewModel
+                    {
+                        Season = s.SeasonNumber,
+                        User = r.User.UserName,
+                        Content = r.Content,
+                        Date = r.Date,
+                    }).ToList(),
+                }).ToList()
+            };
+
+            return View(tvShowViewModel);
+        }
+
         public IActionResult All(string orderBy)
         {
             var allTVShows = this.tvShowService.GetAllTVShows()
                 .Select(t => new TVShowAllViewModel
                 {
+                    Id = t.Id,
                     Name = t.Name,
                     Description = t.Description,
                     CoverImageLink = t.CoverImageLink,

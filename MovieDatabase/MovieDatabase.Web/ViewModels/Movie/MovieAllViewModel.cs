@@ -4,6 +4,8 @@ namespace MovieDatabase.Web.ViewModels.Movie
 {
     public class MovieAllViewModel
     {
+        public string Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MovieDatabase.Domain
+@inject SignInManager<MovieDatabaseUser> SignInManager
+@model MovieDatabase.Web.ViewModels.TVShow.TVShowDetailsViewModel
+
+@{
+    ViewData["Title"] = "TV Show Details";
+}
+
+<div class="text-center text-warning">
+    <h1>@Model.Name</h1>
+    <h2>Rating @Model.Rating/10</h2>
+    <img src="@Model.CoverImageLink" alt="Cover" height="600" width="400" />
+    <h3>@Model.FirstSeasonReleaseDate</h3>
+    <h3>@Model.Creator</h3>
+    <h3>@Model.Genre</h3>
+    <h3>@Model.Description</h3>
+    <h2>Seasons: </h2>
+
+    @foreach (var season in Model.Seasons)
+    {
+        <h3>@season.TVShow Season: @season.SeasonNumber</h3>
+        <h3>@season.Rating</h3>
+        <h3>@season.ReleaseDate</h3>
+        <h3>@season.Episodes</h3>
+        <h3>@season.LengthPerEpisode</h3>
+
+        <h3>Full Cast:</h3>
+
+        @foreach (var actor in season.Cast)
+        {
+            <h4>@actor.Actor | @actor.TVShowCharacter</h4>
+        }
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a href="/Reviews/Create/@Model.Id?entity=season"><h2>Review this TV Show</h2></a>
+        }
+
+        <h2>Reviews:</h2>
+
+        @foreach (var review in season.Reviews)
+        {
+            <h3>@review.User Rated @review.Season @review.Rating/10</h3>
+            <h4>@review.Content</h4>
+            <h5>Submitted on: @review.Date</h5>
+        }
+    }
+</div>

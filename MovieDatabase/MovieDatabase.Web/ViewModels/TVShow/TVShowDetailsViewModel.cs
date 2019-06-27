@@ -1,21 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MovieDatabase.Web.ViewModels.TVShow
 {
-    public class TVShowAllViewModel
+    public class TVShowDetailsViewModel
     {
         public string Id { get; set; }
 
         public string Name { get; set; }
 
+        public DateTime FirstSeasonReleaseDate { get; set; }
+
         public string Description { get; set; }
+
+        public string Genre { get; set; }
 
         public string CoverImageLink { get; set; }
 
         public double Rating { get; set; }
 
-        public DateTime? ReleaseDate { get; set; } //TODO fix code quality (Release Date is not intuitive because it is not in database)
+        public string Creator { get; set; }
 
-        public int TotalReviews { get; set; }
+        public List<SeasonDetailsViewModel> Seasons { get; set; }
     }
 }

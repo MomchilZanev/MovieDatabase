@@ -17,7 +17,7 @@ namespace MovieDatabase.Web.Controllers
             this.tvShowService = tvShowService;
         }
 
-        public IActionResult All()
+        public IActionResult All(string orderBy)
         {
             var allTVShows = this.tvShowService.GetAllTVShows()
                 .Select(t => new TVShowAllViewModel
@@ -25,8 +25,41 @@ namespace MovieDatabase.Web.Controllers
                     Name = t.Name,
                     Description = t.Description,
                     CoverImageLink = t.CoverImageLink,
+                    ReleaseDate = t.Seasons.First().ReleaseDate,
+                    Rating = t.OverallRating,
+                    TotalReviews = t.Seasons.Sum(s => s.Reviews.Count())
                 })
                 .ToList();
+
+            //TODO: move this logic in Service Layer
+            if (orderBy == "release")
+            {
+                allTVShows = allTVShows
+                    .Where(t => t.ReleaseDate != null)
+                    .OrderByDescending(t => t.ReleaseDate)
+                    .ToList();
+            }
+            else if (orderBy == "popularity")
+            {
+                allTVShows = allTVShows
+                    .Where(t => t.ReleaseDate != null)
+                    .OrderByDescending(t => t.TotalReviews)
+                    .ToList();
+            }
+            else if (orderBy == "rating")
+            {
+                allTVShows = allTVShows
+                    .Where(t => t.ReleaseDate != null)
+                    .OrderByDescending(t => t.Rating)
+                    .ToList();
+            }
+            else if (orderBy == "soon")
+            {
+                allTVShows = allTVShows
+                    .Where(m => m.ReleaseDate != null && m.ReleaseDate > DateTime.UtcNow)
+                    .OrderBy(m => m.ReleaseDate)
+                    .ToList();
+            }
 
             return View(allTVShows);
         }

@@ -13,7 +13,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -21,7 +21,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand text-warning" asp-area="" asp-controller="Home" asp-action="Index">Movie Database</a>
+                <a href="/Home/Index" class="btn btn-warning btn-lg mx-1 active" role="button" aria-pressed="false">Movie Db</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -30,16 +30,46 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-warning" asp-area="" asp-controller="Movies" asp-action="All">Movies</a>
+                            <div class="btn-group mx-1">
+                                <button type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Movies
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/Movies/All?orderBy=release">Most Recent</a>
+                                    <a class="dropdown-item" href="/Movies/All?orderBy=popularity">Most Popular</a>
+                                    <a class="dropdown-item" href="/Movies/All?orderBy=rating">Highest Rated</a>
+                                    <a class="dropdown-item" href="/Movies/All?orderBy=soon">Coming Soon</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="/Movies/Create">Create Entry</a>
+                                    }
+                                </div>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-warning" asp-area="" asp-controller="TVShows" asp-action="All">TV Shows</a>
+                            <div class="btn-group mx-1">
+                                <button type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    TV Shows
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/TVShows/All?orderBy=release">Most Recent</a>
+                                    <a class="dropdown-item" href="/TVShows/All?orderBy=popularity">Most Popular</a>
+                                    <a class="dropdown-item" href="/TVShows/All?orderBy=rating">Highest Rated</a>
+                                    <a class="dropdown-item" href="/TVShows/All?orderBy=soon">Coming Soon</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="/TVShows/Create">Create Entry</a>
+                                    }
+                                </div>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-warning" asp-area="" asp-controller="Artists" asp-action="All">Celebritites</a>
+                            <a href="/Artists/All" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">Artists</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-warning" asp-area="" asp-controller="Announcements" asp-action="All">News</a>
+                            <a href="/Announcements/All" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">News</a>
                         </li>
                     </ul>
                 </div>

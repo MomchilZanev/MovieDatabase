@@ -19,7 +19,7 @@ namespace MovieDatabase.Domain
         [Required]
         public string Name { get; set; }
 
-        public DateTime? ReleaseDate { get; set; }
+        public DateTime ReleaseDate { get; set; }
 
         [Required]
         public string Description { get; set; }

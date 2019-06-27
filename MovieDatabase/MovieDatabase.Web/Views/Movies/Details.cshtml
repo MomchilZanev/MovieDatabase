@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MovieDatabase.Domain
+@inject SignInManager<MovieDatabaseUser> SignInManager
+@model MovieDatabase.Web.ViewModels.Movie.MovieDetailsViewModel
+
+@{
+    ViewData["Title"] = "Movie Details";
+}
+
+<div class="text-center text-warning">
+    <h1>@Model.Name</h1>
+    <h2>Rating @Model.Rating/10</h2>
+    <img src="@Model.CoverImageLink" alt="Cover" height="600" width="400" />
+    <h3>@Model.ReleaseDate</h3>
+    <h3>@Model.Director</h3>
+    <h3>@Model.Genre</h3>
+    <h3>@Model.Description</h3>
+    <h3>@Model.Length</h3>
+    <h2>Full Cast:</h2>
+
+    @foreach (var actor in Model.Cast)
+    {
+        <h4>@actor.Actor | @actor.MovieCharacter</h4>
+    }
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a href="/Reviews/Create/@Model.Id"><h2>Review this movie</h2></a>
+    }
+
+    <h2>Reviews</h2>
+
+    @foreach (var review in Model.Reviews)
+    {
+        <h3>@review.User Rated @review.Movie @review.Rating/10</h3>
+        <h4>@review.Content</h4>
+        <h5>Submitted on: @review.Date</h5>
+    }
+</div>

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MovieDatabase.Models.ViewModels.Artist;
 using MovieDatabase.Services.Contracts;
-using System.Linq;
 
 namespace MovieDatabase.Web.Controllers
 {

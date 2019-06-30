@@ -1,5 +1,4 @@
 ﻿using MovieDatabase.Data;
-using MovieDatabase.Domain;
 using MovieDatabase.Models.ViewModels.Announcement;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;
@@ -22,7 +21,7 @@ namespace MovieDatabase.Services
                 .Select(a => new AnnouncementViewModel
                 {
                     Title = a.Title,
-                    Content = a.Content,
+                    Content = a.Content.Substring(0, 260) + "....",
                     ImageLink = a.ImageLink,
                     Date = a.Date
                 })

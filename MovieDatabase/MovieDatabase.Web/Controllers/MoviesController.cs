@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Services.Contracts;
+using System.Security.Claims;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -21,7 +22,7 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All(string orderBy)
         {
-            var allMoviesOrdered = this.movieService.GetAllMoviesAndOrder(orderBy);                
+            var allMoviesOrdered = this.movieService.GetAllMoviesAndOrder(orderBy);
 
             return View(allMoviesOrdered);
         }

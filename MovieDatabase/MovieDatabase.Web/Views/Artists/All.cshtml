@@ -6,10 +6,14 @@
 
 @foreach (var artist in Model)
 {
-    <article class="text-justify text-warning">
-        <h2>@artist.FullName</h2>
-        <img class="img-thumbnail" src="@artist.PhotoLink" height="300" width="150">
-        <font size="6"><span class="align-top">@artist.Biography</span></font>
-    </article>
+    <div class="row">
+        <div class="col-3">
+            <img class="rounded" src="@artist.PhotoLink" height="310" width="240">
+        </div>
+        <div class="col-9 text-warning">
+            <h1>@artist.FullName</h1>
+            <font class="font-weight-light" size="6">@artist.Biography</font>
+        </div>        
+    </div>
     <br />
 }

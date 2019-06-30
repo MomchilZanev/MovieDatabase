@@ -26,7 +26,6 @@ namespace MovieDatabase.Services
                 {
                     Id = m.Id,
                     Name = m.Name,
-                    Description = m.Description,
                     CoverImageLink = m.CoverImageLink,
                     Rating = m.Rating,
                     ReleaseDate = m.ReleaseDate,

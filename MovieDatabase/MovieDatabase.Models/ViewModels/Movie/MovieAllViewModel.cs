@@ -8,7 +8,7 @@ namespace MovieDatabase.Models.ViewModels.Movie
 
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        //public string Description { get; set; }
 
         public string CoverImageLink { get; set; }
 

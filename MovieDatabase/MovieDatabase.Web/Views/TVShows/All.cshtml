@@ -4,13 +4,33 @@
     ViewData["Title"] = "All TV Shows";
 }
 
-@foreach (var tvShow in Model)
-{
-    <article class="text-justify text-warning">
-        <a class="text-warning" href="/TVShows/Details/@tvShow.Id"><h2>@tvShow.Name</h2></a>
-        <a href="/TVShows/Details/@tvShow.Id"><img class="img-thumbnail" src="@tvShow.CoverImageLink" height="350" width="175"></a>
-        <font size="6"><span class="align-top">Rating @tvShow.Rating/10</span></font><br />
-        <font size="6"><span class="align-top">@tvShow.Description</span></font>
-    </article>
-    <br />
-}
+<table class="table w-100 text-warning table-borderless table-striped">
+    <thead>
+        <tr class="text-center">
+            <th class="align-middle"><font size="6">Cover</font></th>
+            <th class="align-middle"><font size="6">Title</font></th>
+            <th class="align-middle"><font size="6">Rating</font></th>
+            <th class="align-middle"><font size="6">Watchlisted</font></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tvShow in Model)
+        {
+            <tr class="text-center">
+                <td>
+                    <a href="/Movies/Details/@tvShow.Id"><img src="@tvShow.CoverImageLink" height="150" width="110"></a>
+                </td>
+                <td class="align-middle">
+                    <a class="text-warning" href="/Movies/Details/@tvShow.Id"><font size="6"><span>@tvShow.Name</span></font></a>
+                </td>
+                <td class="align-middle">
+                    <font size="6"><span>@tvShow.Rating</span></font><br />
+                </td>
+                <td class="align-middle">
+                    <font size="6"><span>tmp</span></font><br />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

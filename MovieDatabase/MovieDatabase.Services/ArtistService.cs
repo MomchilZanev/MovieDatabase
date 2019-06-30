@@ -1,5 +1,4 @@
 ﻿using MovieDatabase.Data;
-using MovieDatabase.Domain;
 using MovieDatabase.Models.ViewModels.Artist;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;
@@ -23,7 +22,7 @@ namespace MovieDatabase.Services
                 {
                     FullName = a.FullName,
                     PhotoLink = a.PhotoLink,
-                    Biography = a.Biography,
+                    Biography = a.Biography.Substring(0,260) + "....",
                 })
                 .ToList();
 

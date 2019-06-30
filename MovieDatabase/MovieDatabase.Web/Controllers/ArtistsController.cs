@@ -18,5 +18,12 @@ namespace MovieDatabase.Web.Controllers
 
             return View(allArtists);
         }
+
+        public IActionResult Details(string id)
+        {
+            var artistDetailsViewModel = artistService.GetArtistAndDetailsById(id);
+
+            return View(artistDetailsViewModel);
+        }
     }
 }

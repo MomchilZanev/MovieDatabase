@@ -2,6 +2,8 @@
 {
     public class ArtistAllViewModel
     {
+        public string Id { get; set; }
+
         public string FullName { get; set; }
 
         public string PhotoLink { get; set; }

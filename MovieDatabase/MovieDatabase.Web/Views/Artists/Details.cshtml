@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MovieDatabase.Domain
+@inject SignInManager<MovieDatabaseUser> SignInManager
+@model MovieDatabase.Models.ViewModels.Artist.ArtistDetailsViewModel
+
+@{
+    ViewData["Title"] = "Artist Details";
+}
+
+    <div class="text-center text-warning">
+        <h1>@Model.FullName</h1>
+        <img src="@Model.PhotoLink" alt="Cover" height="600" width="400" />
+        <h2>@Model.BirthDate</h2>
+        <h3>@Model.Biography</h3>
+        <h2>Movie Director:</h2>
+
+        @foreach (var movie in Model.MoviesDirected)
+        {
+            <h4>@movie</h4>
+        }
+
+        <h2>TV Show Creator:</h2>
+
+        @foreach (var tvShow in Model.TVShowsCreated)
+        {
+            <h4>@tvShow</h4>
+        }
+
+        <h2>Actor:</h2>
+        <h3>Movie</h3>
+        @foreach (var movieRole in Model.MovieRoles)
+        {
+            <h4>@movieRole.Key | @movieRole.Value</h4>
+        }
+
+        <h3>TVShow</h3>
+        @foreach (var seasonRole in Model.SeasonRoles)
+        {
+            <h4>@seasonRole.Key | @seasonRole.Value</h4>
+        }
+    </div>

@@ -6,6 +6,8 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IArtistService
     {
+        ArtistDetailsViewModel GetArtistAndDetailsById(string artistId);
+
         List<ArtistAllViewModel> GetAllArtists();
     }
 }

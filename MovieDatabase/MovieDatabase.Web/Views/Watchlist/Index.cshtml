@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MovieDatabase.Domain
+
+@model List<MovieDatabase.Models.ViewModels.Watchlist.WatchlistAllViewModel>
+
+@inject SignInManager<MovieDatabaseUser> SignInManager
+@inject UserManager<MovieDatabaseUser> UserManager
+
+@{
+    ViewData["Title"] = "Watchlist";
+}
+
+<h1 class="text-warning text-center display-4 mb-4">Your Watchlist</h1>
+
+@foreach (var item in Model)
+{
+    <div class="row  d-flex justify-content-between">
+        <div class="col-1"></div>
+        <a href="/@item.Type.ToString()s/Details/@item.Id" class="text-warning text-right"><h1>@item.Name (@item.ReleaseDate.Year)</h1></a>
+        <a href="/Watchlist/Remove/@item.Id" class="btn btn-group-vertical font-weight-bold btn-outline-warning" role="button" aria-pressed="true">Remove</a>
+        <div class="col-1"></div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-2">
+            <a href="/@item.Type.ToString()s/Details/@item.Id"><img class="rounded" src="@item.CoverImageLink" height="250" width="180"></a>
+        </div>
+        <div class="col-4 text-warning">
+            <h2>Rating: @item.Rating</h2>
+            <font class="font-weight-light" size="6">@item.Description</font>
+        </div>
+    </div>
+    <br />
+}

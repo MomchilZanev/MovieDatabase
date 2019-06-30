@@ -12,10 +12,16 @@ namespace MovieDatabase.Domain
         public string Title { get; set; }
 
         [Required]
+        public string Creator { get; set; }
+
+        [Required]
         public string Content { get; set; }
 
         public DateTime Date { get; set; }
 
         public string ImageLink { get; set; }
+
+        [Required]
+        public string OfficialArticleLink { get; set; }
     }
 }

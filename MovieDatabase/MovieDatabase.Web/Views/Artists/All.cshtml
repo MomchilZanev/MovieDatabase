@@ -8,12 +8,12 @@
 {
     <div class="row">
         <div class="col-3">
-            <img class="rounded" src="@artist.PhotoLink" height="310" width="240">
+            <a href="/Artists/Details/@artist.Id"><img class="rounded" src="@artist.PhotoLink" height="310" width="240"></a>
         </div>
         <div class="col-9 text-warning">
-            <h1>@artist.FullName</h1>
+            <a href="/Artists/Details/@artist.Id" class="text-warning"><h1>@artist.FullName</h1></a>
             <font class="font-weight-light" size="6">@artist.Biography</font>
-        </div>        
+        </div>
     </div>
     <br />
 }

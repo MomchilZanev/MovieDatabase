@@ -34,7 +34,7 @@
 
         @if (SignInManager.IsSignedIn(User))
         {
-            <a href="/Reviews/Create/@Model.Id?entity=season"><h2>Review this TV Show</h2></a>
+            <a href="/Reviews/Create/@season.Id"><h2>Review this Season</h2></a>
         }
 
         <h2>Reviews:</h2>

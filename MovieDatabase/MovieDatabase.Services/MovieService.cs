@@ -68,7 +68,7 @@ namespace MovieDatabase.Services
 
         public MovieDetailsViewModel GetMovieAndDetailsById(string movieId)
         {
-            var movie = this.dbContext.Movies.Find(movieId);
+            var movie = dbContext.Movies.Find(movieId);
             
             var movieDetailsViewModel = new MovieDetailsViewModel
             {

@@ -15,7 +15,7 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult Details(string id)
         {
-            var movieViewModel = this.movieService.GetMovieAndDetailsById(id);
+            var movieViewModel = movieService.GetMovieAndDetailsById(id);
 
             return View(movieViewModel);
         }
@@ -29,7 +29,7 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var allMoviesOrdered = this.movieService.GetAllMoviesAndOrder(orderBy, userId);
+            var allMoviesOrdered = movieService.GetAllMoviesAndOrder(orderBy, userId);
 
             return View(allMoviesOrdered);
         }

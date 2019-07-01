@@ -48,7 +48,7 @@ namespace MovieDatabase.Services
 
         public List<ArtistAllViewModel> GetAllArtists()
         {
-            var allArtists = this.dbContext.Artists
+            var allArtists = dbContext.Artists
                 .Select(a => new ArtistAllViewModel
                 {
                     Id = a.Id,

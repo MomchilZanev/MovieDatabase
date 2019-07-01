@@ -15,7 +15,7 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult Details(string id)
         {
-            var tvShowDetailsViewModel = this.tvShowService.GetTVShowAndDetailsById(id);
+            var tvShowDetailsViewModel = tvShowService.GetTVShowAndDetailsById(id);
 
             return View(tvShowDetailsViewModel);
         }
@@ -29,7 +29,7 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var allTVShowsViewModel = this.tvShowService.GetAllTVShowsAndOrder(orderBy, userId);
+            var allTVShowsViewModel = tvShowService.GetAllTVShowsAndOrder(orderBy, userId);
 
             return View(allTVShowsViewModel);
         }

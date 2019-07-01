@@ -26,7 +26,6 @@
         @if (SignInManager.IsSignedIn(User))
         {
             <a href="/Reviews/Create/@Model.Id"><h2>Review this movie</h2></a>
-            <a href="/Watchlist/Add/@Model.Id"><h2>Add to watchlist</h2></a>
         }
 
         <h2>Reviews</h2>

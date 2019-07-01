@@ -24,7 +24,7 @@ namespace MovieDatabase.Domain
 
         public int LengthPerEpisode { get; set; }
 
-        public double Rating => this.Reviews.Average(review => review.Rating);
+        public double Rating => this.Reviews.Any() ? this.Reviews.Average(review => review.Rating) : 0;
 
         [Required]
         public string TVShowId { get; set; }

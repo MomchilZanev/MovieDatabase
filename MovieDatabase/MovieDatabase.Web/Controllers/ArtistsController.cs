@@ -14,7 +14,7 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All()
         {
-            var allArtists = this.artistService.GetAllArtists();
+            var allArtists = artistService.GetAllArtists();
 
             return View(allArtists);
         }

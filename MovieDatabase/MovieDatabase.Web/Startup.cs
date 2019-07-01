@@ -57,6 +57,7 @@ namespace MovieDatabase.Web
             services.AddTransient<IMovieService, MovieService>();
             services.AddTransient<ITVShowService, TVShowService>();
             services.AddTransient<IWatchlistService, WatchlistService>();
+            services.AddTransient<IReviewService, ReviewService>();
 
             services.AddMvc(options =>
             {

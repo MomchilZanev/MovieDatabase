@@ -25,11 +25,44 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
+        public IActionResult AddRemove(string id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var isValidId = watchlistService.IsValidId(id);
+            var controller = "";
+            if (isValidId)
+            {
+                var exists = watchlistService.Exists(userId, id);
+
+                if (exists)
+                {
+                    controller = watchlistService.RemoveItemFromUserWatchlist(userId, id);
+                }
+                else
+                {
+                    controller = watchlistService.AddItemToUserWatchlist(userId, id);
+                }
+            }           
+
+            return Redirect($"/{controller}/All");
+        }
+
+        [Authorize]
         public IActionResult Remove(string id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var result = watchlistService.RemoveItemFromUserWatchlist(userId, id);
+            var isValidId = watchlistService.IsValidId(id);
+            if (isValidId)
+            {
+                var exists = watchlistService.Exists(userId, id);
+
+                if (exists)
+                {
+                    watchlistService.RemoveItemFromUserWatchlist(userId, id);
+                }
+            }
 
             return Redirect("/Watchlist/Index");
         }

@@ -22,7 +22,14 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All(string orderBy)
         {
-            var allMoviesOrdered = this.movieService.GetAllMoviesAndOrder(orderBy);
+            string userId = "";
+
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+
+            var allMoviesOrdered = this.movieService.GetAllMoviesAndOrder(orderBy, userId);
 
             return View(allMoviesOrdered);
         }

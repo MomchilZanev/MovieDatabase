@@ -17,5 +17,7 @@ namespace MovieDatabase.Models.ViewModels.TVShow
         public DateTime FirstSeasonReleaseDate { get; set; }
 
         public int TotalReviews { get; set; }
+
+        public bool Watchlisted { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MovieDatabase.Data;
+using MovieDatabase.Domain;
 using MovieDatabase.Models.ViewModels.Watchlist;
 using MovieDatabase.Services.Contracts;
 using System;
@@ -16,28 +17,81 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public bool RemoveItemFromUserWatchlist(string userId, string itemId)
+        public bool IsValidId(string itemId)
         {
-            if (dbContext.Movies.Any(m => m.Id == itemId))
+            if (dbContext.Movies.Any(m => m.Id == itemId) || dbContext.TVShows.Any(t => t.Id == itemId))
             {
-                var movieUser = dbContext.MovieUsers.SingleOrDefault(mu => mu.UserId == userId && mu.MovieId == itemId);
-
-                dbContext.MovieUsers.Remove(movieUser);
-                dbContext.SaveChanges();
-
-                return true;
-            }
-            else if (dbContext.TVShows.Any(m => m.Id == itemId))
-            {
-                var tvShowUser = dbContext.TVShowUsers.SingleOrDefault(tu => tu.UserId == userId && tu.TVShowId == itemId);
-
-                dbContext.TVShowUsers.Remove(tvShowUser);
-                dbContext.SaveChanges();
-
                 return true;
             }
 
             return false;
+        }
+
+        public bool Exists(string userId, string itemId)
+        {            
+            if (dbContext.MovieUsers.Any(mu => mu.MovieId == itemId && mu.UserId == userId) ||
+                dbContext.TVShowUsers.Any(tu => tu.TVShowId == itemId && tu.UserId == userId))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public string AddItemToUserWatchlist(string userId, string itemId)
+        {
+            if (dbContext.Movies.Any(m => m.Id == itemId))
+            {
+                var movieUser = new MovieUser
+                {
+                    MovieId = itemId,
+                    UserId = userId,
+                };
+
+                dbContext.MovieUsers.Add(movieUser);
+                dbContext.SaveChanges();
+
+                return "Movies";
+            }
+            else if (dbContext.TVShows.Any(m => m.Id == itemId))
+            {
+                var tvShowUser = new TVShowUser
+                {
+                    TVShowId = itemId,
+                    UserId = userId,
+                };
+
+                dbContext.TVShowUsers.Add(tvShowUser);
+                dbContext.SaveChanges();
+
+                return "TVShows";
+            }
+
+            return "Error";
+        }
+
+        public string RemoveItemFromUserWatchlist(string userId, string itemId)
+        {
+            if (dbContext.MovieUsers.Any(mu => mu.MovieId == itemId && mu.UserId == userId))
+            {
+                var movieUser = dbContext.MovieUsers.SingleOrDefault(mu => mu.MovieId == itemId && mu.UserId == userId);
+
+                dbContext.MovieUsers.Remove(movieUser);
+                dbContext.SaveChanges();
+
+                return "Movies";
+            }
+            else if (dbContext.TVShowUsers.Any(tu => tu.TVShowId == itemId && tu.UserId == userId))
+            {
+                var tvShowUser = dbContext.TVShowUsers.SingleOrDefault(tu => tu.TVShowId == itemId && tu.UserId == userId);
+
+                dbContext.TVShowUsers.Remove(tvShowUser);
+                dbContext.SaveChanges();
+
+                return "TVShows";
+            }
+
+            return "Error";
 
         }
 
@@ -80,6 +134,6 @@ namespace MovieDatabase.Services
             watchlistAllViewModel.AddRange(tvShows);
 
             return watchlistAllViewModel;
-        }
+        }        
     }
 }

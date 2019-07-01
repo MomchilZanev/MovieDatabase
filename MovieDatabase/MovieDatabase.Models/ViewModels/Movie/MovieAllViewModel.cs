@@ -17,5 +17,7 @@ namespace MovieDatabase.Models.ViewModels.Movie
         public DateTime ReleaseDate { get; set; }
 
         public int TotalReviews { get; set; }
+
+        public bool Watchlisted { get; set; }
     }
 }

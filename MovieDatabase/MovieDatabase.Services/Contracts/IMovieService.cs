@@ -5,7 +5,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IMovieService
     {
-        List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy);
+        List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy, string userId);
 
         MovieDetailsViewModel GetMovieAndDetailsById(string movieId);
     }

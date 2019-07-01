@@ -5,7 +5,13 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IWatchlistService
     {
-        bool RemoveItemFromUserWatchlist(string userId, string itemId);
+        bool IsValidId(string itemId);
+
+        bool Exists(string userId, string itemId);
+
+        string AddItemToUserWatchlist(string userId, string itemId);
+
+        string RemoveItemFromUserWatchlist(string userId, string itemId);
 
         List<WatchlistAllViewModel> GetItemsInUserWatchlist(string userId);
     }

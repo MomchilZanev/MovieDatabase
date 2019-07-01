@@ -17,7 +17,7 @@ namespace MovieDatabase.Services
         }
 
         //TODO: Implement AutoMapper
-        public List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy)
+        public List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy, string userId)
         {
             var allMovies = dbContext.Movies.ToList();
 
@@ -29,7 +29,8 @@ namespace MovieDatabase.Services
                     CoverImageLink = m.CoverImageLink,
                     Rating = m.Rating,
                     ReleaseDate = m.ReleaseDate,
-                    TotalReviews = m.Reviews.Count()
+                    TotalReviews = m.Reviews.Count(),
+                    Watchlisted = dbContext.MovieUsers.Any(mu => mu.MovieId == m.Id && mu.UserId == userId),
                 })
                 .ToList();
 

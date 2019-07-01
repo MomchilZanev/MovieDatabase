@@ -17,7 +17,7 @@ namespace MovieDatabase.Services
         }
 
         //TODO: Implement AutoMapper
-        public List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy)
+        public List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy, string userId)
         {
             var allTVShows = dbContext.TVShows.ToList();
 
@@ -30,8 +30,8 @@ namespace MovieDatabase.Services
                     CoverImageLink = t.CoverImageLink,
                     FirstSeasonReleaseDate = t.Seasons.First().ReleaseDate,
                     Rating = t.OverallRating,
-                    TotalReviews = t.Seasons.Sum(s => s.Reviews.Count())
-
+                    TotalReviews = t.Seasons.Sum(s => s.Reviews.Count()),
+                    Watchlisted = dbContext.TVShowUsers.Any(tu => tu.TVShowId == t.Id && tu.UserId == userId),
                 }).ToList();
 
             if (orderBy == "release")

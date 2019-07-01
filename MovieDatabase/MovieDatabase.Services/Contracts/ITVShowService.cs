@@ -5,7 +5,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface ITVShowService
     {
-        List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy);
+        List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy, string userId);
 
         TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId);
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Services.Contracts;
+using System.Security.Claims;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -21,7 +22,14 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All(string orderBy)
         {
-            var allTVShowsViewModel = this.tvShowService.GetAllTVShowsAndOrder(orderBy);
+            string userId = "";
+
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+
+            var allTVShowsViewModel = this.tvShowService.GetAllTVShowsAndOrder(orderBy, userId);
 
             return View(allTVShowsViewModel);
         }

@@ -7,6 +7,6 @@ namespace MovieDatabase.Services.Contracts
     {
         List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy, string userId);
 
-        TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId);
+        TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId);
     }
 }

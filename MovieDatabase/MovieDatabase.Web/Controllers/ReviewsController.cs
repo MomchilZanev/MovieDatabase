@@ -20,11 +20,11 @@ namespace MovieDatabase.Web.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            bool isValidId = reviewService.IsValidId(id);
+            bool isValidId = reviewService.IsValidMovieOrSeasonId(id);
 
             if (isValidId)
             {
-                var exists = reviewService.Exists(userId, id);
+                var exists = reviewService.ReviewExists(userId, id);
 
                 if (exists)
                 {
@@ -48,28 +48,49 @@ namespace MovieDatabase.Web.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            bool isValidId = reviewService.IsValidId(input.Id);
+            bool isValidId = reviewService.IsValidMovieOrSeasonId(input.Id);
 
-            var controller = "";
             if (isValidId)
             {
-                var exists = reviewService.Exists(userId, input.Id);
+                var exists = reviewService.ReviewExists(userId, input.Id);
 
                 if (exists)
                 {
-                    controller = reviewService.UpdateUserReview(userId, input.Id, input.Content, input.Rating);
+                    var controller = reviewService.UpdateUserReview(userId, input.Id, input.Content, input.Rating);
 
                     return Redirect($"/{controller}/All/");
                 }
                 else
                 {
-                    controller = reviewService.CreateUserReview(userId, input.Id, input.Content, input.Rating);
+                    var controller = reviewService.CreateUserReview(userId, input.Id, input.Content, input.Rating);
 
                     return Redirect($"/{controller}/All/");
                 }
             }
 
             return Redirect("/");
+        }
+
+        [Authorize]
+        public IActionResult Delete(string id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            bool isValidId = reviewService.IsValidMovieOrSeasonId(id);
+
+            if (isValidId)
+            {
+                var exists = reviewService.ReviewExists(userId, id);
+
+                if (exists)
+                {
+                    string controller = reviewService.DeleteUserReview(userId, id);
+
+                    return Redirect($"/{controller}/All");
+                }
+            }
+
+            return Redirect($"/Home/Index");
         }
     }
 }

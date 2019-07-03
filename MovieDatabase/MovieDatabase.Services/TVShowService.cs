@@ -10,10 +10,12 @@ namespace MovieDatabase.Services
     public class TVShowService : ITVShowService
     {
         private readonly MovieDatabaseDbContext dbContext;
+        private readonly IReviewService reviewService;
 
-        public TVShowService(MovieDatabaseDbContext dbContext)
+        public TVShowService(MovieDatabaseDbContext dbContext, IReviewService reviewService)
         {
             this.dbContext = dbContext;
+            this.reviewService = reviewService;
         }
 
         //TODO: Implement AutoMapper
@@ -66,7 +68,7 @@ namespace MovieDatabase.Services
             return tvShowAllViewModel;
         }
 
-        public TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId)
+        public TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId)
         {
             var tvShow = dbContext.TVShows.Find(tvShowId);
             
@@ -102,6 +104,7 @@ namespace MovieDatabase.Services
                         Date = r.Date,
                         Rating = r.Rating,
                     }).ToList(),
+                    IsReviewedByCurrentUser = reviewService.ReviewExists(userId, s.Id),
                 }).ToList()
             };
 

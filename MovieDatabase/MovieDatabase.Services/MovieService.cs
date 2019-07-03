@@ -10,10 +10,12 @@ namespace MovieDatabase.Services
     public class MovieService : IMovieService
     {
         private readonly MovieDatabaseDbContext dbContext;
+        private readonly IReviewService reviewService;
 
-        public MovieService(MovieDatabaseDbContext dbContext)
+        public MovieService(MovieDatabaseDbContext dbContext, IReviewService reviewService)
         {
             this.dbContext = dbContext;
+            this.reviewService = reviewService;
         }
 
         //TODO: Implement AutoMapper
@@ -66,7 +68,7 @@ namespace MovieDatabase.Services
             return movieAllViewModel;
         }
 
-        public MovieDetailsViewModel GetMovieAndDetailsById(string movieId)
+        public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId)
         {
             var movie = dbContext.Movies.Find(movieId);
             
@@ -94,6 +96,7 @@ namespace MovieDatabase.Services
                     Rating = x.Rating,
                     Date = x.Date,
                 }).ToList(),
+                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movie.Id),
             };
 
             return movieDetailsViewModel;

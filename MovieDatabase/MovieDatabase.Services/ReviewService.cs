@@ -16,7 +16,7 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }        
 
-        public bool IsValidId(string itemId)
+        public bool IsValidMovieOrSeasonId(string itemId)
         {
             if (dbContext.Movies.Any(m => m.Id == itemId) || dbContext.Seasons.Any(t => t.Id == itemId))
             {
@@ -26,7 +26,7 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public bool Exists(string userId, string itemId)
+        public bool ReviewExists(string userId, string itemId)
         {
             if (dbContext.MovieReviews.Any(mr => mr.MovieId == itemId && mr.UserId == userId) ||
                 dbContext.SeasonReviews.Any(sr => sr.SeasonId == itemId && sr.UserId == userId))
@@ -127,6 +127,32 @@ namespace MovieDatabase.Services
                 seasonReview.Date = DateTime.UtcNow;
 
                 dbContext.Update(seasonReview);
+                dbContext.SaveChanges();
+
+                return "TVShows";
+            }
+
+            return "Error";
+        }
+
+        public string DeleteUserReview(string userId, string itemId)
+        {
+            if (dbContext.Movies.Any(m => m.Id == itemId))
+            {
+                var movieReview = dbContext.MovieReviews.SingleOrDefault(mr => mr.MovieId == itemId && mr.UserId == userId);
+
+                dbContext.MovieReviews.Remove(movieReview);
+
+                dbContext.SaveChanges();
+
+                return "Movies";
+            }
+            else if (dbContext.Seasons.Any(s => s.Id == itemId))
+            {
+                var seasonReview = dbContext.SeasonReviews.SingleOrDefault(mr => mr.SeasonId == itemId && mr.UserId == userId);
+
+                dbContext.SeasonReviews.Remove(seasonReview);
+
                 dbContext.SaveChanges();
 
                 return "TVShows";

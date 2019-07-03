@@ -8,14 +8,20 @@ namespace MovieDatabase.Web.Controllers
     {
         private readonly IMovieService movieService;
 
-        public MoviesController(IMovieService movieService)
+        public MoviesController(IMovieService movieService, IReviewService reviewService)
         {
             this.movieService = movieService;
         }
 
         public IActionResult Details(string id)
         {
-            var movieViewModel = movieService.GetMovieAndDetailsById(id);
+            var userId = "";
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+
+            var movieViewModel = movieService.GetMovieAndDetailsById(id, userId);
 
             return View(movieViewModel);
         }
@@ -23,7 +29,6 @@ namespace MovieDatabase.Web.Controllers
         public IActionResult All(string orderBy)
         {
             string userId = "";
-
             if (User.Identity.IsAuthenticated)
             {
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

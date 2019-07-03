@@ -8,14 +8,20 @@ namespace MovieDatabase.Web.Controllers
     {
         private readonly ITVShowService tvShowService;
 
-        public TVShowsController(ITVShowService tvShowService)
+        public TVShowsController(ITVShowService tvShowService, IReviewService reviewService)
         {
             this.tvShowService = tvShowService;
         }
 
         public IActionResult Details(string id)
         {
-            var tvShowDetailsViewModel = tvShowService.GetTVShowAndDetailsById(id);
+            var userId = "";
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+
+            var tvShowDetailsViewModel = tvShowService.GetTVShowAndDetailsById(id, userId);
 
             return View(tvShowDetailsViewModel);
         }
@@ -23,7 +29,6 @@ namespace MovieDatabase.Web.Controllers
         public IActionResult All(string orderBy)
         {
             string userId = "";
-
             if (User.Identity.IsAuthenticated)
             {
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

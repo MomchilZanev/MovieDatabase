@@ -7,6 +7,6 @@ namespace MovieDatabase.Services.Contracts
     {
         List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy, string userId);
 
-        MovieDetailsViewModel GetMovieAndDetailsById(string movieId);
+        MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId);
     }
 }

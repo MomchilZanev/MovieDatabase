@@ -22,5 +22,7 @@ namespace MovieDatabase.Models.ViewModels.TVShow
         public List<SeasonCastViewModel> Cast { get; set; }
 
         public List<SeasonReviewViewModel> Reviews { get; set; }
+
+        public bool IsReviewedByCurrentUser { get; set; }
     }
 }

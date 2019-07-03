@@ -16,8 +16,24 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Create()
+        public IActionResult Create(string id)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            bool isValidId = reviewService.IsValidId(id);
+
+            if (isValidId)
+            {
+                var exists = reviewService.Exists(userId, id);
+
+                if (exists)
+                {
+                    var reviewInputModel = reviewService.GetUserReview(userId, id);
+
+                    return View(reviewInputModel);
+                }
+            }
+
             return View();
         }
 
@@ -39,7 +55,13 @@ namespace MovieDatabase.Web.Controllers
             {
                 var exists = reviewService.Exists(userId, input.Id);
 
-                if (!exists)
+                if (exists)
+                {
+                    controller = reviewService.UpdateUserReview(userId, input.Id, input.Content, input.Rating);
+
+                    return Redirect($"/{controller}/All/");
+                }
+                else
                 {
                     controller = reviewService.CreateUserReview(userId, input.Id, input.Content, input.Rating);
 

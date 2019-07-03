@@ -46,19 +46,40 @@ namespace MovieDatabase.Services
             return artistDetailsViewModel;
         }
 
-        public List<ArtistAllViewModel> GetAllArtists()
+        public List<ArtistAllViewModel> GetAllArtistsAndOrder(string orderBy)
         {
-            var allArtists = dbContext.Artists
+            var artistAllViewModel = dbContext.Artists
                 .Select(a => new ArtistAllViewModel
                 {
                     Id = a.Id,
                     FullName = a.FullName,
                     PhotoLink = a.PhotoLink,
                     Biography = a.Biography.Substring(0, Math.Min(260, a.Biography.Length)) + "....",
+                    BirthDate = a.BirthDate,
+                    CareerProjects = a.MovieRoles.Count() + a.SeasonRoles.Count() + a.MoviesDirected.Count() + a.TVShowsCreated.Count(),
                 })
                 .ToList();
 
-            return allArtists;
+            if (orderBy == "youngest")
+            {
+                artistAllViewModel = artistAllViewModel
+                    .OrderByDescending(a => a.BirthDate)
+                    .ToList();
+            }
+            else if (orderBy == "oldest")
+            {
+                artistAllViewModel = artistAllViewModel
+                    .OrderBy(a => a.BirthDate)
+                    .ToList();
+            }
+            else if (orderBy == "popularity")
+            {
+                artistAllViewModel = artistAllViewModel
+                    .OrderByDescending(a => a.CareerProjects)
+                    .ToList();
+            }
+
+            return artistAllViewModel;
         }
     }
 }

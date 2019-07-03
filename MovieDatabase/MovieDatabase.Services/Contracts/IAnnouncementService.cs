@@ -6,6 +6,6 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IAnnouncementService
     {
-        List<AnnouncementViewModel> GetAllAnnouncementsOrderedByDateAscending();
+        List<AnnouncementViewModel> GetAllAnnouncementsAndOrder(string orderBy);
     }
 }

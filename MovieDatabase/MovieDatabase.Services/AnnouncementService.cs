@@ -15,9 +15,9 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public List<AnnouncementViewModel> GetAllAnnouncementsOrderedByDateAscending()
+        public List<AnnouncementViewModel> GetAllAnnouncementsAndOrder(string orderBy)
         {
-            var allAnnouncements = dbContext.Announcements
+            var announcementAllViewModel = dbContext.Announcements
                 .Select(a => new AnnouncementViewModel
                 {
                     Title = a.Title,
@@ -28,7 +28,21 @@ namespace MovieDatabase.Services
                 .OrderBy(a => a.Date)
                 .ToList();
 
-            return allAnnouncements;
+            if (orderBy == "latest")
+            {
+                announcementAllViewModel = announcementAllViewModel
+                    .OrderByDescending(a => a.Date)
+                    .ToList();
+            }
+            else if (orderBy == "oldest")
+            {
+                announcementAllViewModel = announcementAllViewModel
+                    .OrderBy(a => a.Date)
+                    .ToList();
+            }
+
+            return announcementAllViewModel;
         }
+
     }
 }

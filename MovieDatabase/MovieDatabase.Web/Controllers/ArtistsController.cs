@@ -10,20 +10,20 @@ namespace MovieDatabase.Web.Controllers
         public ArtistsController(IArtistService artistService)
         {
             this.artistService = artistService;
-        }
-
-        public IActionResult All()
-        {
-            var allArtists = artistService.GetAllArtists();
-
-            return View(allArtists);
-        }
+        }        
 
         public IActionResult Details(string id)
         {
             var artistDetailsViewModel = artistService.GetArtistAndDetailsById(id);
 
             return View(artistDetailsViewModel);
+        }
+
+        public IActionResult All(string orderBy)
+        {
+            var allArtists = artistService.GetAllArtistsAndOrder(orderBy);
+
+            return View(allArtists);
         }
     }
 }

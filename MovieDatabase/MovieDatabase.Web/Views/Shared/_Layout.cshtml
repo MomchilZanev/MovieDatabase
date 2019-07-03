@@ -66,10 +66,37 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a href="/Artists/All" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">Artists</a>
+                            <div class="btn-group mx-1">
+                                <button type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Artists
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/Artists/All?orderBy=youngest">Youngest</a>
+                                    <a class="dropdown-item" href="/Artists/All?orderBy=oldest">Oldest</a>
+                                    <a class="dropdown-item" href="/Artists/All?orderBy=popularity">Most Popular</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="/Artists/Create">Create Entry</a>
+                                    }
+                                </div>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a href="/Announcements/All" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">News</a>
+                            <div class="btn-group mx-1">
+                                <button type="button" class="btn btn-outline-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    News
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/Announcements/All?orderBy=latest">Latest</a>
+                                    <a class="dropdown-item" href="/Announcements/All?orderBy=oldest">Oldest</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="/Announcements/Create">Create Entry</a>
+                                    }
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -73,10 +74,22 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new MovieDatabaseUser { UserName = Input.UserName, Email = Input.Email };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (_userManager.Users.Count() == 1)
+                {
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, "User");
+                }
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
                     /*
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     
@@ -89,6 +102,7 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     */
+
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }

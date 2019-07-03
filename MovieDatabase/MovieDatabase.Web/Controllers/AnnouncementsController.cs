@@ -12,9 +12,9 @@ namespace MovieDatabase.Web.Controllers
             this.announcementService = announcementService;
         }
 
-        public IActionResult All()
+        public IActionResult All(string orderBy)
         {
-            var allAnnouncements = announcementService.GetAllAnnouncementsOrderedByDateAscending();
+            var allAnnouncements = announcementService.GetAllAnnouncementsAndOrder(orderBy);
 
             return View(allAnnouncements);
         }

@@ -22,6 +22,25 @@ namespace MovieDatabase.Web.Controllers
             var watchlistAllViewModel = watchlistService.GetItemsInUserWatchlist(userId);
 
             return View(watchlistAllViewModel);
+        }        
+
+        [Authorize]
+        public IActionResult Remove(string id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var isValidId = watchlistService.IsValidId(id);
+            if (isValidId)
+            {
+                var exists = watchlistService.Exists(userId, id);
+
+                if (exists)
+                {
+                    watchlistService.RemoveItemFromUserWatchlist(userId, id);
+                }
+            }
+
+            return Redirect("/Watchlist/Index");
         }
 
         [Authorize]
@@ -43,28 +62,9 @@ namespace MovieDatabase.Web.Controllers
                 {
                     controller = watchlistService.AddItemToUserWatchlist(userId, id);
                 }
-            }           
-
-            return Redirect($"/{controller}/All");
-        }
-
-        [Authorize]
-        public IActionResult Remove(string id)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            var isValidId = watchlistService.IsValidId(id);
-            if (isValidId)
-            {
-                var exists = watchlistService.Exists(userId, id);
-
-                if (exists)
-                {
-                    watchlistService.RemoveItemFromUserWatchlist(userId, id);
-                }
             }
 
-            return Redirect("/Watchlist/Index");
+            return Redirect($"/{controller}/All");
         }
     }
 }

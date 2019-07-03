@@ -107,6 +107,27 @@ namespace MovieDatabase.Web
         {
             //Bad Temporary DB seeding for Testing
             context.Database.Migrate();
+
+            if (!context.Roles.Any())
+            {
+                var adminRole = new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN",
+                };
+
+                var userRole = new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER",
+                };
+
+                context.Roles.Add(adminRole);
+                context.Roles.Add(userRole);
+
+                context.SaveChanges();
+            }
+
             if (!context.Artists.Any())
             {
                 var artist1 = new Artist

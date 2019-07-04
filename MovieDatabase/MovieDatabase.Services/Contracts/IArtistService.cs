@@ -1,4 +1,4 @@
-﻿using MovieDatabase.Domain;
+﻿using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Models.ViewModels.Artist;
 using System.Collections.Generic;
 
@@ -9,5 +9,7 @@ namespace MovieDatabase.Services.Contracts
         ArtistDetailsViewModel GetArtistAndDetailsById(string artistId);
 
         List<ArtistAllViewModel> GetAllArtistsAndOrder(string orderBy);
+
+        bool CreateArtist(CreateArtistInputModel input);
     }
 }

@@ -60,7 +60,7 @@ namespace MovieDatabase.Services
                 Title = input.Title,
                 Content = input.Content,
                 OfficialArticleLink = input.OfficialArticleLink,
-                ImageLink = (input.ImageLink == "" || input.ImageLink == null) ? "~/images/no_image.png" : input.ImageLink,
+                ImageLink = (input.ImageLink == "" || input.ImageLink == null) ? "/images/no_image.png" : input.ImageLink,
                 Date = DateTime.UtcNow,
             };
 

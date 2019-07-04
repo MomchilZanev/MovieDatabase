@@ -1,4 +1,6 @@
 ﻿using MovieDatabase.Data;
+using MovieDatabase.Domain;
+using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Models.ViewModels.Artist;
 using MovieDatabase.Services.Contracts;
 using System;
@@ -80,6 +82,27 @@ namespace MovieDatabase.Services
             }
 
             return artistAllViewModel;
+        }
+
+        public bool CreateArtist(CreateArtistInputModel input)
+        {
+            if (dbContext.Artists.Any(a => a.FullName == input.FullName && a.Biography == input.Biography && a.BirthDate == a.BirthDate))
+            {
+                return false;
+            }
+
+            var artist = new Artist
+            {
+                FullName = input.FullName,
+                BirthDate = input.BirthDate,
+                Biography = input.Biography,
+                PhotoLink = (input.PhotoLink == "" || input.PhotoLink == null) ? "/images/no_artist_image.png" : input.PhotoLink,
+            };
+
+            dbContext.Artists.Add(artist);
+            dbContext.SaveChanges();
+
+            return true;
         }
     }
 }

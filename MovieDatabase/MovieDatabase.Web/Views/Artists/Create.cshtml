@@ -1,0 +1,41 @@
+﻿@model MovieDatabase.Models.InputModels.Artist.CreateArtistInputModel
+
+@{
+    ViewData["Title"] = "Create Artist";
+}
+<link rel="stylesheet" type="text/css" href="~/css/style.css">
+<h2 class="text-warning mb-4">Create Artist</h2>
+<form asp-controller="Artists" asp-action="Create" method="post" class="text-warning">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="FullName"></label>
+        <input asp-for="FullName" class="form-control col-4 mb-2" placeholder="Artist name">
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="BirthDate"></label>
+        <input asp-for="BirthDate" type="date" class="form-control col-6 mb-2">
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="Biography"></label>
+        <textarea asp-for="Biography" class="form-control col-8 mb-2" rows="20" placeholder="Artists biography"></textarea>
+        <span asp-validation-for="Biography" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="PhotoLink"></label>
+        <input asp-for="PhotoLink" class="form-control col-6 mb-2" placeholder="Profile picture">
+        <span asp-validation-for="PhotoLink" class="text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-6" value="Create" />
+</form>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

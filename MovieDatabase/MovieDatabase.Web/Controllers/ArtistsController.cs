@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Services.Contracts;
 
 namespace MovieDatabase.Web.Controllers
@@ -24,6 +26,26 @@ namespace MovieDatabase.Web.Controllers
             var allArtists = artistService.GetAllArtistsAndOrder(orderBy);
 
             return View(allArtists);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create(CreateArtistInputModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(input);
+            }
+
+            artistService.CreateArtist(input);
+
+            return Redirect("/Artists/All/?orderBy=youngest");
         }
     }
 }

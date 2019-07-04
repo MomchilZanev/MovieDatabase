@@ -1,4 +1,4 @@
-﻿using MovieDatabase.Models.InputModels;
+﻿using MovieDatabase.Models.InputModels.Review;
 
 namespace MovieDatabase.Services.Contracts
 {

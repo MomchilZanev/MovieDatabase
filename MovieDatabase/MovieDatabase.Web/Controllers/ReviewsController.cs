@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieDatabase.Models.InputModels;
+using MovieDatabase.Models.InputModels.Review;
 using MovieDatabase.Services.Contracts;
 using System.Security.Claims;
 

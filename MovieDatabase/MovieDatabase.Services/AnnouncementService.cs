@@ -1,6 +1,9 @@
 ﻿using MovieDatabase.Data;
+using MovieDatabase.Domain;
+using MovieDatabase.Models.InputModels.Announcement;
 using MovieDatabase.Models.ViewModels.Announcement;
 using MovieDatabase.Services.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +16,7 @@ namespace MovieDatabase.Services
         public AnnouncementService(MovieDatabaseDbContext dbContext)
         {
             this.dbContext = dbContext;
-        }
+        }        
 
         public List<AnnouncementViewModel> GetAllAnnouncementsAndOrder(string orderBy)
         {
@@ -44,5 +47,27 @@ namespace MovieDatabase.Services
             return announcementAllViewModel;
         }
 
+        public bool CreateAnnouncement(CreateAnnouncementInputModel input)
+        {
+            if (dbContext.Announcements.Any(a => a.Title == input.Title && a.Content == input.Content))
+            {
+                return false;
+            }
+
+            var announcement = new Announcement
+            {
+                Creator = input.Creator,
+                Title = input.Title,
+                Content = input.Content,
+                OfficialArticleLink = input.OfficialArticleLink,
+                ImageLink = (input.ImageLink == "" || input.ImageLink == null) ? "~/images/no_image.png" : input.ImageLink,
+                Date = DateTime.UtcNow,
+            };
+
+            dbContext.Announcements.Add(announcement);
+            dbContext.SaveChanges();
+
+            return true;
+        }
     }
 }

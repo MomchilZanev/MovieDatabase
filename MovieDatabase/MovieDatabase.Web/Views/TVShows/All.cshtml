@@ -36,12 +36,12 @@
                 <td class="align-middle">
                     @if (tvShow.Watchlisted && SignInManager.IsSignedIn(User))
                     {
-                        <a href="/Watchlist/AddRemove/@tvShow.Id" class="text-warning"><img src="~/items/bookmark_true.svg" height="50" /><br /></a>
+                        <a href="/Watchlist/AddRemove/@tvShow.Id" class="text-warning"><img src="~/icons/bookmark_true.svg" height="50" /><br /></a>
                         @*<a href="/Watchlist/AddRemove/@tvShow.Id" class="text-warning"><object type="image/svg+xml" data="~/items/bookmark_false.svg" height="50">Bookmark icon</object><br /></a>*@
                     }
                     else if (SignInManager.IsSignedIn(User))
                     {
-                        <a href="/Watchlist/AddRemove/@tvShow.Id" class="text-warning"><img src="~/items/bookmark_false.svg" height="50" /><br /></a>
+                        <a href="/Watchlist/AddRemove/@tvShow.Id" class="text-warning"><img src="~/icons/bookmark_false.svg" height="50" /><br /></a>
                     }
                     else
                     {

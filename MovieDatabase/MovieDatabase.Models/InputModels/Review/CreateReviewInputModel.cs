@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieDatabase.Models.InputModels
+namespace MovieDatabase.Models.InputModels.Review
 {
     public class CreateReviewInputModel
     {

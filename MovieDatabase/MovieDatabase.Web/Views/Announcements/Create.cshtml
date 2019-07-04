@@ -1,0 +1,47 @@
+﻿@model MovieDatabase.Models.InputModels.Announcement.CreateAnnouncementInputModel
+
+@{
+    ViewData["Title"] = "Create Announcement";
+}
+<link rel="stylesheet" type="text/css" href="~/css/style.css">
+<h2 class="text-warning mb-4">Create Announcement</h2>
+<form asp-controller="Announcements" asp-action="Create" method="post" class="text-warning">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="Creator"></label>
+        <input asp-for="Creator" class="form-control col-4 mb-2" placeholder="Article creator">
+        <span asp-validation-for="Creator" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control col-6 mb-2" placeholder="Announcement title">
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" class="form-control col-8 mb-2" rows="10" placeholder="Announcement summary"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="OfficialArticleLink"></label>
+        <input asp-for="OfficialArticleLink" class="form-control col-6 mb-2" placeholder="Link to official article">
+        <span asp-validation-for="OfficialArticleLink" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="ImageLink"></label>
+        <input asp-for="ImageLink" class="form-control col-6 mb-2" placeholder="Provide an image if available">
+        <span asp-validation-for="ImageLink" class="text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-6" value="Create" />
+</form>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

@@ -98,6 +98,12 @@
                                 </div>
                             </div>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Genres/Create" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">Add new genre</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

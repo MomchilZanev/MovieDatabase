@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Models.InputModels.Movie;
 using MovieDatabase.Services.Contracts;
+using System.Linq;
 using System.Security.Claims;
 
 namespace MovieDatabase.Web.Controllers
@@ -7,10 +10,14 @@ namespace MovieDatabase.Web.Controllers
     public class MoviesController : Controller
     {
         private readonly IMovieService movieService;
+        private readonly IGenreService genreService;
+        private readonly IArtistService artistService;
 
-        public MoviesController(IMovieService movieService, IReviewService reviewService)
+        public MoviesController(IMovieService movieService, IGenreService genreService, IArtistService artistService)
         {
             this.movieService = movieService;
+            this.genreService = genreService;
+            this.artistService = artistService;
         }
 
         public IActionResult Details(string id)
@@ -37,6 +44,58 @@ namespace MovieDatabase.Web.Controllers
             var allMoviesOrdered = movieService.GetAllMoviesAndOrder(orderBy, userId);
 
             return View(allMoviesOrdered);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create()
+        {
+            ViewBag.Genres = genreService.GetAllGenres();
+            ViewBag.Directors = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]        
+        public IActionResult Create(CreateMovieInputModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Genres = genreService.GetAllGenres();
+                ViewBag.Directors = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+
+                return View(input);
+            }
+
+            movieService.CreateMovie(input);
+
+            return Redirect("/Home/Index");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult AddRole()
+        {
+            ViewBag.Movies = movieService.GetAllMoviesAndOrder("", "").Select(m => m.Name).ToList();//TODO: Create dedicated method
+            ViewBag.Artists = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult AddRole(AddRoleInputModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Movies = movieService.GetAllMoviesAndOrder("", "").Select(m => m.Name).ToList();
+                ViewBag.Artists = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+
+                return View(input);
+            }
+
+            movieService.AddRoleToMovie(input);
+
+            return Redirect("/Home/Index");
         }
     }
 }

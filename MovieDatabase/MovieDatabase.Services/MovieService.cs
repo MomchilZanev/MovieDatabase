@@ -1,4 +1,6 @@
 ﻿using MovieDatabase.Data;
+using MovieDatabase.Domain;
+using MovieDatabase.Models.InputModels.Movie;
 using MovieDatabase.Models.ViewModels.Movie;
 using MovieDatabase.Services.Contracts;
 using System;
@@ -100,6 +102,71 @@ namespace MovieDatabase.Services
             };
 
             return movieDetailsViewModel;
+        }
+
+        public bool CreateMovie(CreateMovieInputModel input)
+        {
+            if (!dbContext.Genres.Any(g => g.Name == input.Genre))
+            {
+                return false;
+            }
+            if (!dbContext.Artists.Any(a => a.FullName == input.Director))
+            {
+                return false;
+            }
+            if (dbContext.Movies.Any(m => m.Name == input.Name))
+            {
+                return false;
+            }
+
+            var genre = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
+            var director = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
+
+            var movie = new Movie
+            {
+                Name = input.Name,
+                Genre = genre,
+                ReleaseDate = input.ReleaseDate,
+                Length = input.Length,
+                Director = director,
+                Description = input.Description,
+                CoverImageLink = (input.CoverImageLink == "" || input.CoverImageLink == null) ? "/images/no_image.png" : input.CoverImageLink,
+            };
+            dbContext.Movies.Add(movie);
+            dbContext.SaveChanges();
+
+            return true;
+        }
+
+        public bool AddRoleToMovie(AddRoleInputModel input)
+        {
+            if (!dbContext.Movies.Any(m => m.Name == input.Movie))
+            {
+                return false;
+            }
+            if (!dbContext.Artists.Any(a => a.FullName == input.Artist))
+            {
+                return false;
+            }            
+
+            var movie = dbContext.Movies.SingleOrDefault(g => g.Name == input.Movie);
+            var artist = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Artist);
+
+            if (dbContext.MovieRoles.Any(mr => mr.ArtistId == artist.Id && mr.MovieId == movie.Id))
+            {
+                return false;
+            }
+
+            var movieRole = new MovieRole
+            {
+                Movie = movie,
+                Artist = artist,
+                CharacterPlayed = input.CharacterPlayed,
+            };
+            dbContext.MovieRoles.Add(movieRole);
+            dbContext.SaveChanges();
+
+            return true;
         }
     }
 }

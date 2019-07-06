@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +40,7 @@ namespace MovieDatabase.Web
                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                         .UseLazyLoadingProxies());
 
-            services.AddIdentity<MovieDatabaseUser, IdentityRole>(options =>
+            services.AddDefaultIdentity<MovieDatabaseUser>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = false;
                 options.Password.RequireDigit = false;
@@ -49,7 +50,9 @@ namespace MovieDatabase.Web
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 3;
             })
+				.AddDefaultUI(UIFramework.Bootstrap4)
                 .AddDefaultTokenProviders()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<MovieDatabaseDbContext>();
 
             services.AddTransient<IAnnouncementService, AnnouncementService>();
@@ -188,19 +191,23 @@ namespace MovieDatabase.Web
             {
                 var announcement1 = new Announcement
                 {
+                    Creator = "Pesho",
                     Title = "Some title",
                     Content = "sahfgakjdgsdjgvfoeg",
                     ImageLink = "https://cdn-images-1.medium.com/max/1600/1*ZVYpEAxnObj7kWNnyKr_nQ.jpeg",
                     Date = DateTime.UtcNow,
+                    OfficialArticleLink = "Tuk"
                 };
                 context.Announcements.Add(announcement1);
 
                 var announcement2 = new Announcement
                 {
+                    Creator = "Gosho",
                     Title = "Other title",
                     Content = "asfasfabfytrohiewrobiweiobvgioewrhgviwelsufvaouse",
                     ImageLink = "https://publicrelationssydney.com.au/wp-content/uploads/2012/09/Breaking-news-loudspeaker.jpg",
                     Date = DateTime.UtcNow,
+                    OfficialArticleLink = "Tam"
                 };
                 context.Announcements.Add(announcement2);
                 context.SaveChanges();

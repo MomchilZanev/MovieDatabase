@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Models.ViewModels.Movie;
+﻿using MovieDatabase.Models.InputModels.Movie;
+using MovieDatabase.Models.ViewModels.Movie;
 using System.Collections.Generic;
 
 namespace MovieDatabase.Services.Contracts
@@ -8,5 +9,9 @@ namespace MovieDatabase.Services.Contracts
         List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy, string userId);
 
         MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId);
+
+        bool CreateMovie(CreateMovieInputModel input);
+
+        bool AddRoleToMovie(AddRoleInputModel input);
     }
 }

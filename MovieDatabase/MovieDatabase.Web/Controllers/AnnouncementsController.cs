@@ -34,7 +34,7 @@ namespace MovieDatabase.Web.Controllers
             if (!ModelState.IsValid)
             {
                 return View(input);
-            }
+            }            
 
             announcementService.CreateAnnouncement(input);
 

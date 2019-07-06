@@ -1,0 +1,64 @@
+﻿@model MovieDatabase.Models.InputModels.Movie.AddRoleInputModel
+
+@{
+    ViewData["Title"] = "Add Role";
+}
+<link rel="stylesheet" type="text/css" href="~/css/style.css">
+
+<h2 class="text-warning text-center mb-3 mt-4 ml-3">Add Role</h2>
+
+<form asp-controller="Movies" asp-action="AddRole" method="post" class="text-warning">
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div asp-validation-summary="All" class="text-danger col-6 ml-3"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="mt-3 mb-3 col-6">
+            <label asp-for="Movie"></label>
+            <select asp-for="Movie" class="form-control mb-2" placeholder="Movie Name">
+                @foreach (var movie in ViewBag.Movies)
+                {
+                    <option value="@movie">@movie</option>
+                }
+            </select>
+           <span asp-validation-for="Movie" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="row col-8 d-flex justify-content-between">
+            <div class="mt-3 mb-3 col-6">
+                <label asp-for="Artist"></label>
+                <select asp-for="Artist" class="form-control mb-2" placeholder="Actor Name">
+                    @foreach (var artist in ViewBag.Artists)
+                    {
+                        <option value="@artist">@artist</option>
+                    }
+                </select>
+                <span asp-validation-for="Artist" class="text-danger"></span>
+            </div>
+
+            <div class="mt-3 mb-3 col-6">
+                <label asp-for="CharacterPlayed"></label>
+                <input asp-for="CharacterPlayed" class="form-control mb-2" placeholder="Movie Character">
+                <span asp-validation-for="CharacterPlayed" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="mt-3 mb-3 col-6">
+            <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-12" value="Create" />
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

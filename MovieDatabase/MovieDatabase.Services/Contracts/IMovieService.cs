@@ -6,9 +6,9 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IMovieService
     {
-        List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy, string userId);
+        List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy = null, string filterByGenre = null, string userId = null);
 
-        MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId);
+        MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId = null);
 
         bool CreateMovie(CreateMovieInputModel input);
 

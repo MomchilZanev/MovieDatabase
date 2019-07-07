@@ -48,7 +48,7 @@ namespace MovieDatabase.Services
             return artistDetailsViewModel;
         }
 
-        public List<ArtistAllViewModel> GetAllArtistsAndOrder(string orderBy)
+        public List<ArtistAllViewModel> GetAllArtistsAndOrder(string orderBy = null)
         {
             var artistAllViewModel = dbContext.Artists
                 .Select(a => new ArtistAllViewModel

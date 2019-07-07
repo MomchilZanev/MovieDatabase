@@ -21,9 +21,14 @@ namespace MovieDatabase.Services
         }
 
         //TODO: Implement AutoMapper
-        public List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy, string userId)
+        public List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy = null, string genreFilter = null, string userId = null)
         {
             var allMovies = dbContext.Movies.ToList();
+
+            if (dbContext.Genres.Any(g => g.Name == genreFilter))
+            {
+                allMovies = allMovies.Where(m => m.Genre.Name == genreFilter).ToList();
+            }
 
             var movieAllViewModel = allMovies
                 .Select(m => new MovieAllViewModel
@@ -70,7 +75,7 @@ namespace MovieDatabase.Services
             return movieAllViewModel;
         }
 
-        public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId)
+        public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId = null)
         {
             var movie = dbContext.Movies.Find(movieId);
             

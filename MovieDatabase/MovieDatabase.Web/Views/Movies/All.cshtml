@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using MovieDatabase.Domain
+@using System
 
 @model List<MovieDatabase.Models.ViewModels.Movie.MovieAllViewModel>
 
@@ -9,6 +10,26 @@
 @{
     ViewData["Title"] = "All Movies";
 }
+
+<div class="row">
+    <div class="col-10"></div>
+    <div class="btn-group dropleft col-2">
+        <button type="button" class="btn btn-secondary btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filter by Genre
+        </button>
+        <div class="dropdown-menu">
+            @foreach (var genre in ViewBag.Genres)
+            {
+                var query = "?genreFilter=" + @genre;
+                if (@Context.Request.QueryString.ToString() != "" && @Context.Request.QueryString.ToString().Split('=').First() == "?orderBy")
+                {
+                    query = Context.Request.QueryString.ToString().Split('&').First() + "&genreFilter=" + @genre;
+                }
+                <a class="dropdown-item" href="@Context.Request.Path@query">@genre</a>
+            }
+        </div>
+    </div>
+</div>
 
 <table class="table w-100 text-warning table-borderless table-striped">
     <thead>

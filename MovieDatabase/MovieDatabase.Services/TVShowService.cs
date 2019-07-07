@@ -21,9 +21,14 @@ namespace MovieDatabase.Services
         }        
 
         //TODO: Implement AutoMapper
-        public List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy, string userId)
+        public List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy = null, string genreFilter = null, string userId = null)
         {
             var allTVShows = dbContext.TVShows.ToList();
+
+            if (dbContext.Genres.Any(g => g.Name == genreFilter))
+            {
+                allTVShows = allTVShows.Where(t => t.Genre.Name == genreFilter).ToList();
+            }
 
             var tvShowAllViewModel = allTVShows
                 .Select(t => new TVShowAllViewModel

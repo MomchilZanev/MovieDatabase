@@ -33,7 +33,7 @@ namespace MovieDatabase.Web.Controllers
             return View(movieViewModel);
         }
 
-        public IActionResult All(string orderBy)
+        public IActionResult All(string orderBy, string genreFilter)
         {
             string userId = "";
             if (User.Identity.IsAuthenticated)
@@ -41,7 +41,9 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var allMoviesOrdered = movieService.GetAllMoviesAndOrder(orderBy, userId);
+            var allMoviesOrdered = movieService.GetAllMoviesAndOrder(orderBy, genreFilter, userId);
+
+            ViewBag.Genres = genreService.GetAllGenres();
 
             return View(allMoviesOrdered);
         }
@@ -50,7 +52,7 @@ namespace MovieDatabase.Web.Controllers
         public IActionResult Create()
         {
             ViewBag.Genres = genreService.GetAllGenres();
-            ViewBag.Directors = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+            ViewBag.Directors = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
 
             return View();
         }
@@ -62,7 +64,7 @@ namespace MovieDatabase.Web.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Genres = genreService.GetAllGenres();
-                ViewBag.Directors = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+                ViewBag.Directors = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
 
                 return View(input);
             }
@@ -75,8 +77,8 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddRole()
         {
-            ViewBag.Movies = movieService.GetAllMoviesAndOrder("", "").Select(m => m.Name).ToList();//TODO: Create dedicated method
-            ViewBag.Artists = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+            ViewBag.Movies = movieService.GetAllMoviesAndOrder().Select(m => m.Name).ToList();//TODO: Create dedicated method
+            ViewBag.Artists = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
 
             return View();
         }
@@ -87,8 +89,8 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Movies = movieService.GetAllMoviesAndOrder("", "").Select(m => m.Name).ToList();
-                ViewBag.Artists = artistService.GetAllArtistsAndOrder("").Select(a => a.FullName).ToList();
+                ViewBag.Movies = movieService.GetAllMoviesAndOrder().Select(m => m.Name).ToList();
+                ViewBag.Artists = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
 
                 return View(input);
             }

@@ -8,7 +8,7 @@ namespace MovieDatabase.Services.Contracts
     {
         ArtistDetailsViewModel GetArtistAndDetailsById(string artistId);
 
-        List<ArtistAllViewModel> GetAllArtistsAndOrder(string orderBy);
+        List<ArtistAllViewModel> GetAllArtistsAndOrder(string orderBy = null);
 
         bool CreateArtist(CreateArtistInputModel input);
     }

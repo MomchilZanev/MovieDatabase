@@ -18,12 +18,12 @@ namespace MovieDatabase.Models.ViewModels.Watchlist
 
         public double Rating { get; set; }
 
-        public Class Type { get; set; }
+        public Category Category { get; set; }
     }
 
-    public enum Class
+    public enum Category
     {
-        Movie = 1,
-        TVShow = 2
+        Movies = 1,
+        TVShows = 2
     }
 }

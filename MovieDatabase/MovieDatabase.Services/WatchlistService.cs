@@ -110,7 +110,7 @@ namespace MovieDatabase.Services
                     CoverImageLink = x.Movie.CoverImageLink,
                     ReleaseDate = x.Movie.ReleaseDate,
                     Rating = x.Movie.Rating,
-                    Type = Class.Movie
+                    Category = Category.Movies
                 })
                 .ToList();
 
@@ -125,9 +125,9 @@ namespace MovieDatabase.Services
                     Name = x.TVShow.Name,
                     Description = x.TVShow.Description.Substring(0, Math.Min(250, x.TVShow.Description.Length)) + "....",
                     CoverImageLink = x.TVShow.CoverImageLink,
-                    ReleaseDate = x.TVShow.Seasons.First().ReleaseDate,
+                    ReleaseDate = x.TVShow.FirstAired,
                     Rating = x.TVShow.OverallRating,
-                    Type = Class.TVShow
+                    Category = Category.TVShows
                 })
                 .ToList();
 

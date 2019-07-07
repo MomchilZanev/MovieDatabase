@@ -1,0 +1,55 @@
+﻿@model MovieDatabase.Models.InputModels.TVShow.AddSeasonInputModel
+
+@{
+    ViewData["Title"] = "Add Season to TV Show";
+}
+<link rel="stylesheet" type="text/css" href="~/css/style.css">
+
+<h2 class="text-warning mb-3 mt-5 ml-3">Add Season to TV Show</h2>
+
+<form asp-controller="TVShows" asp-action="AddSeason" method="post" class="text-warning">
+
+    <div asp-validation-summary="All" class="text-danger ml-5"></div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-8">
+            <label asp-for="TVShow"></label>
+            <select asp-for="TVShow" class="form-control mb-2" placeholder="Artists biography">
+                @foreach (var tvShow in ViewBag.TVShows)
+                {
+                    <option value="@tvShow">@tvShow</option>
+                }
+            </select>
+            <span asp-validation-for="TVShow" class="text-danger"></span>
+        </div>
+
+        <div class="mt-3 mb-3 col-4">
+            <label asp-for="ReleaseDate"></label>
+            <input asp-for="ReleaseDate" type="date" class="form-control mb-2">
+            <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-6">
+            <label asp-for="Episodes"></label>
+            <input asp-for="Episodes" type="number" class="form-control mb-2" placeholder="Number of episodes"></input>
+            <span asp-validation-for="Episodes" class="text-danger"></span>
+        </div>
+
+        <div class="mt-3 mb-3 col-6">
+            <label asp-for="LengthPerEpisode"></label>
+            <input asp-for="LengthPerEpisode" class="form-control mb-2" placeholder="Average episode length">
+            <span asp-validation-for="LengthPerEpisode" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mt-3 mb-3 row col-8">
+        <div class="col-3"></div>
+        <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-6" value="Create" />
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

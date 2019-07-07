@@ -14,7 +14,7 @@ namespace MovieDatabase.Models.ViewModels.TVShow
 
         public double Rating { get; set; }
 
-        public DateTime FirstSeasonReleaseDate { get; set; }
+        public DateTime FirstAired { get; set; }
 
         public int TotalReviews { get; set; }
 

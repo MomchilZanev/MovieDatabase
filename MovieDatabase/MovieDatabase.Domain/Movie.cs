@@ -30,7 +30,7 @@ namespace MovieDatabase.Domain
 
         public string CoverImageLink { get; set; }
 
-        public double Rating => this.Reviews.Any() ? this.Reviews.Average(review => review.Rating) : 0;
+        public double Rating => Reviews.Any() ? Reviews.Average(review => review.Rating) : 0;
 
         [Required]
         public string DirectorId { get; set; }

@@ -9,7 +9,7 @@ namespace MovieDatabase.Models.ViewModels.TVShow
 
         public string Name { get; set; }
 
-        public DateTime FirstSeasonReleaseDate { get; set; }
+        public DateTime FirstAired { get; set; }
 
         public string Description { get; set; }
 

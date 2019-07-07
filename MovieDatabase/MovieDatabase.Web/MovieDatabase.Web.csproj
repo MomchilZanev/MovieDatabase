@@ -20,9 +20,4 @@
     <ProjectReference Include="..\MovieDatabase.Services\MovieDatabase.Services.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Areas\" />
-  </ItemGroup>
-
 </Project>

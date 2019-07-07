@@ -77,6 +77,9 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
+                user.AvatarLink = "/user_avatars/no_avatar.jpg";
+                await _userManager.UpdateAsync(user);
+
                 if (_userManager.Users.Count() == 1)
                 {
                     await _userManager.AddToRoleAsync(user, "Admin");

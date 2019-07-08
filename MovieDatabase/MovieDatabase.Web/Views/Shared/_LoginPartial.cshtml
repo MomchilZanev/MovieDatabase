@@ -1,30 +1,53 @@
 @using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
 @using MovieDatabase.Domain
+@using MovieDatabase.Services.Contracts
 @inject SignInManager<MovieDatabaseUser> SignInManager
 @inject UserManager<MovieDatabaseUser> UserManager
+@inject IAvatarService avatarService
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link text-warning" asp-controller="Watchlist" asp-action="Index">Watchlist</a>
+        string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        string fileName = avatarService.GetUserAvatarLink(userId);
+
+        <li>
+            <h2 class="navbar-text mx-2 text-warning">@User.Identity.Name</h2>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name</a>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-warning">Logout</button>
-            </form>
+            <div class="dropright">
+                <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+                    <img src="@fileName" alt="Avatar" class="rounded" height="50" />
+                </button>
+                <ul class="dropdown-menu bg-dark" role="menu" aria-labelledby="menu1">
+                    <li role="presentation">
+                        <a class="nav-link text-warning" asp-controller="Watchlist" asp-action="Index">Watchlist</a>
+                    </li>
+                    <li role="presentation">
+                        <a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage account</a>
+                    </li>
+                    <li role="presentation">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="nav-link btn btn-link text-warning">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            <div class="dropright">
+                <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+                    <img src="~/user_avatars/no_avatar.jpg" alt="Avatar" class="rounded" height="50" />
+                </button>
+                <ul class="dropdown-menu bg-dark" role="menu" aria-labelledby="menu1">
+                    <li role="presentation"><a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+                    <li role="presentation"><a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+                </ul>
+            </div>
         </li>
     }
 </ul>

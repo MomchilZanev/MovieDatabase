@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieDatabase.Domain;
 using MovieDatabase.Services.Contracts;
+using Microsoft.AspNetCore.Identity;
 
 namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -20,7 +21,7 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<MovieDatabaseUser> _userManager;
         private readonly SignInManager<MovieDatabaseUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly IAvatarService avatarService;
+        private readonly IAvatarService _avatarService;
 
         public IndexModel(
             UserManager<MovieDatabaseUser> userManager,
@@ -31,7 +32,7 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
-            this.avatarService = avatarService;
+            _avatarService = avatarService;
         }
 
         public string Username { get; set; }
@@ -107,7 +108,7 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
             }
 
             var avatar = Input.Avatar;
-            await avatarService.ChangeUserAvatar(user.Id, avatar);
+            await _avatarService.ChangeUserAvatar(user.Id, avatar);
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)

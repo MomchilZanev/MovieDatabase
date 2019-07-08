@@ -85,6 +85,7 @@ namespace MovieDatabase.Services
                 Name = movie.Name,
                 Director = movie.Director.FullName,
                 CoverImageLink = movie.CoverImageLink,
+                TrailerLink = movie.TrailerLink,
                 Description = movie.Description,
                 Genre = movie.Genre.Name,
                 Length = movie.Length,
@@ -136,6 +137,7 @@ namespace MovieDatabase.Services
                 Director = director,
                 Description = input.Description,
                 CoverImageLink = (input.CoverImageLink == "" || input.CoverImageLink == null) ? "/images/no_image.png" : input.CoverImageLink,
+                TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
             };
             dbContext.Movies.Add(movie);
             dbContext.SaveChanges();

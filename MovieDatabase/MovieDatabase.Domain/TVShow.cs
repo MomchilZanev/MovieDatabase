@@ -24,6 +24,8 @@ namespace MovieDatabase.Domain
 
         public string CoverImageLink { get; set; }
 
+        public string TrailerLink { get; set; }
+
         public DateTime FirstAired => Seasons.Any() ? Seasons.First().ReleaseDate : DateTime.MaxValue;
 
         public double OverallRating => Seasons.Any() ? Seasons.Average(season => season.Rating) : 0;

@@ -19,6 +19,8 @@ namespace MovieDatabase.Models.ViewModels.Movie
 
         public string CoverImageLink { get; set; }
 
+        public string TrailerLink { get; set; }
+
         public double Rating { get; set; }
 
         public string Director { get; set; }

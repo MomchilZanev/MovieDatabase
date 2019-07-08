@@ -30,6 +30,8 @@ namespace MovieDatabase.Domain
 
         public string CoverImageLink { get; set; }
 
+        public string TrailerLink { get; set; }
+
         public double Rating => Reviews.Any() ? Reviews.Average(review => review.Rating) : 0;
 
         [Required]

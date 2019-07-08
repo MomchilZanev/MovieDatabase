@@ -85,6 +85,7 @@ namespace MovieDatabase.Services
                 Name = tvShow.Name,
                 Creator = tvShow.Creator.FullName,
                 CoverImageLink = tvShow.CoverImageLink,
+                TrailerLink = tvShow.TrailerLink,
                 Description = tvShow.Description,
                 Genre = tvShow.Genre.Name,
                 Rating = tvShow.OverallRating,
@@ -148,6 +149,7 @@ namespace MovieDatabase.Services
                 Creator = creator,
                 Description = input.Description,
                 CoverImageLink = (input.CoverImageLink == "" || input.CoverImageLink == null) ? "/images/no_image.png" : input.CoverImageLink,
+                TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
             };
             dbContext.TVShows.Add(tvShow);
             dbContext.SaveChanges();

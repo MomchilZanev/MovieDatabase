@@ -17,6 +17,8 @@ namespace MovieDatabase.Models.ViewModels.TVShow
 
         public string CoverImageLink { get; set; }
 
+        public string TrailerLink { get; set; }
+
         public double Rating { get; set; }
 
         public string Creator { get; set; }

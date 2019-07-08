@@ -63,14 +63,25 @@
         </div>
     </div>
 
-    <div class="mt-3 mb-3 col-8">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control mb-2" rows="10" placeholder="Short summary"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-12">
+            <label asp-for="TrailerLink"></label>
+            <input asp-for="TrailerLink" class="form-control mb-2" placeholder="https://www.youtube.com/embed/VIDEO_ID">
+            <span asp-validation-for="TrailerLink" class="text-danger"></span>
+        </div>
     </div>
 
-    <div class="mt-3 mb-3 col-8">
-        <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-12" value="Create" />
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-12">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control mb-2" rows="10" placeholder="Short summary"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-12">
+            <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-12" value="Create" />
+        </div>
     </div>
 </form>
 

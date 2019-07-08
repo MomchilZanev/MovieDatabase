@@ -28,7 +28,10 @@ namespace MovieDatabase.Models.InputModels.Movie
 
         [Display(Name = "Cover Image Link")]
         public string CoverImageLink { get; set; }
-        
+
+        [Display(Name = "Trailer Link")]
+        public string TrailerLink { get; set; }
+
         [Required]
         public string Director { get; set; }
     }

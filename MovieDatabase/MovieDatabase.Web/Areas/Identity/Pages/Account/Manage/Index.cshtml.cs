@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieDatabase.Domain;
 using MovieDatabase.Services.Contracts;
 using Microsoft.AspNetCore.Identity;
+using MovieDatabase.Web.CustomValidationAttributes;
 
 namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -55,6 +56,7 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
+            [MaxFileSize(64000, ErrorMessage = "Maximum allowed file size is {0} bytes")]
             public IFormFile Avatar { get; set; }
         }
 

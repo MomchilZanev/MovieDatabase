@@ -7,12 +7,12 @@
 @foreach (var artist in Model)
 {
     <div class="row">
-        <div class="col-3">
-            <a href="/Artists/Details/@artist.Id"><img class="rounded" src="@artist.PhotoLink" height="310" width="240"></a>
+        <div class="col-2">
+            <a href="/Artists/Details/@artist.Id"><img class="rounded" src="@artist.PhotoLink" height="275" width="200"></a>
         </div>
-        <div class="col-9 text-warning">
-            <a href="/Artists/Details/@artist.Id" class="text-warning"><h1>@artist.FullName</h1></a>
-            <font class="font-weight-light" size="6">@artist.Biography</font>
+        <div class="col-10 text-warning">
+            <h2><a href="/Artists/Details/@artist.Id" class="text-warning ml-4">@artist.FullName</a></h2>
+            <p class="font-weight-light text-warning ml-4" style="font-size: larger">@artist.Biography</p>
         </div>
     </div>
     <br />

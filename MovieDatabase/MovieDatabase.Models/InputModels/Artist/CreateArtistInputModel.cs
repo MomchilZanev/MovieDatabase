@@ -14,7 +14,7 @@ namespace MovieDatabase.Models.InputModels.Artist
         public DateTime BirthDate { get; set; }
 
         [Required]
-        [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 25)]
+        [StringLength(10000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 25)]
         public string Biography { get; set; }
 
         [Display(Name = "Photo Link")]

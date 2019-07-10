@@ -10,32 +10,40 @@
     ViewData["Title"] = "All TV Shows";
 }
 
-<div class="row">
-    <div class="col-10"></div>
-    <div class="btn-group dropleft col-2">
-        <button type="button" class="btn btn-secondary btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Filter by Genre
-        </button>
-        <div class="dropdown-menu">
-            @foreach (var genre in ViewBag.Genres)
-            {
-                var query = "?genreFilter=" + @genre;
-                if (@Context.Request.QueryString.ToString() != "" && @Context.Request.QueryString.ToString().Split('=').First() == "?orderBy")
+    <div class="row">
+        <div class="btn-group dropleft col-2">
+            <button type="button" class="btn btn-secondary btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Filter by Genre
+            </button>
+            <div class="dropdown-menu">
+                @if (Context.Request.QueryString.ToString().Split('&').Count() == 1)
                 {
-                    query = Context.Request.QueryString.ToString().Split('&').First() + "&genreFilter=" + @genre;
+                    <a class="dropdown-item" href="@Context.Request.Path">None</a>
                 }
-                <a class="dropdown-item" href="@Context.Request.Path@query">@genre</a>
-            }
+                else
+                {
+                    <a class="dropdown-item" href="@Context.Request.Path@Context.Request.QueryString.ToString().Split('&').First()">None</a>
+                }
+                @foreach (var genre in ViewBag.Genres)
+                {
+                    var query = "?genreFilter=" + @genre;
+                    if (@Context.Request.QueryString.ToString() != "" && @Context.Request.QueryString.ToString().Split('=').First() == "?orderBy")
+                    {
+                        query = Context.Request.QueryString.ToString().Split('&').First() + "&genreFilter=" + @genre;
+                    }
+                    <a class="dropdown-item" href="@Context.Request.Path@query">@genre</a>
+                }
+            </div>
         </div>
+        <div class="col-10"></div>
     </div>
-</div>
 
 <table class="table w-100 text-warning table-borderless table-striped">
     <thead>
         <tr class="text-left">
             <th class="align-middle" style="width: 12%"></th>
-            <th class="align-middle" style="width: 68%"><font size="6">Title</font></th>
-            <th class="align-middle" style="width: 10%"><font size="6">Rating</font></th>
+            <th class="align-middle" style="width: 68%"><font class="font-weight-light" size="6">Title</font></th>
+            <th class="align-middle" style="width: 10%"><font class="font-weight-light" size="6">Rating</font></th>
             <th class="align-middle" style="width: 10%"></th>
 
         </tr>
@@ -48,16 +56,15 @@
                     <a href="/TVShows/Details/@tvShow.Id"><img src="@tvShow.CoverImageLink" height="150" width="110"></a>
                 </td>
                 <td class="align-middle">
-                    <a class="text-warning" href="/TVShows/Details/@tvShow.Id"><font size="6"><span>@tvShow.Name</span></font></a>
+                    <a class="text-warning font-weight-light" href="/TVShows/Details/@tvShow.Id"><font size="6"><span>@tvShow.Name</span></font></a>
                 </td>
                 <td class="align-middle text-center">
-                    <font size="6"><span>@tvShow.Rating</span></font><br />
+                    <font class="font-weight-light" size="6"><span>@tvShow.Rating</span></font><br />
                 </td>
                 <td class="align-middle">
                     @if (tvShow.Watchlisted && SignInManager.IsSignedIn(User))
                     {
                         <a href="/Watchlist/AddRemove/@tvShow.Id" class="text-warning"><img src="~/icons/bookmark_true.svg" height="50" /><br /></a>
-                        @*<a href="/Watchlist/AddRemove/@tvShow.Id" class="text-warning"><object type="image/svg+xml" data="~/items/bookmark_false.svg" height="50">Bookmark icon</object><br /></a>*@
                     }
                     else if (SignInManager.IsSignedIn(User))
                     {

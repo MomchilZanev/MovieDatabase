@@ -56,7 +56,7 @@ namespace MovieDatabase.Services
                     Id = a.Id,
                     FullName = a.FullName,
                     PhotoLink = a.PhotoLink,
-                    Biography = a.Biography.Substring(0, Math.Min(260, a.Biography.Length)) + "....",
+                    Biography = a.Biography.Substring(0, Math.Min(800, a.Biography.Length)) + "....",
                     BirthDate = a.BirthDate,
                     CareerProjects = a.MovieRoles.Count() + a.SeasonRoles.Count() + a.MoviesDirected.Count() + a.TVShowsCreated.Count(),
                 })

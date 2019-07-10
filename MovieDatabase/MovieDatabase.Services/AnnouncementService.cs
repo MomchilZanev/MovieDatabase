@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using MovieDatabase.Data;
+﻿using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Announcement;
 using MovieDatabase.Models.ViewModels.Announcement;
 using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace MovieDatabase.Services
@@ -26,9 +24,11 @@ namespace MovieDatabase.Services
                 .Select(a => new AnnouncementViewModel
                 {
                     Title = a.Title,
-                    Content = a.Content.Substring(0, 500) + "....",
+                    Content = a.Content + "....",
                     ImageLink = a.ImageLink,
-                    Date = a.Date
+                    Date = a.Date,
+                    Creator = a.Creator,
+                    OfficialArticleLink = a.OfficialArticleLink,
                 })
                 .OrderBy(a => a.Date)
                 .ToList();

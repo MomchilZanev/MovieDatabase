@@ -6,13 +6,17 @@
 
 @foreach (var announcement in Model)
 {
-    <h1 class="text-warning text-justify">@announcement.Title @announcement.Date</h1>
+    <h3><a href="@announcement.OfficialArticleLink" class="text-warning">@announcement.Title</a></h3>
+    <h6 class="text-warning font-italic mt-2 mb-3">
+        | @announcement.Date.ToString("dddd, dd MMMM yyyy") | by @announcement.Creator | 
+    </h6>
     <div class="row">
-        <div class="col-3">
-            <img class="rounded" src="@announcement.ImageLink" height="310" width="210">
+        <div class="col-2">
+            <img class="rounded" src="@announcement.ImageLink" height="295" width="200">
         </div>
-        <div class="col-9 text-warning">
-            <font class="font-weight-light" size="6">@announcement.Content</font>
+        <div class="col-10">
+            <p class="font-weight-light text-warning ml-4" style="font-size: larger">@announcement.Content</p>
+            <a class="text-warning font-weight-bold ml-4" href="@announcement.OfficialArticleLink">See original article:</a>
         </div>
     </div>
     <br />

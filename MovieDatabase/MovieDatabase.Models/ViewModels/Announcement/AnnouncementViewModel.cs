@@ -11,5 +11,9 @@ namespace MovieDatabase.Models.ViewModels.Announcement
         public string ImageLink { get; set; }
 
         public DateTime Date { get; set; }
+
+        public string Creator { get; set; }
+
+        public string OfficialArticleLink { get; set; }
     }
 }

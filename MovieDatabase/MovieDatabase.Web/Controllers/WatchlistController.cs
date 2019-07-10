@@ -44,7 +44,7 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult AddRemove(string id)
+        public IActionResult AddRemove(string id, string returnQuery)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -64,7 +64,7 @@ namespace MovieDatabase.Web.Controllers
                 }
             }
 
-            return Redirect($"/{controller}/All");
+            return Redirect($"/{controller}/All" + returnQuery);
         }
     }
 }

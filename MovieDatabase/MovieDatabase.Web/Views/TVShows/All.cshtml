@@ -59,7 +59,7 @@
                     <a class="text-warning font-weight-light" href="/TVShows/Details/@tvShow.Id"><font size="6"><span>@tvShow.Name</span></font></a>
                 </td>
                 <td class="align-middle text-center">
-                    <font class="font-weight-light" size="6"><span>@tvShow.Rating</span></font><br />
+                    <font class="font-weight-light" size="6"><span>@tvShow.Rating.ToString("F1")</span></font><br />
                 </td>
                 <td class="align-middle">
                     @if (tvShow.Watchlisted && SignInManager.IsSignedIn(User))

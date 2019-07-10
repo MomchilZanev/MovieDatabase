@@ -13,6 +13,11 @@ namespace MovieDatabase.Web.CustomValidationAttributes
 
         public override bool IsValid(object value)
         {
+            if (value == null)
+            {
+                return true; //service doesn't update avatar if value is null
+            }
+
             var file = value as IFormFile;
             
             return file.Length <= _maxFileSize;

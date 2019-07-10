@@ -110,7 +110,10 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
             }
 
             var avatar = Input.Avatar;
-            await _avatarService.ChangeUserAvatar(user.Id, avatar);
+            if (avatar != null)
+            {
+                await _avatarService.ChangeUserAvatar(user.Id, avatar);
+            }            
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)

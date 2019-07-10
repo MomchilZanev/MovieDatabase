@@ -106,7 +106,7 @@ namespace MovieDatabase.Services
                 {
                     Id = x.MovieId,
                     Name = x.Movie.Name,
-                    Description = x.Movie.Description.Substring(0, Math.Min(250, x.Movie.Description.Length)) + "....",
+                    Description = x.Movie.Description.Substring(0, Math.Min(500, x.Movie.Description.Length)) + "....",
                     CoverImageLink = x.Movie.CoverImageLink,
                     ReleaseDate = x.Movie.ReleaseDate,
                     Rating = x.Movie.Rating,
@@ -123,7 +123,7 @@ namespace MovieDatabase.Services
                 {
                     Id = x.TVShowId,
                     Name = x.TVShow.Name,
-                    Description = x.TVShow.Description.Substring(0, Math.Min(250, x.TVShow.Description.Length)) + "....",
+                    Description = x.TVShow.Description.Substring(0, Math.Min(500, x.TVShow.Description.Length)) + "....",
                     CoverImageLink = x.TVShow.CoverImageLink,
                     ReleaseDate = x.TVShow.FirstAired,
                     Rating = x.TVShow.OverallRating,

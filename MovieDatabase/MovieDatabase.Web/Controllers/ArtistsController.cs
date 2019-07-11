@@ -21,6 +21,13 @@ namespace MovieDatabase.Web.Controllers
             return View(artistDetailsViewModel);
         }
 
+        public IActionResult FullBio(string id)
+        {
+            var artistDetailsViewModel = artistService.GetArtistAndDetailsById(id);
+            //TODO: Make dedicated method in service
+            return View(artistDetailsViewModel);
+        }
+
         public IActionResult All(string orderBy)
         {
             var allArtists = artistService.GetAllArtistsAndOrder(orderBy);

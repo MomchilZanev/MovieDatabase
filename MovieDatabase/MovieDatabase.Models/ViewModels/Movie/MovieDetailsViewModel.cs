@@ -27,7 +27,9 @@ namespace MovieDatabase.Models.ViewModels.Movie
 
         public List<MovieCastViewModel> Cast { get; set; }
 
-        public List<MovieReviewViewModel> Reviews { get; set; }
+        public MovieReviewViewModel RandomReview { get; set; }
+
+        public int ReviewsCount { get; set; }
 
         public bool IsReviewedByCurrentUser { get; set; }
     }

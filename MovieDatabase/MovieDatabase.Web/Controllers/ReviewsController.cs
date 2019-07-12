@@ -15,6 +15,20 @@ namespace MovieDatabase.Web.Controllers
             this.reviewService = reviewService;
         }
 
+        public IActionResult All(string id)
+        {
+            bool isValidId = reviewService.IsValidMovieOrSeasonId(id);
+
+            if (isValidId)
+            {
+                var allReviews = reviewService.GetAllMovieOrSeasonReviews(id);
+
+                return View(allReviews);
+            }
+
+            return Redirect("/Home/Index");
+        }
+
         [Authorize]
         public IActionResult Create(string id)
         {

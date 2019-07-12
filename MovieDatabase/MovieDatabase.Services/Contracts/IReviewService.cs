@@ -1,4 +1,6 @@
 ﻿using MovieDatabase.Models.InputModels.Review;
+using MovieDatabase.Models.ViewModels.Review;
+using System.Collections.Generic;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -7,6 +9,8 @@ namespace MovieDatabase.Services.Contracts
         bool IsValidMovieOrSeasonId(string itemId);
 
         bool ReviewExists(string userId, string itemId);
+
+        List<ReviewAllViewModel> GetAllMovieOrSeasonReviews(string itemId);
 
         CreateReviewInputModel GetUserReview(string userId, string itemId);
 

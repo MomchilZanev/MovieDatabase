@@ -79,7 +79,23 @@ namespace MovieDatabase.Services
         public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId = null)
         {
             var movie = dbContext.Movies.Find(movieId);
-            
+
+            var randomReview = new MovieReviewViewModel();
+
+            if (movie.Reviews.Count > 0)
+            {
+                Random rnd = new Random();
+                int reviewIndex = rnd.Next(0, movie.Reviews.Count());
+
+                var reviewFromDb = movie.Reviews.ToList()[reviewIndex];
+
+                randomReview.Movie = reviewFromDb.Movie.Name;
+                randomReview.User = reviewFromDb.User.UserName;
+                randomReview.Content = reviewFromDb.Content;
+                randomReview.Rating = reviewFromDb.Rating;
+                randomReview.Date = reviewFromDb.Date;
+            }            
+
             var movieDetailsViewModel = new MovieDetailsViewModel
             {
                 Id = movie.Id,
@@ -97,15 +113,9 @@ namespace MovieDatabase.Services
                     Actor = x.Artist.FullName,
                     MovieCharacter = x.CharacterPlayed,
                 }).ToList(),
-                Reviews = movie.Reviews.Select(x => new MovieReviewViewModel
-                {
-                    Movie = movie.Name,
-                    User = x.User.UserName,
-                    Content = x.Content,
-                    Rating = x.Rating,
-                    Date = x.Date,
-                }).ToList(),
+                RandomReview = randomReview,
                 IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movie.Id),
+                ReviewsCount = movie.Reviews.Count(),
             };
 
             return movieDetailsViewModel;

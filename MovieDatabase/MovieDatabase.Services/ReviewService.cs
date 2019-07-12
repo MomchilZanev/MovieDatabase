@@ -1,8 +1,10 @@
 ﻿using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Review;
+using MovieDatabase.Models.ViewModels.Review;
 using MovieDatabase.Services.Contracts;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MovieDatabase.Services
@@ -35,6 +37,40 @@ namespace MovieDatabase.Services
             }
 
             return false;
+        }
+
+        public List<ReviewAllViewModel> GetAllMovieOrSeasonReviews(string itemId)
+        {
+            if (dbContext.MovieReviews.Any(mr => mr.MovieId == itemId))
+            {
+                var movieReviews = dbContext.MovieReviews
+                    .Where(mr => mr.MovieId == itemId).Select(mr => new ReviewAllViewModel
+                    {
+                        User = mr.User.UserName,
+                        Item = mr.Movie.Name,
+                        Content = mr.Content,
+                        Rating = mr.Rating,
+                        Date = mr.Date,
+                    }).ToList();
+
+                return movieReviews;
+            }
+            else if (dbContext.SeasonReviews.Any(sr => sr.SeasonId == itemId))
+            {
+                var seasonReviews = dbContext.SeasonReviews
+                    .Where(sr => sr.SeasonId == itemId).Select(sr => new ReviewAllViewModel
+                    {
+                        User = sr.User.UserName,
+                        Item = sr.Season.TVShow.Name + " Season" + sr.Season.SeasonNumber,
+                        Content = sr.Content,
+                        Rating = sr.Rating,
+                        Date = sr.Date,
+                    }).ToList();
+
+                return seasonReviews;
+            }
+
+            return new List<ReviewAllViewModel>();
         }
 
         public CreateReviewInputModel GetUserReview(string userId, string itemId)
@@ -159,6 +195,6 @@ namespace MovieDatabase.Services
             }
 
             return "Error";
-        }
+        }        
     }
 }

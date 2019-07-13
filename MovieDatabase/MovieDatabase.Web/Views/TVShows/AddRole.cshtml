@@ -5,7 +5,7 @@
 }
 <link rel="stylesheet" type="text/css" href="~/css/style.css">
 
-<h2 class="text-warning text-center mb-3 mt-4 ml-3">Add Role</h2>
+<h2 class="text-warning text-center mb-2 mt-4 ml-3">Add Role</h2>
 
 <form asp-controller="TVShows" asp-action="AddRole" method="post" class="text-warning">
 
@@ -16,7 +16,7 @@
 
     <div class="row">
         <div class="col-3"></div>
-        <div class="mt-3 mb-3 col-6">
+        <div class="mb-3 col-6">
             <label asp-for="SeasonId"></label>
             <select asp-for="SeasonId" class="form-control mb-2" placeholder="Movie Name">
                 @foreach (var season in ViewBag.Seasons)

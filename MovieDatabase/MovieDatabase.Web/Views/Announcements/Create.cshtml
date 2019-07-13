@@ -6,12 +6,15 @@
 
 <link rel="stylesheet" type="text/css" href="~/css/style.css">
 
-<h2 class="text-warning mb-4">Create Announcement</h2>
+<h2 class="text-warning mb-3">Create Announcement</h2>
+
+<hr class="col-4 mt-2" style="height:3px;border:none;background-color:goldenrod;width:340px;" />
+
 <form asp-controller="Announcements" asp-action="Create" method="post" enctype="multipart/form-data" class="text-warning">
 
-    <div asp-validation-summary="All" class="text-danger"></div>
+    <div asp-validation-summary="All" class="text-danger ml-4"></div>
 
-    <div class="mt-3 mb-3">
+    <div class="mt-1 mb-3">
         <label asp-for="Creator"></label>
         <input asp-for="Creator" class="form-control col-4 mb-2" placeholder="Article creator">
         <span asp-validation-for="Creator" class="text-danger"></span>
@@ -31,15 +34,17 @@
 
     <div class="mt-3 mb-3">
         <label asp-for="OfficialArticleLink"></label>
-        <input asp-for="OfficialArticleLink" class="form-control col-6 mb-2" placeholder="Link to official article">
+        <input asp-for="OfficialArticleLink" class="form-control col-6 mb-3" placeholder="Link to official article">
         <span asp-validation-for="OfficialArticleLink" class="text-danger"></span>
     </div>
 
-    <div class="mt-3 mb-3">
+    <div class="mt-3 mb-4">
         <label asp-for="ImageLink"></label>
         <input asp-for="ImageLink" class="form-control col-6 mb-2" placeholder="Provide an image if available">
         <span asp-validation-for="ImageLink" class="text-danger"></span>
     </div>
+
+    <hr class="col-6 mt-4 mb-2" style="height:3px;border:none;background-color:goldenrod; width:525px" />
 
     <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-6" value="Create" />
 </form>

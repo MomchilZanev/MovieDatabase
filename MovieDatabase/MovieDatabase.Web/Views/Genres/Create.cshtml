@@ -6,15 +6,19 @@
 
 <link rel="stylesheet" type="text/css" href="~/css/style.css">
 
-<h2 class="text-warning text-center mt-4 mb-4">Add new genre</h2>
+<h2 class="text-warning text-center mt-4 mb-2">Add new genre</h2>
 
 <form asp-controller="Genres" asp-action="Create" method="post" class="text-warning text-center">
 
-    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-4"></div>
+        <div asp-validation-summary="All" class="col-4 text-danger"></div>
+    </div>
+    
 
     <div class="row">
         <div class="col-4"></div>
-        <div class="mt-3 mb-3 col-4">
+        <div class="mt-1 mb-3 col-4">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control mb-2" placeholder="Genre name">
             <span asp-validation-for="Name" class="text-danger"></span>

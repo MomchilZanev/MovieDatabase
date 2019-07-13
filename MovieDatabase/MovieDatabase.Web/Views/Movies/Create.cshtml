@@ -5,20 +5,21 @@
 }
 <link rel="stylesheet" type="text/css" href="~/css/style.css">
 
-<h2 class="text-warning mb-3 mt-4 ml-3">Create Movie</h2>
+<h2 class="text-warning mt-4 ml-3">Create Movie</h2>
+<hr class="col-7 ml-3 mt-2" style="height:3px;border:none;background-color:goldenrod;" />
 
 <form asp-controller="Movies" asp-action="Create" method="post" class="text-warning">
 
     <div asp-validation-summary="All" class="text-danger ml-5"></div>
 
     <div class="row col-8 d-flex justify-content-between">
-        <div class="mt-3 mb-3 col-8">
+        <div class="mb-3 col-8">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control mb-2" placeholder="Movie name">
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
-        <div class="mt-3 mb-3 col-4">
+        <div class="mb-3 col-4">
             <label asp-for="Length"></label>
             <input asp-for="Length" type="number" placeholder="Movie length" class="form-control mb-2">
             <span asp-validation-for="Length" class="text-danger"></span>
@@ -72,14 +73,18 @@
     </div>
 
     <div class="row col-8 d-flex justify-content-between">
-        <div class="mt-3 mb-3 col-12">
+        <div class="mt-3 col-12">
             <label asp-for="Description"></label>
             <textarea asp-for="Description" class="form-control mb-2" rows="10" placeholder="Short summary"></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
     </div>
+
+    
+
     <div class="row col-8 d-flex justify-content-between">
         <div class="mt-3 mb-3 col-12">
+            <hr class="mb-1 mt-0" style="height:3px;border:none;background-color:goldenrod;" />
             <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-12" value="Create" />
         </div>
     </div>

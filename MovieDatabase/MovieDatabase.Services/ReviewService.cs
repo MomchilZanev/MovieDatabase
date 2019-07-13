@@ -61,7 +61,7 @@ namespace MovieDatabase.Services
                     .Where(sr => sr.SeasonId == itemId).Select(sr => new ReviewAllViewModel
                     {
                         User = sr.User.UserName,
-                        Item = sr.Season.TVShow.Name + " Season" + sr.Season.SeasonNumber,
+                        Item = sr.Season.TVShow.Name + " Season " + sr.Season.SeasonNumber,
                         Content = sr.Content,
                         Rating = sr.Rating,
                         Date = sr.Date,

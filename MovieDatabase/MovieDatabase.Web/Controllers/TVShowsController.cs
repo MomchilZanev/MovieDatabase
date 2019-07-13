@@ -46,7 +46,20 @@ namespace MovieDatabase.Web.Controllers
             var tvShowDetailsViewModel = tvShowService.GetTVShowAndDetailsById(id, userId);
 
             return View(tvShowDetailsViewModel);
-        }        
+        }
+
+        public IActionResult SeasonDetails(string id)
+        {
+            var userId = "";
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+
+            var seasonDetailsViewModel = tvShowService.GetSeasonAndDetailsById(id, userId);
+
+            return View(seasonDetailsViewModel);
+        }
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()

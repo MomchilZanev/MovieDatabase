@@ -7,53 +7,49 @@
     ViewData["Title"] = "TV Show Details";
 }
 
-    <div class="text-center text-warning">
-        <h1>@Model.Name</h1>
-        <h2>Rating @Model.Rating/10</h2>
-        <img src="@Model.CoverImageLink" alt="Cover" height="600" width="400" />
+<h2 class="text-warning">@Model.Name</h2>
 
-        <iframe width="640" height="360" src="@Model.TrailerLink"></iframe>
+<div class="d-flex justify-content-between text-warning ">
+    <h5 class="font-weight-light mb-1"><b class="font-weight-bold">|</b> <i>@Model.FirstAired.ToString("dd MMMM yyyy")</i></h5>
+    <h5 class="font-weight-light mb-1"><i>@Model.Rating.ToString("F1")</i> <span style="color: #ffc700; font-size:x-large">★</span> <b class="font-weight-bold">|</b></h5>
+</div>
 
-        <h3>@Model.FirstAired</h3>
-        <h3>@Model.Creator</h3>
-        <h3>@Model.Genre</h3>
-        <h3>@Model.Description</h3>
-        <h2>Seasons: </h2>
+<hr class="mt-2 mb-3" style="height:3px;border:none;background-color:goldenrod;" />
 
-        @foreach (var season in Model.Seasons)
-        {
-            <h3>@season.TVShow Season: @season.SeasonNumber</h3>
-            <h3>@season.Rating</h3>
-            <h3>@season.ReleaseDate</h3>
-            <h3>@season.Episodes</h3>
-            <h3>@season.LengthPerEpisode</h3>
-
-            <h3>Full Cast:</h3>
-
-            @foreach (var actor in season.Cast)
-            {
-                <h4>@actor.Actor | @actor.TVShowCharacter</h4>
-            }
-
-            @if (SignInManager.IsSignedIn(User))
-            {
-                if (season.IsReviewedByCurrentUser)
-                {
-                    <h3><a href="/Reviews/Create/@season.Id" class="text-warning">Update</a> or <a href="/Reviews/Delete/@season.Id" class="text-warning">Delete</a>  your review.</h3>
-                }
-                else
-                {
-                    <a href="/Reviews/Create/@season.Id" class="text-warning"><h2>Review this Season</h2></a>
-                }
-            }
-
-            <h2>Reviews:</h2>
-
-            @foreach (var review in season.Reviews)
-            {
-                <h3>@review.User Rated @review.Season @review.Rating/10</h3>
-                <h4>@review.Content</h4>
-                <h5>Submitted on: @review.Date</h5>
-            }
-        }
+<div class="row text-warning">
+    <div class="col-3">
+        <img src="@Model.CoverImageLink" class="rounded" alt="Portrait" width="302" height="455" />
     </div>
+    <div class="col-9">
+        <iframe src="@Model.TrailerLink" class="rounded ml-3 border-0" width="810" height="455"></iframe>
+    </div>
+</div>
+
+<hr class="mt-2 mb-3" style="height:3px;border:none;background-color:goldenrod;" />
+
+<div class="text-warning font-weight-light">
+    <h4 class="text-left font-weight-bold" style="font-size:large">
+        Creator: <i class="font-weight-light">@Model.Creator</i>
+    </h4>
+    <h4 class="text-left font-weight-bold" style="font-size:large">
+        Genre: <i class="font-weight-light">@Model.Genre</i>
+    </h4>
+    <h4 class="text-left font-weight-bold" style="font-size:large">
+        Seasons:
+        <i class="font-weight-normal">
+            @foreach (var season in Model.Seasons)
+            {
+                <a href="/TVShows/SeasonDetails/@season.Key" class="text-warning mr-2">@season.Value</a>
+            }
+        </i>
+    </h4>
+    <h4 class="text-left font-weight-bold" style="font-size:large">
+        Episodes: <i class="font-weight-light">@Model.Episodes</i>
+    </h4>
+
+    <p class="text-left" style="font-size:large">
+        @Model.Description
+    </p>
+</div>
+
+<hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />

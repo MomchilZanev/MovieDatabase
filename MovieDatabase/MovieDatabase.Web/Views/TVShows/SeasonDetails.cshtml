@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MovieDatabase.Domain
+@inject SignInManager<MovieDatabaseUser> SignInManager
+@model MovieDatabase.Models.ViewModels.TVShow.SeasonDetailsViewModel
+
+@{
+    ViewData["Title"] = "Season Details";
+}
+
+<h2 class="text-warning">@Model.TVShow Season @Model.SeasonNumber</h2>
+
+<div class="d-flex justify-content-between text-warning ">
+    <h5 class="font-weight-light mb-1"><b class="font-weight-bold">|</b> <i>@Model.ReleaseDate.ToString("dd MMMM yyyy")</i></h5>
+    <h5 class="font-weight-light mb-1"><i>@Model.Rating.ToString("F1")</i> <span style="color: #ffc700; font-size:x-large">★</span> <b class="font-weight-bold">|</b></h5>
+</div>
+
+<hr class="mt-2 mb-3" style="height:3px;border:none;background-color:goldenrod;" />
+
+<div class="text-warning font-weight-light">
+    <h4 class="text-left font-weight-bold" style="font-size:large">
+        Episodes: <i class="font-weight-light">@Model.Episodes</i>
+    </h4>
+    <h4 class="text-left font-weight-bold" style="font-size:large">
+        Episode Length: <i class="font-weight-light">@Model.LengthPerEpisode</i>
+    </h4>
+</div>
+
+<p>
+    <button class="btn btn-primary btn-dark btn-outline-warning col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        <span class="font-weight-bold" style="font-size:larger">Full Cast:</span>
+    </button>
+</p>
+<div class="collapse" id="collapseExample">
+    <div class="card card-body bg-dark text-warning border-warning">
+        <table class="my-0 table table-striped table-borderless text-warning ">
+            @foreach (var role in Model.Cast)
+            {
+                <tr>
+                    <td><h5 class="font-weight-light mx-2">@role.Actor</h5></td>
+                    <td><h5 class="font-weight-light mx-2">@role.TVShowCharacter</h5></td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />
+
+@if (!string.IsNullOrEmpty(Model.RandomReview.User))
+{
+    <div class="text-justify text-warning mt-2">
+        <h5 class="mb-0">User Review</h5>
+        <h5 style="color: #ffc700; font-size:x-large">★ <span style="font-size:large">@Model.RandomReview.Rating</span><span style="font-size:small">/10</span></h5>
+        <h5 style="font-size:medium">@Model.RandomReview.Date.ToString("dd MMMM yyyy") | by @Model.RandomReview.User</h5>
+
+        <div style="white-space: pre-wrap; font-size:large;" class="font-weight-light text-warning text-left mt-2 mb-1">@Model.RandomReview.Content</div>
+
+        <a href="/Reviews/All/@Model.Id" class="text-warning font-weight-bold">See all @Model.ReviewsCount user reviews >></a>
+    </div>
+
+    <hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />
+}
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    if (Model.IsReviewedByCurrentUser)
+    {
+        <h4 class="text-warning text-center"><a href="/Reviews/Create/@Model.Id" class="text-warning">Update</a> or <a href="/Reviews/Delete/@Model.Id" class="text-warning">Delete</a>  your review.</h4>
+    }
+    else
+    {
+        <h4 class="text-warning text-center"><a href="/Reviews/Create/@Model.Id" class="text-warning">Review this movie</a></h4>
+    }
+
+    <hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />
+}

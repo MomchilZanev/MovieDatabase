@@ -90,38 +90,62 @@ namespace MovieDatabase.Services
                 Genre = tvShow.Genre.Name,
                 Rating = tvShow.OverallRating,
                 FirstAired = tvShow.FirstAired,
-                Seasons = new List<SeasonDetailsViewModel>(),
+                Seasons = new Dictionary<string, int>(),
+                Episodes = tvShow.Seasons.Sum(s => s.Episodes),
             };
 
             if (tvShow.Seasons.Any())
             {
-                tvShowDetailsViewModel.Seasons = tvShow.Seasons.Select(s => new SeasonDetailsViewModel
+                foreach (var season in tvShow.Seasons.OrderBy(s => s.SeasonNumber))
                 {
-                    Id = s.Id,
-                    TVShow = tvShow.Name,
-                    SeasonNumber = s.SeasonNumber,
-                    Episodes = s.Episodes,
-                    LengthPerEpisode = s.LengthPerEpisode,
-                    Rating = s.Rating,
-                    ReleaseDate = s.ReleaseDate,
-                    Cast = s.Cast.Select(a => new SeasonCastViewModel
-                    {
-                        Actor = a.Artist.FullName,
-                        TVShowCharacter = a.CharacterPlayed,
-                    }).ToList(),
-                    Reviews = s.Reviews.Select(r => new SeasonReviewViewModel
-                    {
-                        Season = s.SeasonNumber,
-                        User = r.User.UserName,
-                        Content = r.Content,
-                        Date = r.Date,
-                        Rating = r.Rating,
-                    }).ToList(),
-                    IsReviewedByCurrentUser = reviewService.ReviewExists(userId, s.Id),
-                }).ToList();
-            }
+                    tvShowDetailsViewModel.Seasons.Add(season.Id, season.SeasonNumber);
+                }
+            }            
 
             return tvShowDetailsViewModel;
+        }
+
+        public SeasonDetailsViewModel GetSeasonAndDetailsById(string seasonId, string userId)
+        {
+            var season = dbContext.Seasons.Find(seasonId);
+
+            var randomReview = new SeasonReviewViewModel();
+
+            if (season.Reviews.Count > 0)
+            {
+                Random rnd = new Random();
+                int reviewIndex = rnd.Next(0, season.Reviews.Count());
+
+                var reviewFromDb = season.Reviews.ToList()[reviewIndex];
+
+                randomReview.TVShow = season.TVShow.Name;
+                randomReview.Season = season.SeasonNumber;
+                randomReview.User = reviewFromDb.User.UserName;
+                randomReview.Content = reviewFromDb.Content;
+                randomReview.Rating = reviewFromDb.Rating;
+                randomReview.Date = reviewFromDb.Date;
+            }
+
+            var seasonDetailsViewModel = new SeasonDetailsViewModel
+            {
+                Id = season.Id,
+                TVShow = season.TVShow.Name,
+                SeasonNumber = season.SeasonNumber,
+                Episodes = season.Episodes,
+                LengthPerEpisode = season.LengthPerEpisode,
+                Rating = season.Rating,
+                ReleaseDate = season.ReleaseDate,
+                Cast = season.Cast.Select(actor => new SeasonCastViewModel
+                {
+                    Actor = actor.Artist.FullName,
+                    TVShowCharacter = actor.CharacterPlayed,
+                }).ToList(),
+                RandomReview = randomReview,
+                ReviewsCount = season.Reviews.Count(),
+                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, season.Id),
+            };
+
+            return seasonDetailsViewModel;
         }
 
         public bool CreateTVShow(CreateTVShowInputModel input)
@@ -221,6 +245,6 @@ namespace MovieDatabase.Services
             dbContext.SaveChanges();
 
             return true;
-        }
+        }        
     }
 }

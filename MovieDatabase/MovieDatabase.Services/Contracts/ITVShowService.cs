@@ -10,6 +10,8 @@ namespace MovieDatabase.Services.Contracts
 
         TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId);
 
+        SeasonDetailsViewModel GetSeasonAndDetailsById(string seasonId, string userId);
+
         bool CreateTVShow(CreateTVShowInputModel input);
 
         bool AddSeasonToTVShow(AddSeasonInputModel input);

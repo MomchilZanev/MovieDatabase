@@ -23,6 +23,8 @@ namespace MovieDatabase.Models.ViewModels.TVShow
 
         public string Creator { get; set; }
 
-        public List<SeasonDetailsViewModel> Seasons { get; set; }
+        public Dictionary<string, int> Seasons { get; set; }
+
+        public int Episodes { get; set; }
     }
 }

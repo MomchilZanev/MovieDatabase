@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Create Movie";
 }
-<link rel="stylesheet" type="text/css" href="~/css/style.css">
 
 <h2 class="text-warning mt-4 ml-3">Create Movie</h2>
 <hr class="col-7 ml-3 mt-2" style="height:3px;border:none;background-color:goldenrod;" />
@@ -32,7 +31,7 @@
             <select asp-for="Director" class="form-control mb-2" placeholder="Director">
                 @foreach (var director in ViewBag.Directors)
                 {
-                    <option value="@director">@director</option>
+                <option value="@director">@director</option>
                 }
             </select>
             <span asp-validation-for="Director" class="text-danger"></span>
@@ -43,7 +42,7 @@
             <select asp-for="Genre" class="form-control mb-2" placeholder="Artists biography">
                 @foreach (var genre in ViewBag.Genres)
                 {
-                    <option value="@genre">@genre</option>
+                <option value="@genre">@genre</option>
                 }
             </select>
             <span asp-validation-for="Genre" class="text-danger"></span>
@@ -53,9 +52,10 @@
     <div class="row col-8 d-flex justify-content-between">
         <div class="mt-3 mb-3 col-4">
             <label asp-for="ReleaseDate"></label>
-            <input asp-for="ReleaseDate" type="date" class="form-control mb-2">
+            <input asp-for="ReleaseDate" type="text" class="form-control mb-2" placeholder="Release date">
             <span asp-validation-for="ReleaseDate" class="text-danger"></span>
         </div>
+
 
         <div class="mt-3 mb-3 col-8">
             <label asp-for="CoverImageLink"></label>
@@ -80,8 +80,6 @@
         </div>
     </div>
 
-    
-
     <div class="row col-8 d-flex justify-content-between">
         <div class="mt-3 mb-3 col-12">
             <hr class="mb-1 mt-0" style="height:3px;border:none;background-color:goldenrod;" />
@@ -90,6 +88,16 @@
     </div>
 </form>
 
+<script>
+    jQuery('#ReleaseDate').datetimepicker(
+        {
+            theme: 'dark',
+            timepicker: false,
+            format: 'd.m.Y',
+        });
+</script>
+
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+
+<partial name="_ValidationScriptsPartial" />
 }

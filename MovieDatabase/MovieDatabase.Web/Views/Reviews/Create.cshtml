@@ -4,13 +4,9 @@
     ViewData["Title"] = "Create Review";
 }
 
-<link rel="stylesheet" type="text/css" href="~/css/style.css">
-
 <h2 class="text-warning mb-4">Post Review</h2>
 
 <form asp-controller="Reviews" asp-action="Create" method="post" class="text-warning">
-
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
 
     <label asp-for="Rating"></label>
     <br />
@@ -41,11 +37,6 @@
     <br />
 
     <span asp-validation-for="Rating" class="text-danger"></span>
-    @*<div class="mb-3">
-        <label asp-for="Rating"></label>
-        <input type="number" asp-for="Rating" class="form-control col-2 mb-1" />
-        <span asp-validation-for="Rating" class="text-danger"></span>
-    </div>*@
 
     <div class="mt-3 mb-3">
         <label asp-for="Content"></label>

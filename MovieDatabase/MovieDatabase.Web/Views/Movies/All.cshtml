@@ -11,33 +11,7 @@
     ViewData["Title"] = "All Movies";
 }
 
-<div class="row">
-    <div class="btn-group dropleft col-2">
-        <button type="button" class="btn btn-secondary btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Filter by Genre
-        </button>
-        <div class="dropdown-menu bg-dark" role="menu">
-            @if (Context.Request.QueryString.ToString().Split('&').Count() == 1)
-            {
-                <a class="nav-link text-warning" href="@Context.Request.Path">None</a>
-            }
-            else
-            {
-                <a class="nav-link text-warning" href="@Context.Request.Path@Context.Request.QueryString.ToString().Split('&').First()">None</a>
-            }
-            @foreach (var genre in ViewBag.Genres)
-            {
-                var query = "?genreFilter=" + @genre;
-                if (@Context.Request.QueryString.ToString() != "" && @Context.Request.QueryString.ToString().Split('=').First() == "?orderBy")
-                {
-                    query = Context.Request.QueryString.ToString().Split('&').First() + "&genreFilter=" + @genre;
-                }
-                <a class="nav-link text-warning" href="@Context.Request.Path@query">@genre</a>
-            }
-        </div>
-    </div>
-    <div class="col-10"></div>
-</div>
+<partial name="_GenreFilterPartial" />
 
 <table class="table w-100 text-warning table-borderless table-striped">
     <thead>

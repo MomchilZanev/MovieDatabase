@@ -18,29 +18,45 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
+        public ArtistFullBioViewModel GetArtistFullBioById(string artistId)
+        {
+            var artistFromDb = dbContext.Artists.Find(artistId);
+
+            var artistDetailsViewModel = new ArtistFullBioViewModel
+            {
+                Id = artistFromDb.Id,
+                FullName = artistFromDb.FullName,
+                BirthDate = artistFromDb.BirthDate,
+                Biography = artistFromDb.Biography,
+                PhotoLink = artistFromDb.PhotoLink,
+            };
+
+            return artistDetailsViewModel;
+        }
+
         public ArtistDetailsViewModel GetArtistAndDetailsById(string artistId)
         {
-            var artist = dbContext.Artists.Find(artistId);
+            var artistFromDb = dbContext.Artists.Find(artistId);
 
             var artistDetailsViewModel = new ArtistDetailsViewModel
             {
-                Id = artist.Id,
-                FullName = artist.FullName,
-                BirthDate = artist.BirthDate,
-                Biography = artist.Biography,
-                PhotoLink = artist.PhotoLink,
-                MoviesDirected = artist.MoviesDirected.Select(m => m.Name).ToList(),
-                TVShowsCreated = artist.TVShowsCreated.Select(t => t.Name).ToList(),
+                Id = artistFromDb.Id,
+                FullName = artistFromDb.FullName,
+                BirthDate = artistFromDb.BirthDate,
+                Biography = artistFromDb.Biography,
+                PhotoLink = artistFromDb.PhotoLink,
+                MoviesDirected = artistFromDb.MoviesDirected.Select(m => m.Name).ToList(),
+                TVShowsCreated = artistFromDb.TVShowsCreated.Select(t => t.Name).ToList(),
                 MovieRoles = new Dictionary<string, string>(),
                 SeasonRoles = new Dictionary<string, string>(),
             };
 
-            foreach (var movieRole in artist.MovieRoles)
+            foreach (var movieRole in artistFromDb.MovieRoles)
             {
                 artistDetailsViewModel.MovieRoles.Add(movieRole.Movie.Name, movieRole.CharacterPlayed);
             }
 
-            foreach (var seasonRole in artist.SeasonRoles)
+            foreach (var seasonRole in artistFromDb.SeasonRoles)
             {
                 artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + " Season " + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
             }
@@ -51,33 +67,33 @@ namespace MovieDatabase.Services
         public List<ArtistAllViewModel> GetAllArtistsAndOrder(string orderBy = null)
         {
             var artistAllViewModel = dbContext.Artists
-                .Select(a => new ArtistAllViewModel
+                .Select(artist => new ArtistAllViewModel
                 {
-                    Id = a.Id,
-                    FullName = a.FullName,
-                    PhotoLink = a.PhotoLink,
-                    Biography = a.Biography.Substring(0, Math.Min(800, a.Biography.Length)) + "....",
-                    BirthDate = a.BirthDate,
-                    CareerProjects = a.MovieRoles.Count() + a.SeasonRoles.Count() + a.MoviesDirected.Count() + a.TVShowsCreated.Count(),
+                    Id = artist.Id,
+                    FullName = artist.FullName,
+                    PhotoLink = artist.PhotoLink,
+                    Biography = artist.Biography.Substring(0, Math.Min(800, artist.Biography.Length)) + "....",
+                    BirthDate = artist.BirthDate,
+                    CareerProjects = artist.MovieRoles.Count() + artist.SeasonRoles.Count() + artist.MoviesDirected.Count() + artist.TVShowsCreated.Count(),
                 })
                 .ToList();
 
             if (orderBy == "youngest")
             {
                 artistAllViewModel = artistAllViewModel
-                    .OrderByDescending(a => a.BirthDate)
+                    .OrderByDescending(artist => artist.BirthDate)
                     .ToList();
             }
             else if (orderBy == "oldest")
             {
                 artistAllViewModel = artistAllViewModel
-                    .OrderBy(a => a.BirthDate)
+                    .OrderBy(artist => artist.BirthDate)
                     .ToList();
             }
             else if (orderBy == "popularity")
             {
                 artistAllViewModel = artistAllViewModel
-                    .OrderByDescending(a => a.CareerProjects)
+                    .OrderByDescending(artist => artist.CareerProjects)
                     .ToList();
             }
 
@@ -86,12 +102,12 @@ namespace MovieDatabase.Services
 
         public bool CreateArtist(CreateArtistInputModel input)
         {
-            if (dbContext.Artists.Any(a => a.FullName == input.FullName && a.Biography == input.Biography && a.BirthDate == a.BirthDate))
+            if (dbContext.Artists.Any(artist => artist.FullName == input.FullName && artist.Biography == input.Biography && artist.BirthDate == artist.BirthDate))
             {
                 return false;
             }
 
-            var artist = new Artist
+            var artistForDb = new Artist
             {
                 FullName = input.FullName,
                 BirthDate = input.BirthDate,
@@ -99,7 +115,7 @@ namespace MovieDatabase.Services
                 PhotoLink = (input.PhotoLink == "" || input.PhotoLink == null) ? "/images/no_artist_image.png" : input.PhotoLink,
             };
 
-            dbContext.Artists.Add(artist);
+            dbContext.Artists.Add(artistForDb);
             dbContext.SaveChanges();
 
             return true;

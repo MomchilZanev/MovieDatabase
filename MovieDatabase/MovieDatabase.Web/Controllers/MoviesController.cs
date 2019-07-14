@@ -71,7 +71,7 @@ namespace MovieDatabase.Web.Controllers
 
             movieService.CreateMovie(input);
 
-            return Redirect("/Home/Index");
+            return Redirect("/Movies/All?orderBy=release");
         }
 
         [Authorize(Roles = "Admin")]
@@ -97,7 +97,7 @@ namespace MovieDatabase.Web.Controllers
 
             movieService.AddRoleToMovie(input);
 
-            return Redirect("/Home/Index");
+            return Redirect("/Movies/All?orderBy=release");
         }
     }
 }

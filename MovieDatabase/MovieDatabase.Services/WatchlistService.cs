@@ -19,7 +19,7 @@ namespace MovieDatabase.Services
 
         public bool IsValidId(string itemId)
         {
-            if (dbContext.Movies.Any(m => m.Id == itemId) || dbContext.TVShows.Any(t => t.Id == itemId))
+            if (dbContext.Movies.Any(movie => movie.Id == itemId) || dbContext.TVShows.Any(tvShow => tvShow.Id == itemId))
             {
                 return true;
             }
@@ -29,8 +29,8 @@ namespace MovieDatabase.Services
 
         public bool Exists(string userId, string itemId)
         {            
-            if (dbContext.MovieUsers.Any(mu => mu.MovieId == itemId && mu.UserId == userId) ||
-                dbContext.TVShowUsers.Any(tu => tu.TVShowId == itemId && tu.UserId == userId))
+            if (dbContext.MovieUsers.Any(movieUser => movieUser.MovieId == itemId && movieUser.UserId == userId) ||
+                dbContext.TVShowUsers.Any(tvShowUser => tvShowUser.TVShowId == itemId && tvShowUser.UserId == userId))
             {
                 return true;
             }
@@ -40,28 +40,28 @@ namespace MovieDatabase.Services
 
         public string AddItemToUserWatchlist(string userId, string itemId)
         {
-            if (dbContext.Movies.Any(m => m.Id == itemId))
+            if (dbContext.Movies.Any(movie => movie.Id == itemId))
             {
-                var movieUser = new MovieUser
+                var movieUserForDb = new MovieUser
                 {
                     MovieId = itemId,
                     UserId = userId,
                 };
 
-                dbContext.MovieUsers.Add(movieUser);
+                dbContext.MovieUsers.Add(movieUserForDb);
                 dbContext.SaveChanges();
 
                 return "Movies";
             }
-            else if (dbContext.TVShows.Any(m => m.Id == itemId))
+            else if (dbContext.TVShows.Any(tvShow => tvShow.Id == itemId))
             {
-                var tvShowUser = new TVShowUser
+                var tvShowUserForDb = new TVShowUser
                 {
                     TVShowId = itemId,
                     UserId = userId,
                 };
 
-                dbContext.TVShowUsers.Add(tvShowUser);
+                dbContext.TVShowUsers.Add(tvShowUserForDb);
                 dbContext.SaveChanges();
 
                 return "TVShows";
@@ -72,20 +72,22 @@ namespace MovieDatabase.Services
 
         public string RemoveItemFromUserWatchlist(string userId, string itemId)
         {
-            if (dbContext.MovieUsers.Any(mu => mu.MovieId == itemId && mu.UserId == userId))
+            if (dbContext.MovieUsers.Any(movieUser => movieUser.MovieId == itemId && movieUser.UserId == userId))
             {
-                var movieUser = dbContext.MovieUsers.SingleOrDefault(mu => mu.MovieId == itemId && mu.UserId == userId);
+                var movieUserFromDb = dbContext.MovieUsers
+                    .SingleOrDefault(mu => mu.MovieId == itemId && mu.UserId == userId);
 
-                dbContext.MovieUsers.Remove(movieUser);
+                dbContext.MovieUsers.Remove(movieUserFromDb);
                 dbContext.SaveChanges();
 
                 return "Movies";
             }
-            else if (dbContext.TVShowUsers.Any(tu => tu.TVShowId == itemId && tu.UserId == userId))
+            else if (dbContext.TVShowUsers.Any(tvShowUser => tvShowUser.TVShowId == itemId && tvShowUser.UserId == userId))
             {
-                var tvShowUser = dbContext.TVShowUsers.SingleOrDefault(tu => tu.TVShowId == itemId && tu.UserId == userId);
+                var tvShowUserFromDb = dbContext.TVShowUsers
+                    .SingleOrDefault(tvShowUser => tvShowUser.TVShowId == itemId && tvShowUser.UserId == userId);
 
-                dbContext.TVShowUsers.Remove(tvShowUser);
+                dbContext.TVShowUsers.Remove(tvShowUserFromDb);
                 dbContext.SaveChanges();
 
                 return "TVShows";
@@ -99,39 +101,39 @@ namespace MovieDatabase.Services
         {
             var watchlistAllViewModel = new List<WatchlistAllViewModel>();
 
-            var movies = dbContext.MovieUsers
-                .Where(u => u.UserId == userId)
+            var moviesFromDb = dbContext.MovieUsers
+                .Where(movieUser => movieUser.UserId == userId)
                 .ToList()
-                .Select(x => new WatchlistAllViewModel
+                .Select(movieUser => new WatchlistAllViewModel
                 {
-                    Id = x.MovieId,
-                    Name = x.Movie.Name,
-                    Description = x.Movie.Description.Substring(0, Math.Min(500, x.Movie.Description.Length)) + "....",
-                    CoverImageLink = x.Movie.CoverImageLink,
-                    ReleaseDate = x.Movie.ReleaseDate,
-                    Rating = x.Movie.Rating,
+                    Id = movieUser.MovieId,
+                    Name = movieUser.Movie.Name,
+                    Description = movieUser.Movie.Description.Substring(0, Math.Min(500, movieUser.Movie.Description.Length)) + "....",
+                    CoverImageLink = movieUser.Movie.CoverImageLink,
+                    ReleaseDate = movieUser.Movie.ReleaseDate,
+                    Rating = movieUser.Movie.Rating,
                     Category = Category.Movies
                 })
                 .ToList();
 
-            watchlistAllViewModel.AddRange(movies);
+            watchlistAllViewModel.AddRange(moviesFromDb);
 
-            var tvShows = dbContext.TVShowUsers
-                .Where(u => u.UserId == userId)
+            var tvShowsFromDb = dbContext.TVShowUsers
+                .Where(tvShowUser => tvShowUser.UserId == userId)
                 .ToList()
-                .Select(x => new WatchlistAllViewModel
+                .Select(tvShowUser => new WatchlistAllViewModel
                 {
-                    Id = x.TVShowId,
-                    Name = x.TVShow.Name,
-                    Description = x.TVShow.Description.Substring(0, Math.Min(500, x.TVShow.Description.Length)) + "....",
-                    CoverImageLink = x.TVShow.CoverImageLink,
-                    ReleaseDate = x.TVShow.FirstAired,
-                    Rating = x.TVShow.OverallRating,
+                    Id = tvShowUser.TVShowId,
+                    Name = tvShowUser.TVShow.Name,
+                    Description = tvShowUser.TVShow.Description.Substring(0, Math.Min(500, tvShowUser.TVShow.Description.Length)) + "....",
+                    CoverImageLink = tvShowUser.TVShow.CoverImageLink,
+                    ReleaseDate = tvShowUser.TVShow.FirstAired,
+                    Rating = tvShowUser.TVShow.OverallRating,
                     Category = Category.TVShows
                 })
                 .ToList();
 
-            watchlistAllViewModel.AddRange(tvShows);
+            watchlistAllViewModel.AddRange(tvShowsFromDb);
 
             return watchlistAllViewModel;
         }        

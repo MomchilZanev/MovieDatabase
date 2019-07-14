@@ -18,24 +18,24 @@ namespace MovieDatabase.Services
 
         public List<string> GetAllGenres()
         {
-            var genres = dbContext.Genres.Select(g => g.Name).ToList();
+            var genresFromDb = dbContext.Genres.Select(genre => genre.Name).ToList();
 
-            return genres;
+            return genresFromDb;
         }
 
         public bool CreateGenre(CreateGenreInputModel input)
         {
-            if (dbContext.Genres.Any(g => g.Name == input.Name))
+            if (dbContext.Genres.Any(genre => genre.Name == input.Name))
             {
                 return false;
             };
 
-            var genre = new Genre
+            var genreForDb = new Genre
             {
                 Name = input.Name,
             };
 
-            dbContext.Genres.Add(genre);
+            dbContext.Genres.Add(genreForDb);
             dbContext.SaveChanges();
 
             return true;

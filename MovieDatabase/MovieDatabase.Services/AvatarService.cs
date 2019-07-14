@@ -23,10 +23,12 @@ namespace MovieDatabase.Services
             {
                 var fileName = user.UserName + ".jpg";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\user_avatars", fileName);
+
                 using (var fileSrteam = new FileStream(filePath, FileMode.Create))
                 {
                     await avatar.CopyToAsync(fileSrteam);
                 }
+
                 user.AvatarLink = $"/user_avatars/{fileName}";
 
                 dbContext.Update(user);

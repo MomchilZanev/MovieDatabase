@@ -23,8 +23,8 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult FullBio(string id)
         {
-            var artistDetailsViewModel = artistService.GetArtistAndDetailsById(id);
-            //TODO: Make dedicated method in service
+            var artistDetailsViewModel = artistService.GetArtistFullBioById(id);
+            
             return View(artistDetailsViewModel);
         }
 

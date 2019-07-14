@@ -21,14 +21,14 @@ namespace MovieDatabase.Services
         public List<AnnouncementViewModel> GetAllAnnouncementsAndOrder(string orderBy)
         {
             var announcementAllViewModel = dbContext.Announcements
-                .Select(a => new AnnouncementViewModel
+                .Select(announcement => new AnnouncementViewModel
                 {
-                    Title = a.Title,
-                    Content = a.Content + "....",
-                    ImageLink = a.ImageLink,
-                    Date = a.Date,
-                    Creator = a.Creator,
-                    OfficialArticleLink = a.OfficialArticleLink,
+                    Title = announcement.Title,
+                    Content = announcement.Content + "....",
+                    ImageLink = announcement.ImageLink,
+                    Date = announcement.Date,
+                    Creator = announcement.Creator,
+                    OfficialArticleLink = announcement.OfficialArticleLink,
                 })
                 .OrderBy(a => a.Date)
                 .ToList();
@@ -36,13 +36,13 @@ namespace MovieDatabase.Services
             if (orderBy == "latest")
             {
                 announcementAllViewModel = announcementAllViewModel
-                    .OrderByDescending(a => a.Date)
+                    .OrderByDescending(announcment => announcment.Date)
                     .ToList();
             }
             else if (orderBy == "oldest")
             {
                 announcementAllViewModel = announcementAllViewModel
-                    .OrderBy(a => a.Date)
+                    .OrderBy(announcement => announcement.Date)
                     .ToList();
             }
 
@@ -51,12 +51,12 @@ namespace MovieDatabase.Services
 
         public bool CreateAnnouncement(CreateAnnouncementInputModel input)
         {
-            if (dbContext.Announcements.Any(a => a.Title == input.Title && a.Content == input.Content))
+            if (dbContext.Announcements.Any(announcement => announcement.Title == input.Title && announcement.Content == input.Content))
             {
                 return false;
             }            
 
-            var announcement = new Announcement
+            var announcementForDb = new Announcement
             {
                 Creator = input.Creator,
                 Title = input.Title,
@@ -65,7 +65,7 @@ namespace MovieDatabase.Services
                 ImageLink = (input.ImageLink == "" || input.ImageLink == null) ? "/images/no_image.png" : input.ImageLink,
                 Date = DateTime.UtcNow,
             };
-            dbContext.Announcements.Add(announcement);
+            dbContext.Announcements.Add(announcementForDb);
             dbContext.SaveChanges();
             
             return true;

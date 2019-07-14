@@ -20,55 +20,54 @@ namespace MovieDatabase.Services
             this.reviewService = reviewService;
         }        
 
-        //TODO: Implement AutoMapper
         public List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy = null, string genreFilter = null, string userId = null)
         {
-            var allTVShows = dbContext.TVShows.ToList();
+            var allTVShowsFromDb = dbContext.TVShows.ToList();
 
-            if (dbContext.Genres.Any(g => g.Name == genreFilter))
+            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
             {
-                allTVShows = allTVShows.Where(t => t.Genre.Name == genreFilter).ToList();
+                allTVShowsFromDb = allTVShowsFromDb.Where(tvShow => tvShow.Genre.Name == genreFilter).ToList();
             }
 
-            var tvShowAllViewModel = allTVShows
-                .Select(t => new TVShowAllViewModel
+            var tvShowAllViewModel = allTVShowsFromDb
+                .Select(tvShow => new TVShowAllViewModel
                 {
-                    Id = t.Id,
-                    Name = t.Name,
-                    Description = t.Description,
-                    CoverImageLink = t.CoverImageLink,
-                    FirstAired = t.FirstAired,
-                    Rating = t.OverallRating,
-                    TotalReviews = t.Seasons.Sum(s => s.Reviews.Count()),
-                    Watchlisted = dbContext.TVShowUsers.Any(tu => tu.TVShowId == t.Id && tu.UserId == userId),
+                    Id = tvShow.Id,
+                    Name = tvShow.Name,
+                    Description = tvShow.Description,
+                    CoverImageLink = tvShow.CoverImageLink,
+                    FirstAired = tvShow.FirstAired,
+                    Rating = tvShow.OverallRating,
+                    TotalReviews = tvShow.Seasons.Sum(season => season.Reviews.Count()),
+                    Watchlisted = dbContext.TVShowUsers.Any(tvShowUser => tvShowUser.TVShowId == tvShow.Id && tvShowUser.UserId == userId),
                 }).ToList();
 
             if (orderBy == "release")
             {
                 tvShowAllViewModel = tvShowAllViewModel
-                    .Where(t => t.FirstAired != null)
-                    .OrderByDescending(t => t.FirstAired)
+                    .Where(tvShow => tvShow.FirstAired != null)
+                    .OrderByDescending(tvShow => tvShow.FirstAired)
                     .ToList();
             }
             else if (orderBy == "popularity")
             {
                 tvShowAllViewModel = tvShowAllViewModel
-                    .Where(t => t.FirstAired != null)
-                    .OrderByDescending(t => t.TotalReviews)
+                    .Where(tvShow => tvShow.FirstAired != null)
+                    .OrderByDescending(tvShow => tvShow.TotalReviews)
                     .ToList();
             }
             else if (orderBy == "rating")
             {
                 tvShowAllViewModel = tvShowAllViewModel
-                    .Where(t => t.FirstAired != null)
-                    .OrderByDescending(t => t.Rating)
+                    .Where(tvShow => tvShow.FirstAired != null)
+                    .OrderByDescending(tvShow => tvShow.Rating)
                     .ToList();
             }
             else if (orderBy == "soon")
             {
                 tvShowAllViewModel = tvShowAllViewModel
-                    .Where(m => m.FirstAired != null && m.FirstAired > DateTime.UtcNow)
-                    .OrderBy(m => m.FirstAired)
+                    .Where(tvShow => tvShow.FirstAired != null && tvShow.FirstAired > DateTime.UtcNow)
+                    .OrderBy(tvShow => tvShow.FirstAired)
                     .ToList();
             }
 
@@ -77,26 +76,26 @@ namespace MovieDatabase.Services
 
         public TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId)
         {
-            var tvShow = dbContext.TVShows.Find(tvShowId);
+            var tvShowFromDb = dbContext.TVShows.Find(tvShowId);
 
             var tvShowDetailsViewModel = new TVShowDetailsViewModel
             {
-                Id = tvShow.Id,
-                Name = tvShow.Name,
-                Creator = tvShow.Creator.FullName,
-                CoverImageLink = tvShow.CoverImageLink,
-                TrailerLink = tvShow.TrailerLink,
-                Description = tvShow.Description,
-                Genre = tvShow.Genre.Name,
-                Rating = tvShow.OverallRating,
-                FirstAired = tvShow.FirstAired,
+                Id = tvShowFromDb.Id,
+                Name = tvShowFromDb.Name,
+                Creator = tvShowFromDb.Creator.FullName,
+                CoverImageLink = tvShowFromDb.CoverImageLink,
+                TrailerLink = tvShowFromDb.TrailerLink,
+                Description = tvShowFromDb.Description,
+                Genre = tvShowFromDb.Genre.Name,
+                Rating = tvShowFromDb.OverallRating,
+                FirstAired = tvShowFromDb.FirstAired,
                 Seasons = new Dictionary<string, int>(),
-                Episodes = tvShow.Seasons.Sum(s => s.Episodes),
+                Episodes = tvShowFromDb.Seasons.Sum(s => s.Episodes),
             };
 
-            if (tvShow.Seasons.Any())
+            if (tvShowFromDb.Seasons.Any())
             {
-                foreach (var season in tvShow.Seasons.OrderBy(s => s.SeasonNumber))
+                foreach (var season in tvShowFromDb.Seasons.OrderBy(s => s.SeasonNumber))
                 {
                     tvShowDetailsViewModel.Seasons.Add(season.Id, season.SeasonNumber);
                 }
@@ -107,19 +106,19 @@ namespace MovieDatabase.Services
 
         public SeasonDetailsViewModel GetSeasonAndDetailsById(string seasonId, string userId)
         {
-            var season = dbContext.Seasons.Find(seasonId);
+            var seasonFromDb = dbContext.Seasons.Find(seasonId);
 
             var randomReview = new SeasonReviewViewModel();
 
-            if (season.Reviews.Count > 0)
+            if (seasonFromDb.Reviews.Count > 0)
             {
                 Random rnd = new Random();
-                int reviewIndex = rnd.Next(0, season.Reviews.Count());
+                int reviewIndex = rnd.Next(0, seasonFromDb.Reviews.Count());
 
-                var reviewFromDb = season.Reviews.ToList()[reviewIndex];
+                var reviewFromDb = seasonFromDb.Reviews.ToList()[reviewIndex];
 
-                randomReview.TVShow = season.TVShow.Name;
-                randomReview.Season = season.SeasonNumber;
+                randomReview.TVShow = seasonFromDb.TVShow.Name;
+                randomReview.Season = seasonFromDb.SeasonNumber;
                 randomReview.User = reviewFromDb.User.UserName;
                 randomReview.Content = reviewFromDb.Content;
                 randomReview.Rating = reviewFromDb.Rating;
@@ -128,21 +127,21 @@ namespace MovieDatabase.Services
 
             var seasonDetailsViewModel = new SeasonDetailsViewModel
             {
-                Id = season.Id,
-                TVShow = season.TVShow.Name,
-                SeasonNumber = season.SeasonNumber,
-                Episodes = season.Episodes,
-                LengthPerEpisode = season.LengthPerEpisode,
-                Rating = season.Rating,
-                ReleaseDate = season.ReleaseDate,
-                Cast = season.Cast.Select(actor => new SeasonCastViewModel
+                Id = seasonFromDb.Id,
+                TVShow = seasonFromDb.TVShow.Name,
+                SeasonNumber = seasonFromDb.SeasonNumber,
+                Episodes = seasonFromDb.Episodes,
+                LengthPerEpisode = seasonFromDb.LengthPerEpisode,
+                Rating = seasonFromDb.Rating,
+                ReleaseDate = seasonFromDb.ReleaseDate,
+                Cast = seasonFromDb.Cast.Select(actor => new SeasonCastViewModel
                 {
                     Actor = actor.Artist.FullName,
                     TVShowCharacter = actor.CharacterPlayed,
                 }).ToList(),
                 RandomReview = randomReview,
-                ReviewsCount = season.Reviews.Count(),
-                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, season.Id),
+                ReviewsCount = seasonFromDb.Reviews.Count(),
+                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, seasonFromDb.Id),
             };
 
             return seasonDetailsViewModel;
@@ -150,32 +149,33 @@ namespace MovieDatabase.Services
 
         public bool CreateTVShow(CreateTVShowInputModel input)
         {
-            if (!dbContext.Genres.Any(g => g.Name == input.Genre))
+            if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(a => a.FullName == input.Creator))
+            if (!dbContext.Artists.Any(artist => artist.FullName == input.Creator))
             {
                 return false;
             }
-            if (dbContext.TVShows.Any(m => m.Name == input.Name))
+            if (dbContext.TVShows.Any(tvShow => tvShow.Name == input.Name))
             {
                 return false;
             }
 
-            var genre = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
-            var creator = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Creator);
+            var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
+            var creatorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Creator);
 
-            var tvShow = new TVShow
+            var tvShowForDb = new TVShow
             {
                 Name = input.Name,
-                Genre = genre,
-                Creator = creator,
+                Genre = genreFromDb,
+                Creator = creatorFromDb,
                 Description = input.Description,
                 CoverImageLink = (input.CoverImageLink == "" || input.CoverImageLink == null) ? "/images/no_image.png" : input.CoverImageLink,
                 TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
             };
-            dbContext.TVShows.Add(tvShow);
+
+            dbContext.TVShows.Add(tvShowForDb);
             dbContext.SaveChanges();
 
             return true;
@@ -183,22 +183,22 @@ namespace MovieDatabase.Services
 
         public bool AddSeasonToTVShow(AddSeasonInputModel input)
         {
-            if (!dbContext.TVShows.Any(t => t.Name == input.TVShow))
+            if (!dbContext.TVShows.Any(tvShow => tvShow.Name == input.TVShow))
             {
                 return false;
             }
 
-            var tvShow = dbContext.TVShows.SingleOrDefault(t => t.Name == input.TVShow);
+            var tvShowFromDb = dbContext.TVShows.SingleOrDefault(t => t.Name == input.TVShow);
 
-            var season = new Season
+            var seasonForDb = new Season
             {
-                TVShow = tvShow,
-                SeasonNumber = tvShow.Seasons.Count() + 1,
+                TVShow = tvShowFromDb,
+                SeasonNumber = tvShowFromDb.Seasons.Count() + 1,
                 ReleaseDate = input.ReleaseDate,
                 Episodes = input.Episodes,
                 LengthPerEpisode = input.LengthPerEpisode,
             };
-            dbContext.Seasons.Add(season);
+            dbContext.Seasons.Add(seasonForDb);
             dbContext.SaveChanges();
 
             return true;
@@ -206,11 +206,11 @@ namespace MovieDatabase.Services
 
         public List<SeasonsAndTVShowNameViewModel> GetAllSeasonsAndTVShowNames()
         {
-            var tvShowsAndSeasonsViewModel = dbContext.Seasons.Select(s => new SeasonsAndTVShowNameViewModel
+            var tvShowsAndSeasonsViewModel = dbContext.Seasons.Select(season => new SeasonsAndTVShowNameViewModel
             {
-                SeasonId = s.Id,
-                SeasonNumber = s.SeasonNumber,
-                TVShowName = s.TVShow.Name,
+                SeasonId = season.Id,
+                SeasonNumber = season.SeasonNumber,
+                TVShowName = season.TVShow.Name,
             }).ToList();
 
             return tvShowsAndSeasonsViewModel;
@@ -218,30 +218,30 @@ namespace MovieDatabase.Services
 
         public bool AddRoleToTVShowSeason(AddRoleInputModel input)
         {
-            if (!dbContext.Seasons.Any(s => s.Id == input.SeasonId))
+            if (!dbContext.Seasons.Any(season => season.Id == input.SeasonId))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(a => a.FullName == input.Artist))
-            {
-                return false;
-            }
-
-            var season = dbContext.Seasons.SingleOrDefault(s => s.Id == input.SeasonId);
-            var artist = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Artist);
-
-            if (dbContext.SeasonRoles.Any(sr => sr.ArtistId == artist.Id && sr.SeasonId == season.Id))
+            if (!dbContext.Artists.Any(artist => artist.FullName == input.Artist))
             {
                 return false;
             }
 
-            var seasonRole = new SeasonRole
+            var seasonFromDb = dbContext.Seasons.SingleOrDefault(s => s.Id == input.SeasonId);
+            var artistFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Artist);
+
+            if (dbContext.SeasonRoles.Any(sr => sr.ArtistId == artistFromDb.Id && sr.SeasonId == seasonFromDb.Id))
             {
-                Season = season,
-                Artist = artist,
+                return false;
+            }
+
+            var seasonRoleForDb = new SeasonRole
+            {
+                Season = seasonFromDb,
+                Artist = artistFromDb,
                 CharacterPlayed = input.CharacterPlayed,
             };
-            dbContext.SeasonRoles.Add(seasonRole);
+            dbContext.SeasonRoles.Add(seasonRoleForDb);
             dbContext.SaveChanges();
 
             return true;

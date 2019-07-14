@@ -84,7 +84,7 @@ namespace MovieDatabase.Web.Controllers
 
             tvShowService.CreateTVShow(input);
 
-            return Redirect("/Home/Index");
+            return Redirect("/TVShows/All?orderBy=release");
         }
 
         [Authorize(Roles = "Admin")]
@@ -108,7 +108,7 @@ namespace MovieDatabase.Web.Controllers
 
             tvShowService.AddSeasonToTVShow(input);
 
-            return Redirect("/Home/Index");
+            return Redirect("/TVShows/All?orderBy=release");
         }
 
         [Authorize(Roles = "Admin")]
@@ -134,7 +134,7 @@ namespace MovieDatabase.Web.Controllers
 
             tvShowService.AddRoleToTVShowSeason(input);
 
-            return Redirect("/Home/Index");
+            return Redirect("/TVShows/All?orderBy=release");
         }
     }
 }

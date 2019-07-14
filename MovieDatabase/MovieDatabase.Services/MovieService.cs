@@ -21,55 +21,54 @@ namespace MovieDatabase.Services
             this.reviewService = reviewService;
         }
 
-        //TODO: Implement AutoMapper
         public List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy = null, string genreFilter = null, string userId = null)
         {
-            var allMovies = dbContext.Movies.ToList();
+            var allMoviesFromDb = dbContext.Movies.ToList();
 
-            if (dbContext.Genres.Any(g => g.Name == genreFilter))
+            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
             {
-                allMovies = allMovies.Where(m => m.Genre.Name == genreFilter).ToList();
+                allMoviesFromDb = allMoviesFromDb.Where(movie => movie.Genre.Name == genreFilter).ToList();
             }
 
-            var movieAllViewModel = allMovies
-                .Select(m => new MovieAllViewModel
+            var movieAllViewModel = allMoviesFromDb
+                .Select(movie => new MovieAllViewModel
                 {
-                    Id = m.Id,
-                    Name = m.Name,
-                    CoverImageLink = m.CoverImageLink,
-                    Rating = m.Rating,
-                    ReleaseDate = m.ReleaseDate,
-                    TotalReviews = m.Reviews.Count(),
-                    Watchlisted = dbContext.MovieUsers.Any(mu => mu.MovieId == m.Id && mu.UserId == userId),
+                    Id = movie.Id,
+                    Name = movie.Name,
+                    CoverImageLink = movie.CoverImageLink,
+                    Rating = movie.Rating,
+                    ReleaseDate = movie.ReleaseDate,
+                    TotalReviews = movie.Reviews.Count(),
+                    Watchlisted = dbContext.MovieUsers.Any(movieUser => movieUser.MovieId == movie.Id && movieUser.UserId == userId),
                 })
                 .ToList();
 
             if (orderBy == "release")
             {
                 movieAllViewModel = movieAllViewModel
-                    .Where(m => m.ReleaseDate != null)
-                    .OrderByDescending(m => m.ReleaseDate)
+                    .Where(movie => movie.ReleaseDate != null)
+                    .OrderByDescending(movie => movie.ReleaseDate)
                     .ToList();
             }
             else if (orderBy == "popularity")
             {
                 movieAllViewModel = movieAllViewModel
-                    .Where(m => m.ReleaseDate != null)
-                    .OrderByDescending(m => m.TotalReviews)
+                    .Where(movie => movie.ReleaseDate != null)
+                    .OrderByDescending(movie => movie.TotalReviews)
                     .ToList();
             }
             else if (orderBy == "rating")
             {
                 movieAllViewModel = movieAllViewModel
-                    .Where(m => m.ReleaseDate != null)
-                    .OrderByDescending(m => m.Rating)
+                    .Where(movie => movie.ReleaseDate != null)
+                    .OrderByDescending(movie => movie.Rating)
                     .ToList();
             }
             else if (orderBy == "soon")
             {
                 movieAllViewModel = movieAllViewModel
-                    .Where(m => m.ReleaseDate != null && m.ReleaseDate > DateTime.UtcNow)
-                    .OrderBy(m => m.ReleaseDate)
+                    .Where(movie => movie.ReleaseDate != null && movie.ReleaseDate > DateTime.UtcNow)
+                    .OrderBy(movie => movie.ReleaseDate)
                     .ToList();
             }
 
@@ -78,16 +77,16 @@ namespace MovieDatabase.Services
 
         public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId = null)
         {
-            var movie = dbContext.Movies.Find(movieId);
+            var movieFromDb = dbContext.Movies.Find(movieId);
 
             var randomReview = new MovieReviewViewModel();
 
-            if (movie.Reviews.Count > 0)
+            if (movieFromDb.Reviews.Count > 0)
             {
                 Random rnd = new Random();
-                int reviewIndex = rnd.Next(0, movie.Reviews.Count());
+                int reviewIndex = rnd.Next(0, movieFromDb.Reviews.Count());
 
-                var reviewFromDb = movie.Reviews.ToList()[reviewIndex];
+                var reviewFromDb = movieFromDb.Reviews.ToList()[reviewIndex];
 
                 randomReview.Movie = reviewFromDb.Movie.Name;
                 randomReview.User = reviewFromDb.User.UserName;
@@ -98,24 +97,24 @@ namespace MovieDatabase.Services
 
             var movieDetailsViewModel = new MovieDetailsViewModel
             {
-                Id = movie.Id,
-                Name = movie.Name,
-                Director = movie.Director.FullName,
-                CoverImageLink = movie.CoverImageLink,
-                TrailerLink = movie.TrailerLink,
-                Description = movie.Description,
-                Genre = movie.Genre.Name,
-                Length = movie.Length,
-                Rating = movie.Rating,
-                ReleaseDate = movie.ReleaseDate,
-                Cast = movie.Cast.Select(x => new MovieCastViewModel
+                Id = movieFromDb.Id,
+                Name = movieFromDb.Name,
+                Director = movieFromDb.Director.FullName,
+                CoverImageLink = movieFromDb.CoverImageLink,
+                TrailerLink = movieFromDb.TrailerLink,
+                Description = movieFromDb.Description,
+                Genre = movieFromDb.Genre.Name,
+                Length = movieFromDb.Length,
+                Rating = movieFromDb.Rating,
+                ReleaseDate = movieFromDb.ReleaseDate,
+                Cast = movieFromDb.Cast.Select(x => new MovieCastViewModel
                 {
                     Actor = x.Artist.FullName,
                     MovieCharacter = x.CharacterPlayed,
                 }).ToList(),
                 RandomReview = randomReview,
-                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movie.Id),
-                ReviewsCount = movie.Reviews.Count(),
+                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movieFromDb.Id),
+                ReviewsCount = movieFromDb.Reviews.Count(),
             };
 
             return movieDetailsViewModel;
@@ -123,34 +122,35 @@ namespace MovieDatabase.Services
 
         public bool CreateMovie(CreateMovieInputModel input)
         {
-            if (!dbContext.Genres.Any(g => g.Name == input.Genre))
+            if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(a => a.FullName == input.Director))
+            if (!dbContext.Artists.Any(artist => artist.FullName == input.Director))
             {
                 return false;
             }
-            if (dbContext.Movies.Any(m => m.Name == input.Name))
+            if (dbContext.Movies.Any(movie => movie.Name == input.Name))
             {
                 return false;
             }
 
-            var genre = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
-            var director = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
+            var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
+            var directorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
 
-            var movie = new Movie
+            var movieForDb = new Movie
             {
                 Name = input.Name,
-                Genre = genre,
+                Genre = genreFromDb,
                 ReleaseDate = input.ReleaseDate,
                 Length = input.Length,
-                Director = director,
+                Director = directorFromDb,
                 Description = input.Description,
                 CoverImageLink = (input.CoverImageLink == "" || input.CoverImageLink == null) ? "/images/no_image.png" : input.CoverImageLink,
                 TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
             };
-            dbContext.Movies.Add(movie);
+
+            dbContext.Movies.Add(movieForDb);
             dbContext.SaveChanges();
 
             return true;
@@ -158,30 +158,31 @@ namespace MovieDatabase.Services
 
         public bool AddRoleToMovie(AddRoleInputModel input)
         {
-            if (!dbContext.Movies.Any(m => m.Name == input.Movie))
+            if (!dbContext.Movies.Any(movie => movie.Name == input.Movie))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(a => a.FullName == input.Artist))
+            if (!dbContext.Artists.Any(artist => artist.FullName == input.Artist))
             {
                 return false;
             }            
 
-            var movie = dbContext.Movies.SingleOrDefault(g => g.Name == input.Movie);
-            var artist = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Artist);
+            var movieFromDb = dbContext.Movies.SingleOrDefault(g => g.Name == input.Movie);
+            var artistFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Artist);
 
-            if (dbContext.MovieRoles.Any(mr => mr.ArtistId == artist.Id && mr.MovieId == movie.Id))
+            if (dbContext.MovieRoles.Any(movieRole => movieRole.ArtistId == artistFromDb.Id && movieRole.MovieId == movieFromDb.Id))
             {
                 return false;
             }
 
-            var movieRole = new MovieRole
+            var movieRoleForDb = new MovieRole
             {
-                Movie = movie,
-                Artist = artist,
+                Movie = movieFromDb,
+                Artist = artistFromDb,
                 CharacterPlayed = input.CharacterPlayed,
             };
-            dbContext.MovieRoles.Add(movieRole);
+
+            dbContext.MovieRoles.Add(movieRoleForDb);
             dbContext.SaveChanges();
 
             return true;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Models.CustomValidationAttributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.Artist
@@ -12,6 +13,7 @@ namespace MovieDatabase.Models.InputModels.Artist
 
         [Required]
         [Display(Name = "Birth Date")]
+        [BirthDayBeforeToday(ErrorMessage = "Artist cannot be born after current date")]
         public DateTime BirthDate { get; set; }
 
         [Required]

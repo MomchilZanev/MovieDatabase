@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace MovieDatabase.Web.CustomValidationAttributes
+namespace MovieDatabase.Models.CustomValidationAttributes
 {
     public class MaxFileSizeAttribute : ValidationAttribute
     {

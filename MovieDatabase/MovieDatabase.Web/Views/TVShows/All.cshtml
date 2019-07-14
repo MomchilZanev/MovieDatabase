@@ -16,14 +16,14 @@
         <button type="button" class="btn btn-secondary btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Filter by Genre
         </button>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu bg-dark">
             @if (Context.Request.QueryString.ToString().Split('&').Count() == 1)
             {
-                <a class="dropdown-item" href="@Context.Request.Path">None</a>
+                <a class="nav-link text-warning" href="@Context.Request.Path">None</a>
             }
             else
             {
-                <a class="dropdown-item" href="@Context.Request.Path@Context.Request.QueryString.ToString().Split('&').First()">None</a>
+                <a class="nav-link text-warning" href="@Context.Request.Path@Context.Request.QueryString.ToString().Split('&').First()">None</a>
             }
             @foreach (var genre in ViewBag.Genres)
             {
@@ -32,7 +32,7 @@
                 {
                     query = Context.Request.QueryString.ToString().Split('&').First() + "&genreFilter=" + @genre;
                 }
-                <a class="dropdown-item" href="@Context.Request.Path@query">@genre</a>
+                <a class="nav-link text-warning" href="@Context.Request.Path@query">@genre</a>
             }
         </div>
     </div>

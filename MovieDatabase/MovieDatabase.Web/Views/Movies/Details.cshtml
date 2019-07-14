@@ -10,11 +10,11 @@
 <h2 class="text-warning">@Model.Name</h2>
 
 <div class="d-flex justify-content-between text-warning ">
-    <h5 class="font-weight-light mb-1"><b class="font-weight-bold">|</b> <i>@Model.ReleaseDate.ToString("dd MMMM yyyy")</i></h5>
-    <h5 class="font-weight-light mb-1"><i>@Model.Rating.ToString("F1")</i> <span style="color: #ffc700; font-size:x-large">★</span> <b class="font-weight-bold">|</b></h5>
+    <h5 class="font-weight-light mb-1"><b class="font-weight-bold" style="color:orangered;">|</b> <i>@Model.ReleaseDate.ToString("dd MMMM yyyy")</i></h5>
+    <h5 class="font-weight-light mb-1"><i>@Model.Rating.ToString("F1")</i> <span style="color: #ffc700; font-size:x-large">★</span> <b class="font-weight-bold" style="color:orangered;">|</b></h5>
 </div>
 
-<hr class="mt-2 mb-3" style="height:3px;border:none;background-color:goldenrod;" />
+<hr class="mt-2 mb-3" style="height:3px;border:none;background-color:orangered;" />
 
 <div class="row text-warning">
     <div class="col-3">
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<hr class="mt-2 mb-3" style="height:3px;border:none;background-color:goldenrod;" />
+<hr class="mt-2 mb-3" style="height:3px;border:none;background-color:orangered;" />
 
 <div class="text-warning font-weight-light">
     <h4 class="text-left font-weight-bold" style="font-size:large">
@@ -43,7 +43,7 @@
     </p>
 </div>
 
-<hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />
+<hr class="mb-2" style="height:3px;border:none;background-color:orangered;" />
 
 <p>
     <button class="btn btn-primary btn-dark btn-outline-warning col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -64,7 +64,7 @@
     </div>
 </div>
 
-<hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />
+<hr class="mb-2" style="height:3px;border:none;background-color:orangered;" />
 
 @if (!string.IsNullOrEmpty(Model.RandomReview.User))
 {
@@ -78,7 +78,7 @@
         <a href="/Reviews/All/@Model.Id" class="text-warning font-weight-bold">See all @Model.ReviewsCount user reviews >></a>
     </div>
 
-    <hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />
+    <hr class="mb-2" style="height:3px;border:none;background-color:orangered;" />
 }
 
 
@@ -93,5 +93,5 @@
         <h4 class="text-warning text-center"><a href="/Reviews/Create/@Model.Id" class="text-warning">Review this movie</a></h4>
     }
 
-    <hr class="mb-2" style="height:3px;border:none;background-color:goldenrod;" />
+    <hr class="mb-2" style="height:3px;border:none;background-color:orangered;" />
 }

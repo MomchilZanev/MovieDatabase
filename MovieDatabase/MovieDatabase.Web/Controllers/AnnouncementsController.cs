@@ -16,9 +16,14 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All(string orderBy)
         {
-            var allAnnouncements = announcementService.GetAllAnnouncementsAndOrder(orderBy);
+            var allAnnouncementsViewModel = announcementService.GetAllAnnouncements();
 
-            return View(allAnnouncements);
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                allAnnouncementsViewModel = announcementService.OrderAnnouncements(allAnnouncementsViewModel, orderBy);
+            }
+
+            return View(allAnnouncementsViewModel);
         }
 
         [Authorize(Roles = "Admin")]
@@ -34,9 +39,12 @@ namespace MovieDatabase.Web.Controllers
             if (!ModelState.IsValid)
             {
                 return View(input);
-            }            
+            }
 
-            announcementService.CreateAnnouncement(input);
+            if (!announcementService.CreateAnnouncement(input))
+            {
+                return View(input);
+            }            
 
             return Redirect("/Announcements/All/?orderBy=latest");
         }

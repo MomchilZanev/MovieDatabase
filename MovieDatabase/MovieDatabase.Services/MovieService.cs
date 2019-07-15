@@ -6,7 +6,6 @@ using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace MovieDatabase.Services
 {
@@ -21,61 +20,63 @@ namespace MovieDatabase.Services
             this.reviewService = reviewService;
         }
 
-        public List<MovieAllViewModel> GetAllMoviesAndOrder(string orderBy = null, string genreFilter = null, string userId = null)
+        public List<MovieAllViewModel> GetAllMovies(string userId)
         {
             var allMoviesFromDb = dbContext.Movies.ToList();
 
-            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
-            {
-                allMoviesFromDb = allMoviesFromDb.Where(movie => movie.Genre.Name == genreFilter).ToList();
-            }
-
-            var movieAllViewModel = allMoviesFromDb
+            var moviesAllViewModel = allMoviesFromDb
                 .Select(movie => new MovieAllViewModel
                 {
                     Id = movie.Id,
                     Name = movie.Name,
+                    Genre = movie.Genre.Name,
                     CoverImageLink = movie.CoverImageLink,
                     Rating = movie.Rating,
                     ReleaseDate = movie.ReleaseDate,
-                    TotalReviews = movie.Reviews.Count(),
-                    Watchlisted = dbContext.MovieUsers.Any(movieUser => movieUser.MovieId == movie.Id && movieUser.UserId == userId),
+                    TotalReviews = movie.TotalReviews,
+
+                    Watchlisted = dbContext.MovieUsers.Any(movieUser => movieUser.MovieId == movie.Id && movieUser.UserId == userId),//TODO
                 })
                 .ToList();
 
-            if (orderBy == "release")
-            {
-                movieAllViewModel = movieAllViewModel
-                    .Where(movie => movie.ReleaseDate != null)
-                    .OrderByDescending(movie => movie.ReleaseDate)
-                    .ToList();
-            }
-            else if (orderBy == "popularity")
-            {
-                movieAllViewModel = movieAllViewModel
-                    .Where(movie => movie.ReleaseDate != null)
-                    .OrderByDescending(movie => movie.TotalReviews)
-                    .ToList();
-            }
-            else if (orderBy == "rating")
-            {
-                movieAllViewModel = movieAllViewModel
-                    .Where(movie => movie.ReleaseDate != null)
-                    .OrderByDescending(movie => movie.Rating)
-                    .ToList();
-            }
-            else if (orderBy == "soon")
-            {
-                movieAllViewModel = movieAllViewModel
-                    .Where(movie => movie.ReleaseDate != null && movie.ReleaseDate > DateTime.UtcNow)
-                    .OrderBy(movie => movie.ReleaseDate)
-                    .ToList();
-            }
-
-            return movieAllViewModel;
+            return moviesAllViewModel;
         }
 
-        public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId = null)
+        public List<string> GetAllMovieNames()
+        {
+            var allMovieNames = dbContext.Movies.Select(movie => movie.Name).ToList();
+
+            return allMovieNames;
+        }
+
+        public List<MovieAllViewModel> FilterMoviesByGenre(List<MovieAllViewModel> moviesAllViewModel, string genreFilter)
+        {
+            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
+            {
+                return moviesAllViewModel = moviesAllViewModel.Where(movie => movie.Genre == genreFilter).ToList();
+            }
+
+            return moviesAllViewModel.ToList();
+        }
+
+        public List<MovieAllViewModel> OrderMovies(List<MovieAllViewModel> moviesAllViewModel, string orderBy)
+        {
+            switch (orderBy)
+            {
+                case "release":
+                    return moviesAllViewModel.OrderByDescending(movie => movie.ReleaseDate).ToList();
+                case "popularity":
+                    return moviesAllViewModel.OrderByDescending(movie => movie.TotalReviews).ToList();
+                case "rating":
+                    return moviesAllViewModel.OrderByDescending(movie => movie.Rating).ToList();
+                case "soon":
+                    return moviesAllViewModel.Where(movie => movie.ReleaseDate > DateTime.UtcNow).OrderBy(movie => movie.ReleaseDate).ToList();
+                default:
+                    return moviesAllViewModel.ToList();
+            }
+        }
+
+        public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId)
         {
             var movieFromDb = dbContext.Movies.Find(movieId);
 
@@ -93,7 +94,7 @@ namespace MovieDatabase.Services
                 randomReview.Content = reviewFromDb.Content;
                 randomReview.Rating = reviewFromDb.Rating;
                 randomReview.Date = reviewFromDb.Date;
-            }            
+            }
 
             var movieDetailsViewModel = new MovieDetailsViewModel
             {
@@ -113,8 +114,9 @@ namespace MovieDatabase.Services
                     MovieCharacter = x.CharacterPlayed,
                 }).ToList(),
                 RandomReview = randomReview,
-                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movieFromDb.Id),
-                ReviewsCount = movieFromDb.Reviews.Count(),
+                ReviewsCount = movieFromDb.TotalReviews,
+
+                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movieFromDb.Id), 
             };
 
             return movieDetailsViewModel;
@@ -165,10 +167,10 @@ namespace MovieDatabase.Services
             if (!dbContext.Artists.Any(artist => artist.FullName == input.Artist))
             {
                 return false;
-            }            
+            }
 
-            var movieFromDb = dbContext.Movies.SingleOrDefault(g => g.Name == input.Movie);
-            var artistFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Artist);
+            var movieFromDb = dbContext.Movies.SingleOrDefault(movie => movie.Name == input.Movie);
+            var artistFromDb = dbContext.Artists.SingleOrDefault(artist => artist.FullName == input.Artist);
 
             if (dbContext.MovieRoles.Any(movieRole => movieRole.ArtistId == artistFromDb.Id && movieRole.MovieId == movieFromDb.Id))
             {

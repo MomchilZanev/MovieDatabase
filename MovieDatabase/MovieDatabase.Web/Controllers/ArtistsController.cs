@@ -30,9 +30,14 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All(string orderBy)
         {
-            var allArtists = artistService.GetAllArtistsAndOrder(orderBy);
+            var artistsAllViewModel = artistService.GetAllArtists();
 
-            return View(allArtists);
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                artistsAllViewModel = artistService.OrderArtists(artistsAllViewModel, orderBy);
+            }
+
+            return View(artistsAllViewModel);
         }
 
         [Authorize(Roles = "Admin")]
@@ -50,7 +55,10 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            artistService.CreateArtist(input);
+            if (!artistService.CreateArtist(input))
+            {
+                return View(input);
+            }
 
             return Redirect("/Artists/All/?orderBy=youngest");
         }

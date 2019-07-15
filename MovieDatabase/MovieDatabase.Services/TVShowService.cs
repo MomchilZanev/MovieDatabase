@@ -18,61 +18,75 @@ namespace MovieDatabase.Services
         {
             this.dbContext = dbContext;
             this.reviewService = reviewService;
-        }        
+        }
 
-        public List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy = null, string genreFilter = null, string userId = null)
+        public List<string> GetAllTVShowNames()
         {
-            var allTVShowsFromDb = dbContext.TVShows.ToList();
+            var allTVShowNames = dbContext.TVShows.Select(tvShow => tvShow.Name).ToList();
 
-            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
+            return allTVShowNames;
+        }
+
+        public List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames()
+        {
+            var tvShowsAndSeasonsViewModel = dbContext.Seasons.Select(season => new SeasonsAndTVShowNameViewModel
             {
-                allTVShowsFromDb = allTVShowsFromDb.Where(tvShow => tvShow.Genre.Name == genreFilter).ToList();
-            }
+                SeasonId = season.Id,
+                SeasonNumber = season.SeasonNumber,
+                TVShowName = season.TVShow.Name,
+            }).ToList();
+
+            return tvShowsAndSeasonsViewModel;
+        }
+
+        public List<TVShowAllViewModel> GetAllTVShows(string userId)
+        {
+            var allTVShowsFromDb = dbContext.TVShows.ToList();            
 
             var tvShowAllViewModel = allTVShowsFromDb
                 .Select(tvShow => new TVShowAllViewModel
                 {
                     Id = tvShow.Id,
                     Name = tvShow.Name,
+                    Genre = tvShow.Genre.Name,
                     Description = tvShow.Description,
                     CoverImageLink = tvShow.CoverImageLink,
                     FirstAired = tvShow.FirstAired,
                     Rating = tvShow.OverallRating,
-                    TotalReviews = tvShow.Seasons.Sum(season => season.Reviews.Count()),
-                    Watchlisted = dbContext.TVShowUsers.Any(tvShowUser => tvShowUser.TVShowId == tvShow.Id && tvShowUser.UserId == userId),
-                }).ToList();
+                    TotalReviews = tvShow.TotalReviews,
 
-            if (orderBy == "release")
-            {
-                tvShowAllViewModel = tvShowAllViewModel
-                    .Where(tvShow => tvShow.FirstAired != null)
-                    .OrderByDescending(tvShow => tvShow.FirstAired)
-                    .ToList();
-            }
-            else if (orderBy == "popularity")
-            {
-                tvShowAllViewModel = tvShowAllViewModel
-                    .Where(tvShow => tvShow.FirstAired != null)
-                    .OrderByDescending(tvShow => tvShow.TotalReviews)
-                    .ToList();
-            }
-            else if (orderBy == "rating")
-            {
-                tvShowAllViewModel = tvShowAllViewModel
-                    .Where(tvShow => tvShow.FirstAired != null)
-                    .OrderByDescending(tvShow => tvShow.Rating)
-                    .ToList();
-            }
-            else if (orderBy == "soon")
-            {
-                tvShowAllViewModel = tvShowAllViewModel
-                    .Where(tvShow => tvShow.FirstAired != null && tvShow.FirstAired > DateTime.UtcNow)
-                    .OrderBy(tvShow => tvShow.FirstAired)
-                    .ToList();
-            }
+                    Watchlisted = dbContext.TVShowUsers.Any(tvShowUser => tvShowUser.TVShowId == tvShow.Id && tvShowUser.UserId == userId), //TODO
+                }).ToList();
 
             return tvShowAllViewModel;
         }
+
+        public List<TVShowAllViewModel> FilterTVShowsByGenre(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter)
+        {
+            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
+            {
+                tvShowsAllViewModel = tvShowsAllViewModel.Where(tvShow => tvShow.Genre == genreFilter).ToList();
+            }
+
+            return tvShowsAllViewModel.ToList();
+        }
+
+        public List<TVShowAllViewModel> OrderTVShows(List<TVShowAllViewModel> tvShowsAllViewModel, string orderBy)
+        {
+            switch (orderBy)
+            {
+                case "release":
+                    return tvShowsAllViewModel.OrderByDescending(tvShow => tvShow.FirstAired).ToList();
+                case "popularity":
+                    return tvShowsAllViewModel.OrderByDescending(tvShow => tvShow.TotalReviews).ToList();
+                case "rating":
+                    return tvShowsAllViewModel.OrderByDescending(tvShow => tvShow.Rating).ToList();
+                case "soon":
+                    return tvShowsAllViewModel.Where(tvShow => tvShow.FirstAired > DateTime.UtcNow).OrderByDescending(tvShow => tvShow.FirstAired).ToList();
+                default:
+                    return tvShowsAllViewModel.ToList();
+            }
+        }        
 
         public TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId)
         {
@@ -140,7 +154,8 @@ namespace MovieDatabase.Services
                     TVShowCharacter = actor.CharacterPlayed,
                 }).ToList(),
                 RandomReview = randomReview,
-                ReviewsCount = seasonFromDb.Reviews.Count(),
+                ReviewsCount = seasonFromDb.TotalReviews,
+
                 IsReviewedByCurrentUser = reviewService.ReviewExists(userId, seasonFromDb.Id),
             };
 
@@ -203,19 +218,7 @@ namespace MovieDatabase.Services
 
             return true;
         }
-
-        public List<SeasonsAndTVShowNameViewModel> GetAllSeasonsAndTVShowNames()
-        {
-            var tvShowsAndSeasonsViewModel = dbContext.Seasons.Select(season => new SeasonsAndTVShowNameViewModel
-            {
-                SeasonId = season.Id,
-                SeasonNumber = season.SeasonNumber,
-                TVShowName = season.TVShow.Name,
-            }).ToList();
-
-            return tvShowsAndSeasonsViewModel;
-        }
-
+        
         public bool AddRoleToTVShowSeason(AddRoleInputModel input)
         {
             if (!dbContext.Seasons.Any(season => season.Id == input.SeasonId))
@@ -227,8 +230,8 @@ namespace MovieDatabase.Services
                 return false;
             }
 
-            var seasonFromDb = dbContext.Seasons.SingleOrDefault(s => s.Id == input.SeasonId);
-            var artistFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Artist);
+            var seasonFromDb = dbContext.Seasons.SingleOrDefault(season => season.Id == input.SeasonId);
+            var artistFromDb = dbContext.Artists.SingleOrDefault(artist => artist.FullName == input.Artist);
 
             if (dbContext.SeasonRoles.Any(sr => sr.ArtistId == artistFromDb.Id && sr.SeasonId == seasonFromDb.Id))
             {
@@ -241,6 +244,7 @@ namespace MovieDatabase.Services
                 Artist = artistFromDb,
                 CharacterPlayed = input.CharacterPlayed,
             };
+
             dbContext.SeasonRoles.Add(seasonRoleForDb);
             dbContext.SaveChanges();
 

@@ -6,7 +6,13 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface ITVShowService
     {
-        List<TVShowAllViewModel> GetAllTVShowsAndOrder(string orderBy = null, string genreFilter = null, string userId = null);
+        List<string> GetAllTVShowNames();
+
+        List<TVShowAllViewModel> GetAllTVShows(string userId);
+
+        List<TVShowAllViewModel> FilterTVShowsByGenre(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter);
+
+        List<TVShowAllViewModel> OrderTVShows(List<TVShowAllViewModel> tvShowsAllViewModel, string orderBy);
 
         TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId);
 
@@ -18,6 +24,6 @@ namespace MovieDatabase.Services.Contracts
 
         bool AddRoleToTVShowSeason(AddRoleInputModel input);
 
-        List<SeasonsAndTVShowNameViewModel> GetAllSeasonsAndTVShowNames();
+        List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames();
     }
 }

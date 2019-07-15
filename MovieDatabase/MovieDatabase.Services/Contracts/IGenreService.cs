@@ -5,7 +5,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IGenreService
     {
-        List<string> GetAllGenres();
+        List<string> GetAllGenreNames();
 
         bool CreateGenre(CreateGenreInputModel input);
     }

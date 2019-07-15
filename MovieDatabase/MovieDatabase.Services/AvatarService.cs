@@ -31,7 +31,6 @@ namespace MovieDatabase.Services
 
                 user.AvatarLink = $"/user_avatars/{fileName}";
 
-                dbContext.Update(user);
                 dbContext.SaveChanges();
             }
         }

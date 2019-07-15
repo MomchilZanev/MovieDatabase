@@ -29,7 +29,10 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            genreService.CreateGenre(input);
+            if (!genreService.CreateGenre(input))
+            {
+                return View(input);
+            }
 
             return Redirect("/Home/Index");
         }

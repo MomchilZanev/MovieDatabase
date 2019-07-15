@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MovieDatabase.Models.ViewModels.Watchlist
 {
@@ -18,12 +16,6 @@ namespace MovieDatabase.Models.ViewModels.Watchlist
 
         public double Rating { get; set; }
 
-        public Category Category { get; set; }
-    }
-
-    public enum Category
-    {
-        Movies = 1,
-        TVShows = 2
+        public string Category { get; set; }
     }
 }

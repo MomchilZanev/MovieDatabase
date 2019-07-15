@@ -34,6 +34,8 @@ namespace MovieDatabase.Domain
 
         public double Rating => Reviews.Any() ? Reviews.Average(review => review.Rating) : 0;
 
+        public int TotalReviews => Reviews.Count();
+
         [Required]
         public string DirectorId { get; set; }
         public virtual Artist Director { get; set; }

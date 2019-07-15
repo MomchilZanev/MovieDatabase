@@ -26,6 +26,8 @@ namespace MovieDatabase.Domain
 
         public double Rating => Reviews.Any() ? Reviews.Average(review => review.Rating) : 0;
 
+        public int TotalReviews => Reviews.Count();
+
         [Required]
         public string TVShowId { get; set; }
         public virtual TVShow TVShow { get; set; }

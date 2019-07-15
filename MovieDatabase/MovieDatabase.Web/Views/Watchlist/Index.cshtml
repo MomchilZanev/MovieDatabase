@@ -26,7 +26,7 @@
             <div class="col-1"></div>
             <div class="col-10">
                 <div class="d-flex justify-content-between">
-                    <h2><a href="/@item.Category.ToString()/Details/@item.Id" class="text-warning">@item.Name (@item.ReleaseDate.ToString("dd MMMM yyyy"))</a></h2>
+                    <h2><a href="/@item.Category/Details/@item.Id" class="text-warning">@item.Name (@item.ReleaseDate.ToString("dd MMMM yyyy"))</a></h2>
                     <a href="/Watchlist/Remove/@item.Id" class="btn btn-group-vertical btn-outline-warning" role="button" aria-pressed="true">Remove</a>
                 </div>
                 <h3 class="text-warning font-italic font-weight-light">| Rating: @item.Rating.ToString("F1") |</h3>
@@ -36,7 +36,7 @@
             <div class="col-1"></div>
             <div class="col-10">
                 <div class="row">
-                    <a href="/@item.Category.ToString()/Details/@item.Id" class="col-3"><img class="rounded" src="@item.CoverImageLink" height="310" width="210"></a>
+                    <a href="/@item.Category/Details/@item.Id" class="col-3"><img class="rounded" src="@item.CoverImageLink" height="310" width="210"></a>
                     <p class="col-9 font-weight-light text-warning" style="font-size:x-large">@item.Description</p>
                 </div>
 

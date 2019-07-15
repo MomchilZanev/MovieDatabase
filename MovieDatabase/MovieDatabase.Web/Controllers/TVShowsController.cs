@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.TVShow;
 using MovieDatabase.Services.Contracts;
-using System.Linq;
 using System.Security.Claims;
 
 namespace MovieDatabase.Web.Controllers
@@ -28,11 +27,20 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var allTVShowsViewModel = tvShowService.GetAllTVShowsAndOrder(orderBy, genreFilter, userId);
+            var tvShowsAllViewModel = tvShowService.GetAllTVShows(userId);
 
-            ViewBag.Genres = genreService.GetAllGenres();
+            if (!string.IsNullOrEmpty(genreFilter))
+            {
+                tvShowsAllViewModel = tvShowService.FilterTVShowsByGenre(tvShowsAllViewModel, genreFilter);
+            }
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                tvShowsAllViewModel = tvShowService.OrderTVShows(tvShowsAllViewModel, orderBy);
+            }
 
-            return View(allTVShowsViewModel);
+            ViewBag.Genres = genreService.GetAllGenreNames();
+
+            return View(tvShowsAllViewModel);
         }
 
         public IActionResult Details(string id)
@@ -64,8 +72,8 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewBag.Genres = genreService.GetAllGenres();
-            ViewBag.Creators = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+            ViewBag.Genres = genreService.GetAllGenreNames();
+            ViewBag.Creators = artistService.GetAllArtistNames();
 
             return View();
         }
@@ -76,13 +84,19 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Genres = genreService.GetAllGenres();
-                ViewBag.Creators = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+                ViewBag.Genres = genreService.GetAllGenreNames();
+                ViewBag.Creators = artistService.GetAllArtistNames();
 
                 return View(input);
             }
 
-            tvShowService.CreateTVShow(input);
+            if (tvShowService.CreateTVShow(input))
+            {
+                ViewBag.Genres = genreService.GetAllGenreNames();
+                ViewBag.Creators = artistService.GetAllArtistNames();
+
+                return View(input);
+            }
 
             return Redirect("/TVShows/All?orderBy=release");
         }
@@ -90,7 +104,7 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddSeason()
         {
-            ViewBag.TVShows = tvShowService.GetAllTVShowsAndOrder().Select(a => a.Name).ToList();
+            ViewBag.TVShows = tvShowService.GetAllTVShowNames();
 
             return View();
         }
@@ -101,12 +115,17 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.TVShows = tvShowService.GetAllTVShowsAndOrder().Select(a => a.Name).ToList();
+                ViewBag.TVShows = tvShowService.GetAllTVShowNames();
 
                 return View(input);
             }
 
-            tvShowService.AddSeasonToTVShow(input);
+            if (!tvShowService.AddSeasonToTVShow(input))
+            {
+                ViewBag.TVShows = tvShowService.GetAllTVShowNames();
+
+                return View(input);
+            }
 
             return Redirect("/TVShows/All?orderBy=release");
         }
@@ -114,8 +133,8 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddRole()
         {
-            ViewBag.Seasons = tvShowService.GetAllSeasonsAndTVShowNames();
-            ViewBag.Artists = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+            ViewBag.Seasons = tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNames();
+            ViewBag.Artists = artistService.GetAllArtistNames();
 
             return View();
         }
@@ -126,13 +145,19 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Seasons = tvShowService.GetAllSeasonsAndTVShowNames();
-                ViewBag.Artists = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+                ViewBag.Seasons = tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNames();
+                ViewBag.Artists = artistService.GetAllArtistNames();
 
                 return View(input);
             }
 
-            tvShowService.AddRoleToTVShowSeason(input);
+            if (!tvShowService.AddRoleToTVShowSeason(input))
+            {
+                ViewBag.Seasons = tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNames();
+                ViewBag.Artists = artistService.GetAllArtistNames();
+
+                return View(input);
+            }
 
             return Redirect("/TVShows/All?orderBy=release");
         }

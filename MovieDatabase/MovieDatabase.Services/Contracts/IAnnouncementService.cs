@@ -6,7 +6,9 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IAnnouncementService
     {
-        List<AnnouncementViewModel> GetAllAnnouncementsAndOrder(string orderBy);
+        List<AnnouncementViewModel> GetAllAnnouncements();
+
+        List<AnnouncementViewModel> OrderAnnouncements(List<AnnouncementViewModel> announcements, string orderBy);
 
         bool CreateAnnouncement(CreateAnnouncementInputModel input);
     }

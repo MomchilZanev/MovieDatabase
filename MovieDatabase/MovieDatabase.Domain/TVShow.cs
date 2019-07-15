@@ -30,6 +30,8 @@ namespace MovieDatabase.Domain
 
         public double OverallRating => Seasons.Any() ? Seasons.Average(season => season.Rating) : 0;
 
+        public int TotalReviews => Seasons.Any() ? Seasons.Sum(season => season.TotalReviews) : 0;
+
         [Required]
         public string CreatorId { get; set; }
         public virtual Artist Creator { get; set; }

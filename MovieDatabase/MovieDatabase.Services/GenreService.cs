@@ -16,7 +16,7 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public List<string> GetAllGenres()
+        public List<string> GetAllGenreNames()
         {
             var genresFromDb = dbContext.Genres.Select(genre => genre.Name).ToList();
 

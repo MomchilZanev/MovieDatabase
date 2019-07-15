@@ -18,9 +18,9 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }        
 
-        public List<AnnouncementViewModel> GetAllAnnouncementsAndOrder(string orderBy)
+        public List<AnnouncementViewModel> GetAllAnnouncements()
         {
-            var announcementAllViewModel = dbContext.Announcements
+            var announcementsAllViewModel = dbContext.Announcements
                 .Select(announcement => new AnnouncementViewModel
                 {
                     Title = announcement.Title,
@@ -33,20 +33,20 @@ namespace MovieDatabase.Services
                 .OrderBy(a => a.Date)
                 .ToList();
 
-            if (orderBy == "latest")
-            {
-                announcementAllViewModel = announcementAllViewModel
-                    .OrderByDescending(announcment => announcment.Date)
-                    .ToList();
-            }
-            else if (orderBy == "oldest")
-            {
-                announcementAllViewModel = announcementAllViewModel
-                    .OrderBy(announcement => announcement.Date)
-                    .ToList();
-            }
+            return announcementsAllViewModel;
+        }
 
-            return announcementAllViewModel;
+        public List<AnnouncementViewModel> OrderAnnouncements(List<AnnouncementViewModel> announcements, string orderBy)
+        {
+            switch (orderBy)
+            {
+                case "latest":
+                    return announcements.OrderByDescending(announcment => announcment.Date).ToList();
+                case "oldest":
+                    return announcements.OrderBy(announcement => announcement.Date).ToList();
+                default:
+                    return announcements.ToList();
+            }
         }
 
         public bool CreateAnnouncement(CreateAnnouncementInputModel input)
@@ -62,7 +62,7 @@ namespace MovieDatabase.Services
                 Title = input.Title,
                 Content = input.Content,
                 OfficialArticleLink = input.OfficialArticleLink,
-                ImageLink = (input.ImageLink == "" || input.ImageLink == null) ? "/images/no_image.png" : input.ImageLink,
+                ImageLink = string.IsNullOrEmpty(input.ImageLink) ? "/images/no_image.png" : input.ImageLink,
                 Date = DateTime.UtcNow,
             };
             dbContext.Announcements.Add(announcementForDb);

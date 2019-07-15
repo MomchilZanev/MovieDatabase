@@ -8,16 +8,28 @@ namespace MovieDatabase.Services.Contracts
     {
         bool IsValidMovieOrSeasonId(string itemId);
 
+        string IsIdMovieOrSeasonId(string id);
+
         bool ReviewExists(string userId, string itemId);
 
-        List<ReviewAllViewModel> GetAllMovieOrSeasonReviews(string itemId);
+        List<ReviewAllViewModel> GetAllMovieReviews(string movieId);
 
-        CreateReviewInputModel GetUserReview(string userId, string itemId);
+        List<ReviewAllViewModel> GetAllSeasonReviews(string seasonId);
 
-        string DeleteUserReview(string userId, string itemId);
+        CreateReviewInputModel GetMovieReview(string userId, string movieId);
 
-        string CreateUserReview(string userId, string itemId, string content, int rating);
+        CreateReviewInputModel GetSeasonReview(string userId, string seasonId);
 
-        string UpdateUserReview(string userId, string itemId, string content, int rating);
+        bool CreateMovieReview(string userId, CreateReviewInputModel input);
+
+        bool CreateSeasonReview(string userId, CreateReviewInputModel input);
+
+        bool UpdateMovieReview(string userId, CreateReviewInputModel input);
+
+        bool UpdateSeasonReview(string userId, CreateReviewInputModel input);
+
+        bool DeleteMovieReview(string userId, string movieId);
+
+        bool DeleteSeasonReview(string userId, string seasonId);
     }
 }

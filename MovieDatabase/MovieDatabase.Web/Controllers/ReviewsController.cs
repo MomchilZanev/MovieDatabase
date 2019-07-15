@@ -17,38 +17,39 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All(string id)
         {
-            bool isValidId = reviewService.IsValidMovieOrSeasonId(id);
+            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
 
-            if (isValidId)
+            if (idIsValidMovieOrSeasonId)
             {
-                var allReviews = reviewService.GetAllMovieOrSeasonReviews(id);
+                var itemType = reviewService.IsIdMovieOrSeasonId(id);
 
-                return View(allReviews);
+                switch (itemType)
+                {
+                    case "Movie":
+                        var movieReviews = reviewService.GetAllMovieReviews(id);
+                        return View(movieReviews);
+                    case "Season":
+                        var seasonReviews = reviewService.GetAllSeasonReviews(id);
+                        return View(seasonReviews);
+                    default:
+                        return Redirect("/Home/Error");
+                }
             }
 
-            return Redirect("/Home/Index");
+            return Redirect("/Home/Error");
         }
 
         [Authorize]
         public IActionResult Create(string id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
 
-            bool isValidId = reviewService.IsValidMovieOrSeasonId(id);
-
-            if (isValidId)
+            if (idIsValidMovieOrSeasonId)
             {
-                var exists = reviewService.ReviewExists(userId, id);
-
-                if (exists)
-                {
-                    var reviewInputModel = reviewService.GetUserReview(userId, id);
-
-                    return View(reviewInputModel);
-                }
+                return View();
             }
 
-            return View();
+            return Redirect("/Home/Error");
         }
 
         [Authorize]
@@ -62,27 +63,106 @@ namespace MovieDatabase.Web.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            bool isValidId = reviewService.IsValidMovieOrSeasonId(input.Id);
+            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(input.Id);
 
-            if (isValidId)
+            if (idIsValidMovieOrSeasonId)
             {
-                var exists = reviewService.ReviewExists(userId, input.Id);
+                var itemType = reviewService.IsIdMovieOrSeasonId(input.Id);
 
-                if (exists)
+                switch (itemType)
                 {
-                    var controller = reviewService.UpdateUserReview(userId, input.Id, input.Content, input.Rating);
+                    case "Movie":
+                        if (!reviewService.CreateMovieReview(userId, input))
+                        {
+                            return Redirect("/Home/Error");
+                        }
 
-                    return Redirect($"/{controller}/All/");
-                }
-                else
-                {
-                    var controller = reviewService.CreateUserReview(userId, input.Id, input.Content, input.Rating);
+                        return Redirect($"/Movies/Details/{input.Id}");
+                    case "Season":
+                        if (!reviewService.CreateSeasonReview(userId, input))
+                        {
+                            return Redirect("/Home/Error");
+                        }
 
-                    return Redirect($"/{controller}/All/");
+                        return Redirect($"/TVShows/SeasonDetails/{input.Id}");
+                    default:
+                        return Redirect("/Home/Error");
                 }
             }
 
-            return Redirect("/");
+            return Redirect("/Home/Error");
+        }
+
+        [Authorize]
+        public IActionResult Update(string id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
+            bool reviewExists = reviewService.ReviewExists(userId, id);
+
+            if (idIsValidMovieOrSeasonId && reviewExists)
+            {
+                var itemType = reviewService.IsIdMovieOrSeasonId(id);
+
+                switch (itemType)
+                {
+                    case "Movie":
+                        var movieReview = reviewService.GetMovieReview(userId, id);
+
+                        return View(movieReview);
+                    case "Season":
+                        var seasonReview = reviewService.GetSeasonReview(userId, id);
+
+                        return View(seasonReview);
+                    default:
+                        return Redirect("/Home/Error");
+                }
+            }
+
+            return Redirect("/Home/Error");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Update(CreateReviewInputModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(input);
+            }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(input.Id);
+            bool reviewExists = reviewService.ReviewExists(userId, input.Id);
+
+            if (idIsValidMovieOrSeasonId && reviewExists)
+            {
+                var itemType = reviewService.IsIdMovieOrSeasonId(input.Id);
+
+                switch (itemType)
+                {
+                    case "Movie":
+                        if (!reviewService.UpdateMovieReview(userId, input))
+                        {
+                            return Redirect("/Home/Error");
+                        }
+
+                        return Redirect($"/Movies/Details/{input.Id}");
+                    case "Season":
+                        if (!reviewService.UpdateSeasonReview(userId, input))
+                        {
+                            return Redirect("/Home/Error");
+                        }
+
+                        return Redirect($"/TVShows/SeasonDetails/{input.Id}");
+                    default:
+                        return Redirect("/Home/Error");
+                }
+            }
+
+            return Redirect("/Home/Error");
         }
 
         [Authorize]
@@ -90,21 +170,34 @@ namespace MovieDatabase.Web.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            bool isValidId = reviewService.IsValidMovieOrSeasonId(id);
+            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
 
-            if (isValidId)
+            if (idIsValidMovieOrSeasonId)
             {
-                var exists = reviewService.ReviewExists(userId, id);
+                var itemType = reviewService.IsIdMovieOrSeasonId(id);
 
-                if (exists)
+                switch (itemType)
                 {
-                    string controller = reviewService.DeleteUserReview(userId, id);
+                    case "Movie":
+                        if (!reviewService.DeleteMovieReview(userId, id))
+                        {
+                            return Redirect("/Home/Error");
+                        }
 
-                    return Redirect($"/{controller}/All");
+                        return Redirect($"/Movies/Details/{id}");
+                    case "Season":
+                        if (!reviewService.DeleteSeasonReview(userId, id))
+                        {
+                            return Redirect("/Home/Error");
+                        }
+
+                        return Redirect($"/TVShows/SeasonDetails/{id}");
+                    default:
+                        return Redirect("/Home/Error");
                 }
             }
 
-            return Redirect($"/Home/Index");
+            return Redirect($"/Home/Error");
         }
     }
 }

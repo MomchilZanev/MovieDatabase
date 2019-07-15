@@ -18,7 +18,7 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }        
 
-        public bool IsValidMovieOrSeasonId(string itemId)
+        public bool IsValidMovieOrSeasonId(string itemId)//TODO: Move to separate service
         {
             if (dbContext.Movies.Any(movie => movie.Id == itemId) || dbContext.Seasons.Any(t => t.Id == itemId))
             {
@@ -26,6 +26,20 @@ namespace MovieDatabase.Services
             }
 
             return false;
+        }
+
+        public string IsIdMovieOrSeasonId(string id)//TODO: Move to separate service
+        {
+            if (dbContext.Movies.Any(movie => movie.Id == id))
+            {
+                return "Movie";
+            }
+            else if (dbContext.Seasons.Any(season => season.Id == id))
+            {
+                return "Season";
+            }
+
+            return "Neither";
         }
 
         public bool ReviewExists(string userId, string itemId)
@@ -39,12 +53,11 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public List<ReviewAllViewModel> GetAllMovieOrSeasonReviews(string itemId)
+        public List<ReviewAllViewModel> GetAllMovieReviews(string movieId)
         {
-            if (dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == itemId))
-            {
-                var movieReviewsFromDb = dbContext.MovieReviews
-                    .Where(movieReview => movieReview.MovieId == itemId)
+            var movieReviewsFromDb = dbContext.MovieReviews.Where(movieReview => movieReview.MovieId == movieId);
+
+            var reviewsAllViewModel = movieReviewsFromDb
                     .Select(movieReview => new ReviewAllViewModel
                     {
                         User = movieReview.User.UserName,
@@ -54,12 +67,14 @@ namespace MovieDatabase.Services
                         Date = movieReview.Date,
                     }).ToList();
 
-                return movieReviewsFromDb;
-            }
-            else if (dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == itemId))
-            {
-                var seasonReviewsFromDb = dbContext.SeasonReviews
-                    .Where(seasonReview => seasonReview.SeasonId == itemId)
+            return reviewsAllViewModel;
+        }
+
+        public List<ReviewAllViewModel> GetAllSeasonReviews(string seasonId)
+        {
+            var seasonReviewsFromDb = dbContext.SeasonReviews.Where(seasonReview => seasonReview.SeasonId == seasonId);
+
+            var reviewsAllViewModel = seasonReviewsFromDb
                     .Select(seasonReview => new ReviewAllViewModel
                     {
                         User = seasonReview.User.UserName,
@@ -69,138 +84,153 @@ namespace MovieDatabase.Services
                         Date = seasonReview.Date,
                     }).ToList();
 
-                return seasonReviewsFromDb;
-            }
-
-            return new List<ReviewAllViewModel>();
+            return reviewsAllViewModel;
         }
 
-        public CreateReviewInputModel GetUserReview(string userId, string itemId)
+        public CreateReviewInputModel GetMovieReview(string userId, string movieId)
         {
-            if (dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == itemId && movieReview.UserId == userId))
+            var movieReviewFromDb = dbContext.MovieReviews
+                    .SingleOrDefault(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId);
+
+            var movieReviewInputModel = new CreateReviewInputModel
             {
-                var movieReviewFromDb = dbContext.MovieReviews
-                    .SingleOrDefault(movieReview => movieReview.MovieId == itemId && movieReview.UserId == userId);
+                Id = movieReviewFromDb.MovieId,
+                Content = movieReviewFromDb.Content,
+                Rating = movieReviewFromDb.Rating,
+            };
 
-                return new CreateReviewInputModel
-                {
-                    Id = movieReviewFromDb.MovieId,
-                    Content = movieReviewFromDb.Content,
-                    Rating = movieReviewFromDb.Rating,
-                };
-            }
-            else if (dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == itemId && seasonReview.UserId == userId))
-            {
-                var seasonReviewFromDb = dbContext.SeasonReviews
-                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == itemId && seasonReview.UserId == userId);
-
-                return new CreateReviewInputModel
-                {
-                    Id = seasonReviewFromDb.SeasonId,
-                    Content = seasonReviewFromDb.Content,
-                    Rating = seasonReviewFromDb.Rating,
-                };
-            }
-
-            return null;
+            return movieReviewInputModel;
         }
 
-        public string CreateUserReview(string userId, string itemId, string content, int rating)
+        public CreateReviewInputModel GetSeasonReview(string userId, string seasonId)
         {
-            if (dbContext.Movies.Any(movie => movie.Id == itemId))
+            var seasonReviewFromDb = dbContext.SeasonReviews
+                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId);
+
+            var seasonReviewInputModel = new CreateReviewInputModel
             {
-                var movieReviewForDb = new MovieReview
-                {
-                    MovieId = itemId,
-                    UserId = userId,
-                    Content = content,
-                    Rating = rating,
-                    Date = DateTime.UtcNow,                    
-                };
+                Id = seasonReviewFromDb.SeasonId,
+                Content = seasonReviewFromDb.Content,
+                Rating = seasonReviewFromDb.Rating,
+            };
 
-                dbContext.MovieReviews.Add(movieReviewForDb);
-                dbContext.SaveChanges();
-
-                return "Movies";
-            }
-            else if (dbContext.Seasons.Any(s => s.Id == itemId))
-            {
-                var seasonReviewForDb = new SeasonReview
-                {
-                    SeasonId = itemId,
-                    UserId = userId,
-                    Content = content,
-                    Rating = rating,
-                    Date = DateTime.UtcNow,
-                };
-
-                dbContext.SeasonReviews.Add(seasonReviewForDb);
-                dbContext.SaveChanges();
-
-                return "TVShows";
-            }
-
-            return "Error";
+            return seasonReviewInputModel;
         }
 
-        public string UpdateUserReview(string userId, string itemId, string content, int rating)
+        public bool CreateMovieReview(string userId , CreateReviewInputModel input)
         {
-            if (dbContext.Movies.Any(movie => movie.Id == itemId))
+            if (dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
             {
-                var movieReviewFromDb = dbContext.MovieReviews
-                    .SingleOrDefault(movieReview => movieReview.MovieId == itemId && movieReview.UserId == userId);
-
-                movieReviewFromDb.Content = content;
-                movieReviewFromDb.Rating = rating;
-                movieReviewFromDb.Date = DateTime.UtcNow;
-
-                dbContext.Update(movieReviewFromDb);
-                dbContext.SaveChanges();
-
-                return "Movies";
-            }
-            else if (dbContext.Seasons.Any(season => season.Id == itemId))
-            {
-                var seasonReviewForDb = dbContext.SeasonReviews.SingleOrDefault(seasonReview => seasonReview.SeasonId == itemId && seasonReview.UserId == userId);
-
-                seasonReviewForDb.Content = content;
-                seasonReviewForDb.Rating = rating;
-                seasonReviewForDb.Date = DateTime.UtcNow;
-
-                dbContext.Update(seasonReviewForDb);
-                dbContext.SaveChanges();
-
-                return "TVShows";
+                return false;
             }
 
-            return "Error";
+            var movieReviewForDb = new MovieReview
+            {
+                MovieId = input.Id,
+                UserId = userId,
+                Content = input.Content,
+                Rating = input.Rating,
+                Date = DateTime.UtcNow,
+            };
+
+            dbContext.MovieReviews.Add(movieReviewForDb);
+            dbContext.SaveChanges();
+
+            return true;
         }
 
-        public string DeleteUserReview(string userId, string itemId)
+        public bool CreateSeasonReview(string userId, CreateReviewInputModel input)
         {
-            if (dbContext.Movies.Any(movie => movie.Id == itemId))
+            if (dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
             {
-                var movieReviewFromDb = dbContext.MovieReviews
-                    .SingleOrDefault(movieReview => movieReview.MovieId == itemId && movieReview.UserId == userId);
-
-                dbContext.MovieReviews.Remove(movieReviewFromDb);
-
-                dbContext.SaveChanges();
-
-                return "Movies";
-            }
-            else if (dbContext.Seasons.Any(season => season.Id == itemId))
-            {
-                var seasonReviewFromDb = dbContext.SeasonReviews
-                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == itemId && seasonReview.UserId == userId);
-
-                dbContext.SeasonReviews.Remove(seasonReviewFromDb);
-                dbContext.SaveChanges();
-
-                return "TVShows";
+                return false;
             }
 
-            return "Error";
-        }        
+            var seasonReviewForDb = new SeasonReview
+            {
+                SeasonId = input.Id,
+                UserId = userId,
+                Content = input.Content,
+                Rating = input.Rating,
+                Date = DateTime.UtcNow,
+            };
+
+            dbContext.SeasonReviews.Add(seasonReviewForDb);
+            dbContext.SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateMovieReview(string userId, CreateReviewInputModel input)
+        {
+            if (!dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
+            {
+                return false;
+            }
+
+            var movieReviewFromDb = dbContext.MovieReviews
+                    .SingleOrDefault(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId);
+
+            movieReviewFromDb.Content = input.Content;
+            movieReviewFromDb.Rating = input.Rating;
+            movieReviewFromDb.Date = DateTime.UtcNow;
+
+            dbContext.SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateSeasonReview(string userId, CreateReviewInputModel input)
+        {
+            if (!dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
+            {
+                return false;
+            }
+
+            var seasonReviewFromDb = dbContext.SeasonReviews
+                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId);
+
+            seasonReviewFromDb.Content = input.Content;
+            seasonReviewFromDb.Rating = input.Rating;
+            seasonReviewFromDb.Date = DateTime.UtcNow;
+
+            dbContext.SaveChanges();
+
+            return true;
+        }
+
+        public bool DeleteMovieReview(string userId, string movieId)
+        {
+            if (!dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId))
+            {
+                return false;
+            }
+
+            var movieReviewFromDb = dbContext.MovieReviews
+                    .SingleOrDefault(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId);
+
+            dbContext.MovieReviews.Remove(movieReviewFromDb);
+
+            dbContext.SaveChanges();
+
+            return true;
+        }
+
+        public bool DeleteSeasonReview(string userId, string seasonId)
+        {
+            if (!dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId))
+            {
+                return false;
+            }
+
+            var seasonReviewFromDb = dbContext.SeasonReviews
+                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId);
+
+            dbContext.SeasonReviews.Remove(seasonReviewFromDb);
+
+            dbContext.SaveChanges();
+
+            return true;
+        }    
     }
 }

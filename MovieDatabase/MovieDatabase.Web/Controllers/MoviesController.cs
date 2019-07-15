@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.Movie;
 using MovieDatabase.Services.Contracts;
-using System.Linq;
 using System.Security.Claims;
 
 namespace MovieDatabase.Web.Controllers
@@ -41,18 +40,27 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var allMoviesOrdered = movieService.GetAllMoviesAndOrder(orderBy, genreFilter, userId);
+            var moviesAllViewModel = movieService.GetAllMovies(userId);
 
-            ViewBag.Genres = genreService.GetAllGenres();
+            if (!string.IsNullOrEmpty(genreFilter))
+            {
+                moviesAllViewModel = movieService.FilterMoviesByGenre(moviesAllViewModel, genreFilter);
+            }
+            if (!string.IsNullOrEmpty(orderBy))
+            {
+                moviesAllViewModel = movieService.OrderMovies(moviesAllViewModel, orderBy);
+            }
 
-            return View(allMoviesOrdered);
+            ViewBag.Genres = genreService.GetAllGenreNames();
+
+            return View(moviesAllViewModel);
         }
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewBag.Genres = genreService.GetAllGenres();
-            ViewBag.Directors = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+            ViewBag.Genres = genreService.GetAllGenreNames();
+            ViewBag.Directors = artistService.GetAllArtistNames();
 
             return View();
         }
@@ -63,13 +71,19 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Genres = genreService.GetAllGenres();
-                ViewBag.Directors = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+                ViewBag.Genres = genreService.GetAllGenreNames();
+                ViewBag.Directors = artistService.GetAllArtistNames();
 
                 return View(input);
             }
 
-            movieService.CreateMovie(input);
+            if (movieService.CreateMovie(input))
+            {
+                ViewBag.Genres = genreService.GetAllGenreNames();
+                ViewBag.Directors = artistService.GetAllArtistNames();
+
+                return View(input);
+            }
 
             return Redirect("/Movies/All?orderBy=release");
         }
@@ -77,8 +91,8 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddRole()
         {
-            ViewBag.Movies = movieService.GetAllMoviesAndOrder().Select(m => m.Name).ToList();//TODO: Create dedicated method
-            ViewBag.Artists = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+            ViewBag.Movies = movieService.GetAllMovieNames();
+            ViewBag.Artists = artistService.GetAllArtistNames();
 
             return View();
         }
@@ -89,13 +103,19 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Movies = movieService.GetAllMoviesAndOrder().Select(m => m.Name).ToList();
-                ViewBag.Artists = artistService.GetAllArtistsAndOrder().Select(a => a.FullName).ToList();
+                ViewBag.Movies = movieService.GetAllMovieNames();
+                ViewBag.Artists = artistService.GetAllArtistNames();
 
                 return View(input);
             }
 
-            movieService.AddRoleToMovie(input);
+            if (!movieService.AddRoleToMovie(input))
+            {
+                ViewBag.Movies = movieService.GetAllMovieNames();
+                ViewBag.Artists = artistService.GetAllArtistNames();
+
+                return View(input);
+            }
 
             return Redirect("/Movies/All?orderBy=release");
         }

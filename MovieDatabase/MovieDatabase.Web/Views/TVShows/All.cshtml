@@ -1,11 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using MovieDatabase.Domain
-@using System.Web
-
-@model List<MovieDatabase.Models.ViewModels.TVShow.TVShowAllViewModel>
-
-@inject SignInManager<MovieDatabaseUser> SignInManager
-@inject UserManager<MovieDatabaseUser> UserManager
+﻿@model List<MovieDatabase.Models.ViewModels.TVShow.TVShowAllViewModel>
 
 @{
     ViewData["Title"] = "All TV Shows";
@@ -37,21 +30,7 @@
                     <font class="font-weight-light" size="6"><span>@tvShow.Rating.ToString("F1")</span></font><br />
                 </td>
                 <td class="align-middle">
-                    @{
-                        var currentQuery = HttpUtility.UrlEncode(@Context.Request.QueryString.ToString());
-                    }
-                    @if (tvShow.Watchlisted && SignInManager.IsSignedIn(User))
-                    {
-                        <a href="/Watchlist/AddRemove/?id=@tvShow.Id&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_true.svg" height="50" /><br /></a>
-                    }
-                    else if (SignInManager.IsSignedIn(User))
-                    {
-                        <a href="/Watchlist/AddRemove/?id=@tvShow.Id&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_false.svg" height="50" /><br /></a>
-                    }
-                    else
-                    {
-                        <img src="~/icons/bookmark_false.svg" height="50" /><br />
-                    }
+                    <partial name="_AddRemoveToWatchlistPartial" model="tvShow">
                 </td>
             </tr>
         }

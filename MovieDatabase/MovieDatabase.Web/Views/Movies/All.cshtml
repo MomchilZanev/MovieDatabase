@@ -1,11 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using MovieDatabase.Domain
-@using System.Web
-
-@model List<MovieDatabase.Models.ViewModels.Movie.MovieAllViewModel>
-
-@inject SignInManager<MovieDatabaseUser> SignInManager
-@inject UserManager<MovieDatabaseUser> UserManager
+﻿@model List<MovieDatabase.Models.ViewModels.Movie.MovieAllViewModel>
 
 @{
     ViewData["Title"] = "All Movies";
@@ -36,21 +29,7 @@
                     <font size="6"><span class="font-weight-light">@movie.Rating.ToString("F1")</span></font><br />
                 </td>
                 <td class="align-middle">
-                    @{
-                        var currentQuery = HttpUtility.UrlEncode(@Context.Request.QueryString.ToString());
-                    }
-                    @if (movie.Watchlisted && SignInManager.IsSignedIn(User))
-                    {
-                        <a href="/Watchlist/AddRemove/?id=@movie.Id&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_true.svg" height="50" /><br /></a>
-                    }
-                    else if (SignInManager.IsSignedIn(User))
-                    {
-                        <a href="/Watchlist/AddRemove/?id=@movie.Id&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_false.svg" height="50" /><br /></a>
-                    }
-                    else
-                    {
-                        <img src="~/icons/bookmark_false.svg" height="50" /><br />
-                    }
+                    <partial name="_AddRemoveToWatchlistPartial" model="movie">
                 </td>
             </tr>
         }

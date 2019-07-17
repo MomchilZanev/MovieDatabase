@@ -9,27 +9,33 @@ namespace MovieDatabase.Domain
     {
         public Movie()
         {
-            this.Cast = new HashSet<MovieRole>();
-            this.Reviews = new HashSet<MovieReview>();
+            Cast = new HashSet<MovieRole>();
+            Reviews = new HashSet<MovieReview>();
         }
 
+        [Required]
         [Key]
         public string Id { get; set; }
 
         [Required]
+        [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
 
         public DateTime ReleaseDate { get; set; }
 
         [Required]
+        [StringLength(1000, MinimumLength = 25)]
         public string Description { get; set; }
 
+        [Range(60, 300)]
         public int Length { get; set; }
 
         public virtual Genre Genre { get; set; }
 
+        [Required]
         public string CoverImageLink { get; set; }
 
+        [Required]
         public string TrailerLink { get; set; }
 
         public double Rating => Reviews.Any() ? Reviews.Average(review => review.Rating) : 0;

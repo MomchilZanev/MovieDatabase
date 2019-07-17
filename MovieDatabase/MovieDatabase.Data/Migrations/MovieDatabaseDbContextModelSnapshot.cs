@@ -139,10 +139,12 @@ namespace MovieDatabase.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(1000);
 
                     b.Property<string>("Creator")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("Date");
 
@@ -152,7 +154,8 @@ namespace MovieDatabase.Data.Migrations
                         .IsRequired();
 
                     b.Property<string>("Title")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
@@ -165,14 +168,17 @@ namespace MovieDatabase.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Biography")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(10000);
 
                     b.Property<DateTime>("BirthDate");
 
                     b.Property<string>("FullName")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(50);
 
-                    b.Property<string>("PhotoLink");
+                    b.Property<string>("PhotoLink")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -184,7 +190,9 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.HasKey("Id");
 
@@ -196,10 +204,12 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CoverImageLink");
+                    b.Property<string>("CoverImageLink")
+                        .IsRequired();
 
                     b.Property<string>("Description")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(1000);
 
                     b.Property<string>("DirectorId")
                         .IsRequired();
@@ -209,11 +219,13 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<int>("Length");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("ReleaseDate");
 
-                    b.Property<string>("TrailerLink");
+                    b.Property<string>("TrailerLink")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -231,7 +243,8 @@ namespace MovieDatabase.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("AvatarLink");
+                    b.Property<string>("AvatarLink")
+                        .IsRequired();
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -284,7 +297,8 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.Property<string>("Content")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(10000);
 
                     b.Property<DateTime>("Date");
 
@@ -304,7 +318,8 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("ArtistId");
 
                     b.Property<string>("CharacterPlayed")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.HasKey("MovieId", "ArtistId");
 
@@ -356,7 +371,8 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.Property<string>("Content")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(10000);
 
                     b.Property<DateTime>("Date");
 
@@ -376,7 +392,8 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("ArtistId");
 
                     b.Property<string>("CharacterPlayed")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.HasKey("SeasonId", "ArtistId");
 
@@ -390,20 +407,24 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CoverImageLink");
+                    b.Property<string>("CoverImageLink")
+                        .IsRequired();
 
                     b.Property<string>("CreatorId")
                         .IsRequired();
 
                     b.Property<string>("Description")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(1000);
 
                     b.Property<string>("GenreId");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(50);
 
-                    b.Property<string>("TrailerLink");
+                    b.Property<string>("TrailerLink")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

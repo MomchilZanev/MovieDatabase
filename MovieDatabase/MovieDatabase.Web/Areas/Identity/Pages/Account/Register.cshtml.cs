@@ -73,12 +73,9 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new MovieDatabaseUser { UserName = Input.UserName, Email = Input.Email };
+                var user = new MovieDatabaseUser { UserName = Input.UserName, Email = Input.Email, AvatarLink = "/user_avatars/no_avatar.jpg" };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
-                user.AvatarLink = "/user_avatars/no_avatar.jpg";
-                await _userManager.UpdateAsync(user);
 
                 if (_userManager.Users.Count() == 1)
                 {

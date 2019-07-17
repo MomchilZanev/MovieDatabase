@@ -14,8 +14,10 @@ namespace MovieDatabase.Domain
         public virtual MovieDatabaseUser User { get; set; }
 
         [Required]
+        [StringLength(10000, MinimumLength = 10)]
         public string Content { get; set; }
 
+        [Range(1, 10)]
         public int Rating { get; set; }
 
         public DateTime Date { get; set; }

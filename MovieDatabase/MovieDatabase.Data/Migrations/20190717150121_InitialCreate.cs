@@ -13,9 +13,12 @@ namespace MovieDatabase.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    Content = table.Column<string>(nullable: false),
-                    ImageLink = table.Column<string>(nullable: true)
+                    Title = table.Column<string>(maxLength: 200, nullable: false),
+                    Creator = table.Column<string>(maxLength: 50, nullable: false),
+                    Content = table.Column<string>(maxLength: 1000, nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    ImageLink = table.Column<string>(nullable: true),
+                    OfficialArticleLink = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,10 +30,10 @@ namespace MovieDatabase.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    FullName = table.Column<string>(nullable: false),
+                    FullName = table.Column<string>(maxLength: 50, nullable: false),
                     BirthDate = table.Column<DateTime>(nullable: false),
-                    Biography = table.Column<string>(nullable: false),
-                    PhotoLink = table.Column<string>(nullable: true)
+                    Biography = table.Column<string>(maxLength: 10000, nullable: false),
+                    PhotoLink = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,7 +73,7 @@ namespace MovieDatabase.Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    AvatarLink = table.Column<string>(nullable: true)
+                    AvatarLink = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,7 +85,7 @@ namespace MovieDatabase.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -135,8 +138,8 @@ namespace MovieDatabase.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -180,8 +183,8 @@ namespace MovieDatabase.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -200,12 +203,13 @@ namespace MovieDatabase.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    ReleaseDate = table.Column<DateTime>(nullable: true),
-                    Description = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    ReleaseDate = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(maxLength: 1000, nullable: false),
                     Length = table.Column<int>(nullable: false),
                     GenreId = table.Column<string>(nullable: true),
-                    CoverImageLink = table.Column<string>(nullable: true),
+                    CoverImageLink = table.Column<string>(nullable: false),
+                    TrailerLink = table.Column<string>(nullable: false),
                     DirectorId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -230,9 +234,11 @@ namespace MovieDatabase.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Description = table.Column<string>(maxLength: 1000, nullable: false),
                     GenreId = table.Column<string>(nullable: true),
+                    CoverImageLink = table.Column<string>(nullable: false),
+                    TrailerLink = table.Column<string>(nullable: false),
                     CreatorId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -258,7 +264,7 @@ namespace MovieDatabase.Data.Migrations
                 {
                     MovieId = table.Column<string>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
-                    Content = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(maxLength: 10000, nullable: false),
                     Rating = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false)
                 },
@@ -285,7 +291,7 @@ namespace MovieDatabase.Data.Migrations
                 {
                     MovieId = table.Column<string>(nullable: false),
                     ArtistId = table.Column<string>(nullable: false),
-                    CharacterPlayed = table.Column<string>(nullable: false)
+                    CharacterPlayed = table.Column<string>(maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -334,7 +340,7 @@ namespace MovieDatabase.Data.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     SeasonNumber = table.Column<int>(nullable: false),
-                    ReleaseDate = table.Column<DateTime>(nullable: true),
+                    ReleaseDate = table.Column<DateTime>(nullable: false),
                     Episodes = table.Column<int>(nullable: false),
                     LengthPerEpisode = table.Column<int>(nullable: false),
                     TVShowId = table.Column<string>(nullable: false)
@@ -380,7 +386,7 @@ namespace MovieDatabase.Data.Migrations
                 {
                     SeasonId = table.Column<string>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
-                    Content = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(maxLength: 10000, nullable: false),
                     Rating = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false)
                 },
@@ -407,7 +413,7 @@ namespace MovieDatabase.Data.Migrations
                 {
                     SeasonId = table.Column<string>(nullable: false),
                     ArtistId = table.Column<string>(nullable: false),
-                    CharacterPlayed = table.Column<string>(nullable: false)
+                    CharacterPlayed = table.Column<string>(maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {

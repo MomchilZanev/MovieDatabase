@@ -1,11 +1,12 @@
 ﻿using MovieDatabase.Models.InputModels.Genre;
+using MovieDatabase.Models.ViewModels.Genre;
 using System.Collections.Generic;
 
 namespace MovieDatabase.Services.Contracts
 {
     public interface IGenreService
     {
-        List<string> GetAllGenreNames();
+        List<GenreAllViewModel> GetAllGenreNames();
 
         bool CreateGenre(CreateGenreInputModel input);
     }

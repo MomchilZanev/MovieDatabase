@@ -6,7 +6,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface ITVShowService
     {
-        List<string> GetAllTVShowNames();
+        List<TVShowNameViewModel> GetAllTVShowNames();
 
         List<TVShowAllViewModel> GetAllTVShows(string userId);
 

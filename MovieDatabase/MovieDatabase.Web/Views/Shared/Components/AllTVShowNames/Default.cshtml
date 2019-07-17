@@ -1,0 +1,6 @@
+﻿@model List<MovieDatabase.Models.ViewModels.TVShow.TVShowNameViewModel>
+
+@foreach (var tvShow in Model)
+{
+    <option value="@tvShow.Name">@tvShow.Name</option>
+}

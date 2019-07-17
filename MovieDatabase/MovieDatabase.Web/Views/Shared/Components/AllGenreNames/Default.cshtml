@@ -1,0 +1,6 @@
+﻿@model List<MovieDatabase.Models.ViewModels.Genre.GenreAllViewModel>
+
+@foreach (var genre in Model)
+{
+    <option value="@genre.Name">@genre.Name</option>
+}

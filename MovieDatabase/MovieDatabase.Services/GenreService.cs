@@ -1,6 +1,7 @@
 ﻿using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Genre;
+using MovieDatabase.Models.ViewModels.Genre;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,14 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public List<string> GetAllGenreNames()
+        public List<GenreAllViewModel> GetAllGenreNames()
         {
-            var genresFromDb = dbContext.Genres.Select(genre => genre.Name).ToList();
+            var allGenreNames = dbContext.Genres.Select(genre => new GenreAllViewModel
+            {
+                Name = genre.Name,
+            }).ToList();
 
-            return genresFromDb;
+            return allGenreNames;
         }
 
         public bool CreateGenre(CreateGenreInputModel input)

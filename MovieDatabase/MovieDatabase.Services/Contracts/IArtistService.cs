@@ -8,7 +8,7 @@ namespace MovieDatabase.Services.Contracts
     {
         List<ArtistAllViewModel> GetAllArtists();
 
-        List<string> GetAllArtistNames();
+        List<ArtistNameViewModel> GetAllArtistNames();
 
         ArtistDetailsViewModel GetArtistAndDetailsById(string artistId);
 

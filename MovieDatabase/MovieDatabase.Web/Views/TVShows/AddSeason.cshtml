@@ -14,11 +14,9 @@
     <div class="row col-8 d-flex justify-content-between">
         <div class="mt-1 mb-3 col-8">
             <label asp-for="TVShow"></label>
-            <select asp-for="TVShow" class="form-control mb-2" placeholder="Artists biography">
-                @foreach (var tvShow in ViewBag.TVShows)
-                {
-                    <option value="@tvShow">@tvShow</option>
-                }
+            <select asp-for="TVShow" class="form-control mb-2" placeholder="TV Show Name">
+                <option selected disabled>TV Show Name</option>
+                <vc:all-tv-show-names></vc:all-tv-show-names>
             </select>
             <span asp-validation-for="TVShow" class="text-danger"></span>
         </div>

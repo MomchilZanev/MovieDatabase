@@ -38,8 +38,6 @@ namespace MovieDatabase.Web.Controllers
                 tvShowsAllViewModel = tvShowService.OrderTVShows(tvShowsAllViewModel, orderBy);
             }
 
-            ViewBag.Genres = genreService.GetAllGenreNames();
-
             return View(tvShowsAllViewModel);
         }
 
@@ -72,9 +70,6 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewBag.Genres = genreService.GetAllGenreNames();
-            ViewBag.Creators = artistService.GetAllArtistNames();
-
             return View();
         }
 
@@ -84,17 +79,11 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Genres = genreService.GetAllGenreNames();
-                ViewBag.Creators = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 
-            if (tvShowService.CreateTVShow(input))
+            if (!tvShowService.CreateTVShow(input))
             {
-                ViewBag.Genres = genreService.GetAllGenreNames();
-                ViewBag.Creators = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 
@@ -104,8 +93,6 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddSeason()
         {
-            ViewBag.TVShows = tvShowService.GetAllTVShowNames();
-
             return View();
         }
 
@@ -115,15 +102,11 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.TVShows = tvShowService.GetAllTVShowNames();
-
                 return View(input);
             }
 
             if (!tvShowService.AddSeasonToTVShow(input))
             {
-                ViewBag.TVShows = tvShowService.GetAllTVShowNames();
-
                 return View(input);
             }
 
@@ -133,9 +116,6 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddRole()
         {
-            ViewBag.Seasons = tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNames();
-            ViewBag.Artists = artistService.GetAllArtistNames();
-
             return View();
         }
 
@@ -145,17 +125,11 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Seasons = tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNames();
-                ViewBag.Artists = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 
             if (!tvShowService.AddRoleToTVShowSeason(input))
             {
-                ViewBag.Seasons = tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNames();
-                ViewBag.Artists = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 

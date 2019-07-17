@@ -36,9 +36,12 @@ namespace MovieDatabase.Services
             return artistsAllViewModel;
         }
 
-        public List<string> GetAllArtistNames()
+        public List<ArtistNameViewModel> GetAllArtistNames()
         {
-            var allArtistNames = dbContext.Artists.Select(artist => artist.FullName).ToList();
+            var allArtistNames = dbContext.Artists.Select(artist => new ArtistNameViewModel
+            {
+                FullName = artist.FullName,
+            }).ToList();
 
             return allArtistNames;
         }

@@ -1,0 +1,6 @@
+﻿@model List<MovieDatabase.Models.ViewModels.TVShow.SeasonsAndTVShowNameViewModel>
+
+@foreach (var season in Model)
+{
+    <option value="@season.SeasonId">@season.TVShowName Season @season.SeasonNumber</option>
+}

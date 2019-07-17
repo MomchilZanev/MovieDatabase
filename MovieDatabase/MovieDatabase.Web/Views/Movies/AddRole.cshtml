@@ -18,10 +18,8 @@
         <div class="mb-3 col-6">
             <label asp-for="Movie"></label>
             <select asp-for="Movie" class="form-control mb-2" placeholder="Movie Name">
-                @foreach (var movie in ViewBag.Movies)
-                {
-                    <option value="@movie">@movie</option>
-                }
+                <option selected disabled>Movie Name</option>
+                <vc:all-movie-names></vc:all-movie-names>
             </select>
             <span asp-validation-for="Movie" class="text-danger"></span>
         </div>
@@ -33,10 +31,8 @@
             <div class="mt-3 mb-3 col-6">
                 <label asp-for="Artist"></label>
                 <select asp-for="Artist" class="form-control mb-2" placeholder="Actor Name">
-                    @foreach (var artist in ViewBag.Artists)
-                    {
-                        <option value="@artist">@artist</option>
-                    }
+                    <option selected disabled>Actor Name</option>
+                    <vc:all-artist-names></vc:all-artist-names>
                 </select>
                 <span asp-validation-for="Artist" class="text-danger"></span>
             </div>

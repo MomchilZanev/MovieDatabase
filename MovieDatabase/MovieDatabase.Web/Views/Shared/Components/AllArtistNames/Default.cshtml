@@ -1,0 +1,6 @@
+﻿@model List<MovieDatabase.Models.ViewModels.Artist.ArtistNameViewModel>
+
+@foreach (var artist in Model)
+{
+    <option value="@artist.FullName">@artist.FullName</option>
+}

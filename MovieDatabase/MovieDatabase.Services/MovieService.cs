@@ -42,9 +42,12 @@ namespace MovieDatabase.Services
             return moviesAllViewModel;
         }
 
-        public List<string> GetAllMovieNames()
+        public List<MovieNameViewModel> GetAllMovieNames()
         {
-            var allMovieNames = dbContext.Movies.Select(movie => movie.Name).ToList();
+            var allMovieNames = dbContext.Movies.Select(movie => new MovieNameViewModel
+            {
+                Name = movie.Name,
+            }).ToList();
 
             return allMovieNames;
         }

@@ -51,17 +51,12 @@ namespace MovieDatabase.Web.Controllers
                 moviesAllViewModel = movieService.OrderMovies(moviesAllViewModel, orderBy);
             }
 
-            ViewBag.Genres = genreService.GetAllGenreNames();
-
             return View(moviesAllViewModel);
         }
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewBag.Genres = genreService.GetAllGenreNames();
-            ViewBag.Directors = artistService.GetAllArtistNames();
-
             return View();
         }
 
@@ -71,17 +66,11 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Genres = genreService.GetAllGenreNames();
-                ViewBag.Directors = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 
-            if (movieService.CreateMovie(input))
+            if (!movieService.CreateMovie(input))
             {
-                ViewBag.Genres = genreService.GetAllGenreNames();
-                ViewBag.Directors = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 
@@ -91,9 +80,6 @@ namespace MovieDatabase.Web.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddRole()
         {
-            ViewBag.Movies = movieService.GetAllMovieNames();
-            ViewBag.Artists = artistService.GetAllArtistNames();
-
             return View();
         }
 
@@ -103,17 +89,11 @@ namespace MovieDatabase.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Movies = movieService.GetAllMovieNames();
-                ViewBag.Artists = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 
             if (!movieService.AddRoleToMovie(input))
             {
-                ViewBag.Movies = movieService.GetAllMovieNames();
-                ViewBag.Artists = artistService.GetAllArtistNames();
-
                 return View(input);
             }
 

@@ -8,7 +8,7 @@ namespace MovieDatabase.Services.Contracts
     {
         List<MovieAllViewModel> GetAllMovies(string userId);
 
-        List<string> GetAllMovieNames();
+        List<MovieNameViewModel> GetAllMovieNames();
 
         List<MovieAllViewModel> FilterMoviesByGenre(List<MovieAllViewModel> moviesAllViewModel, string genreFilter);
 

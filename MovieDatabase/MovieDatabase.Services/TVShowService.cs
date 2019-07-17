@@ -20,9 +20,12 @@ namespace MovieDatabase.Services
             this.reviewService = reviewService;
         }
 
-        public List<string> GetAllTVShowNames()
+        public List<TVShowNameViewModel> GetAllTVShowNames()
         {
-            var allTVShowNames = dbContext.TVShows.Select(tvShow => tvShow.Name).ToList();
+            var allTVShowNames = dbContext.TVShows.Select(tvShow => new TVShowNameViewModel
+            {
+                Name = tvShow.Name
+            }).ToList();
 
             return allTVShowNames;
         }

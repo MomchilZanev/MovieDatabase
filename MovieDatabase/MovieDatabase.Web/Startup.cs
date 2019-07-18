@@ -184,7 +184,7 @@ In his personal life, Pacino is one of Hollywood's most enduring and notorious b
 With his intense and gritty performances, Pacino was an original in the acting profession.His Method approach would become the process of many actors throughout time, and his unbeatable number of classic roles has already made him a legend among film buffs and all aspiring actors and directors.His commitment to acting as a profession and his constant screen dominance has established him as one of the movies' true legends.
 
 Pacino has never abandoned his love for the theater, and Shakespeare in particular, having directed the Shakespeare adaptation Аз, Ричард(1996) and played Shylock in Венецианският търговец(2004).",
-                    PhotoLink = "https://www.thinkingheads.com/wp-content/uploads/2017/10/al-pacino.jpg",
+                    PhotoLink = "https://i.pinimg.com/originals/a2/0a/40/a20a4016bac38ad227033884288f932c.jpg",
                 };
                 context.Artists.Add(artist2);
 

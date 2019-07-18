@@ -17,7 +17,7 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public bool IsValidMovieOrTVShowId(string id)//TODO: Move to separate service
+        public bool IsValidMovieOrTVShowId(string id)
         {
             if (dbContext.Movies.Any(movie => movie.Id == id) || dbContext.TVShows.Any(tvShow => tvShow.Id == id))
             {
@@ -27,7 +27,7 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public string IsIdMovieOrTVShowId(string id)//TODO: Move to separate service
+        public string IsIdMovieOrTVShowId(string id)
         {
             if (dbContext.Movies.Any(movie => movie.Id == id))
             {
@@ -104,11 +104,6 @@ namespace MovieDatabase.Services
 
         public bool AddMovieToUserWatchlist(string userId, string movieId)
         {
-            if (MovieIsInUserWatchlist(userId, movieId))
-            {
-                return false;
-            }
-
             var movieUserForDb = new MovieUser
             {
                 MovieId = movieId,
@@ -123,11 +118,6 @@ namespace MovieDatabase.Services
 
         public bool AddTVShowToUserWatchlist(string userId, string tvShowId)
         {
-            if (TVShowIsInUserWatchlist(userId, tvShowId))
-            {
-                return false;
-            }
-
             var tvShowUserForDb = new TVShowUser
             {
                 TVShowId = tvShowId,
@@ -142,13 +132,8 @@ namespace MovieDatabase.Services
 
         public bool RemoveMovieFromUserWatchlist(string userId, string movieId)
         {
-            if (!MovieIsInUserWatchlist(userId, movieId))
-            {
-                return false;
-            }
-
             var movieUserFromDb = dbContext.MovieUsers
-                    .SingleOrDefault(mu => mu.MovieId == movieId && mu.UserId == userId);
+                    .SingleOrDefault(movieUser => movieUser.MovieId == movieId && movieUser.UserId == userId);
 
             dbContext.MovieUsers.Remove(movieUserFromDb);
             dbContext.SaveChanges();
@@ -158,11 +143,6 @@ namespace MovieDatabase.Services
 
         public bool RemoveTVShowFromUserWatchlist(string userId, string tvShowId)
         {
-            if (!TVShowIsInUserWatchlist(userId, tvShowId))
-            {
-                return false;
-            }
-
             var tvShowUserFromDb = dbContext.TVShowUsers
                     .SingleOrDefault(tvShowUser => tvShowUser.TVShowId == tvShowId && tvShowUser.UserId == userId);
 

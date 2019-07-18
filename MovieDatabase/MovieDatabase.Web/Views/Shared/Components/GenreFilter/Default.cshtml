@@ -1,29 +1,26 @@
 ﻿@model List<MovieDatabase.Models.ViewModels.Genre.GenreAllViewModel>
 
-<div class="row">
-    <div class="btn-group dropleft col-2">
-        <button type="button" class="btn btn-secondary btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Filter by Genre
-        </button>
-        <div class="dropdown-menu bg-dark">
-            @if (Context.Request.QueryString.ToString().Split('&').Count() == 1)
+<div class="btn-group dropright col-2">
+    <button type="button" class="btn btn-secondary btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Filter by Genre
+    </button>
+    <div class="dropdown-menu bg-dark">
+        @if (Context.Request.QueryString.ToString().Split('&').Count() == 1)
+        {
+            <a class="nav-link text-warning" href="@Context.Request.Path">None</a>
+        }
+        else
+        {
+            <a class="nav-link text-warning" href="@Context.Request.Path@Context.Request.QueryString.ToString().Split('&').First()">None</a>
+        }
+        @foreach (var genre in Model)
+        {
+            var query = "?genreFilter=" + @genre.Name;
+            if (@Context.Request.QueryString.ToString() != "" && @Context.Request.QueryString.ToString().Split('=').First() == "?orderBy")
             {
-                <a class="nav-link text-warning" href="@Context.Request.Path">None</a>
+                query = Context.Request.QueryString.ToString().Split('&').First() + "&genreFilter=" + @genre.Name;
             }
-            else
-            {
-                <a class="nav-link text-warning" href="@Context.Request.Path@Context.Request.QueryString.ToString().Split('&').First()">None</a>
-            }
-            @foreach (var genre in Model)
-            {
-                var query = "?genreFilter=" + @genre.Name;
-                if (@Context.Request.QueryString.ToString() != "" && @Context.Request.QueryString.ToString().Split('=').First() == "?orderBy")
-                {
-                    query = Context.Request.QueryString.ToString().Split('&').First() + "&genreFilter=" + @genre.Name;
-                }
-                <a class="nav-link text-warning" href="@Context.Request.Path@query">@genre.Name</a>
-            }
-        </div>
+            <a class="nav-link text-warning" href="@Context.Request.Path@query">@genre.Name</a>
+        }
     </div>
-    <div class="col-10"></div>
 </div>

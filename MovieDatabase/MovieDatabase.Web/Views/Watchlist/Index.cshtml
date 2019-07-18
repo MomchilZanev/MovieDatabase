@@ -1,13 +1,14 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using MovieDatabase.Domain
+﻿@using System.Web
 
 @model List<MovieDatabase.Models.ViewModels.Watchlist.WatchlistAllViewModel>
 
-@inject SignInManager<MovieDatabaseUser> SignInManager
-@inject UserManager<MovieDatabaseUser> UserManager
-
 @{
     ViewData["Title"] = "Watchlist";
+}
+
+@{
+    var currentQuery = HttpUtility.UrlEncode(@Context.Request.QueryString.ToString());
+    var currentAction = HttpUtility.UrlEncode(@Context.Request.Path.ToString());
 }
 
 <h1 class="text-warning text-center display-4 mb-4">Your Watchlist</h1>
@@ -19,7 +20,6 @@
     </div>
 </div>
 
-
 @foreach (var item in Model)
 {
     <div class="row">
@@ -27,7 +27,7 @@
         <div class="col-10">
             <div class="d-flex justify-content-between">
                 <h2><a href="/@item.Category/Details/@item.Id" class="text-warning">@item.Name (@item.ReleaseDate.ToString("dd MMMM yyyy"))</a></h2>
-                <a href="/Watchlist/Remove/@item.Id" class="btn btn-group-vertical btn-outline-warning" role="button" aria-pressed="true">Remove</a>
+                <a href="/Watchlist/Remove/?id=@item.Id&returnAction=@currentAction&returnQuery=@currentQuery" class="btn btn-group-vertical btn-outline-warning" role="button" aria-pressed="true">Remove</a>
             </div>
             <h3 class="text-warning font-italic font-weight-light">| Rating: @item.Rating.ToString("F1") |</h3>
         </div>

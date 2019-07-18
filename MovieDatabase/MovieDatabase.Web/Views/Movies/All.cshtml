@@ -4,7 +4,11 @@
     ViewData["Title"] = "All Movies";
 }
 
-<vc:genre-filter></vc:genre-filter>
+<div class="form-group d-flex justify-content-between">
+    <input type="text" class="form-control col-6 text-dark bg-white btn-outline-warning" id="movies-search-bar" placeholder="Search Movies..." />
+
+    <vc:genre-filter></vc:genre-filter>
+</div>
 
 <table class="table w-100 text-warning table-borderless table-striped">
     <thead>
@@ -18,7 +22,7 @@
     <tbody>
         @foreach (var movie in Model)
         {
-            <tr class="text-left">
+            <tr class="movie text-left">
                 <td>
                     <a href="/Movies/Details/@movie.Id"><img src="@movie.CoverImageLink" height="150" width="110"></a>
                 </td>
@@ -35,3 +39,19 @@
         }
     </tbody>
 </table>
+
+<script>
+    $('#movies-search-bar').on("change paste keyup", function () {
+        $('.movie').show();
+
+        let searchValue = $('#movies-search-bar').val();
+
+        for (let elem of $('.movie')) {
+            let movieName = $($(elem).children()[1]).text();
+
+            if (!movieName.toLowerCase().includes(searchValue.toLowerCase())) {
+                $(elem).hide();
+            }
+        }
+    });
+</script>

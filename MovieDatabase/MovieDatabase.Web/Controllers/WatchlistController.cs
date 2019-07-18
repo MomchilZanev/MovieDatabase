@@ -22,98 +22,74 @@ namespace MovieDatabase.Web.Controllers
             var watchlistAllViewModel = watchlistService.GetItemsInUserWatchlist(userId);
 
             return View(watchlistAllViewModel);
-        }        
-
-        [Authorize]
-        public IActionResult Remove(string id)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            var idIsValidMovieOrTVShowId = watchlistService.IsValidMovieOrTVShowId(id);
-            if (idIsValidMovieOrTVShowId)
-            {
-                var itemType = watchlistService.IsIdMovieOrTVShowId(id);
-
-                switch (itemType)
-                {
-                    case "Movie":
-                        if (!watchlistService.RemoveMovieFromUserWatchlist(userId, id))
-                        {
-                            return Redirect("/Home/Error");
-                        }
-
-                        return Redirect("/Watchlist/Index");
-                    case "TV Show":
-                        if (!watchlistService.RemoveTVShowFromUserWatchlist(userId, id))
-                        {
-                            return Redirect("/Home/Error");
-                        }
-
-                        return Redirect("/Watchlist/Index");
-                    default:
-                        return Redirect("/Home/Error");
-                }
-            }
-
-            return Redirect("/Home/Error");
         }
 
         [Authorize]
-        public IActionResult AddRemove(string id, string returnQuery)
+        public IActionResult Add(string id, string returnAction, string returnQuery)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
             var idIsValidMovieOrTVShowId = watchlistService.IsValidMovieOrTVShowId(id);
-            if (idIsValidMovieOrTVShowId)
+            if (!idIsValidMovieOrTVShowId)
             {
-                var itemType = watchlistService.IsIdMovieOrTVShowId(id);
-
-                switch (itemType)
-                {
-                    case "Movie":
-                        if (watchlistService.MovieIsInUserWatchlist(userId, id))
-                        {
-                            if (!watchlistService.RemoveMovieFromUserWatchlist(userId, id))
-                            {
-                                return Redirect("/Home/Error");
-                            }
-
-                            return Redirect($"/Movies/All" + returnQuery);
-                        }
-                        else
-                        {
-                            if (!watchlistService.AddMovieToUserWatchlist(userId, id))
-                            {
-                                return Redirect("/Home/Error");
-                            }
-
-                            return Redirect($"/Movies/All" + returnQuery);
-                        }
-                    case "TV Show":
-                        if (watchlistService.TVShowIsInUserWatchlist(userId, id))
-                        {
-                            if (!watchlistService.RemoveTVShowFromUserWatchlist(userId, id))
-                            {
-                                return Redirect("/Home/Error");
-                            }
-
-                            return Redirect($"/TVShows/All" + returnQuery);
-                        }
-                        else
-                        {
-                            if (!watchlistService.AddTVShowToUserWatchlist(userId, id))
-                            {
-                                return Redirect("/Home/Error");
-                            }
-
-                            return Redirect($"/TVShows/All" + returnQuery);
-                        }
-                    default:
-                        return Redirect("/Home/Error");
-                }
+                return Redirect("/Home/Error");
             }
 
-            return Redirect("/Home/Error");
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var itemType = watchlistService.IsIdMovieOrTVShowId(id);
+            if (itemType == "Movie")
+            {
+                if (watchlistService.MovieIsInUserWatchlist(userId, id))
+                {
+                    return Redirect("/Home/Error");
+                }
+                watchlistService.AddMovieToUserWatchlist(userId, id);
+                return Redirect(returnAction + returnQuery);
+            }
+            else if (itemType == "TV Show")
+            {
+                if (watchlistService.TVShowIsInUserWatchlist(userId, id))
+                {
+                    return Redirect("/Home/Error");
+                }
+                watchlistService.AddTVShowToUserWatchlist(userId, id);
+                return Redirect(returnAction + returnQuery);
+            }
+            else
+            { return Redirect("/Home/Error"); }
+        }
+
+        [Authorize]
+        public IActionResult Remove(string id, string returnAction, string returnQuery)
+        {
+            var idIsValidMovieOrTVShowId = watchlistService.IsValidMovieOrTVShowId(id);
+            if (!idIsValidMovieOrTVShowId)
+            {
+                return Redirect("/Home/Error");
+            }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var itemType = watchlistService.IsIdMovieOrTVShowId(id);
+            if (itemType == "Movie")
+            {
+                if (!watchlistService.MovieIsInUserWatchlist(userId, id))
+                {
+                    return Redirect("/Home/Error");
+                }
+                watchlistService.RemoveMovieFromUserWatchlist(userId, id);
+                return Redirect(returnAction + returnQuery);
+            }
+            else if (itemType == "TV Show")
+            {
+                if (!watchlistService.TVShowIsInUserWatchlist(userId, id))
+                {
+                    return Redirect("/Home/Error");
+                }
+                watchlistService.RemoveTVShowFromUserWatchlist(userId, id);
+                return Redirect(returnAction + returnQuery);
+            }
+            else
+            { return Redirect("/Home/Error"); }
         }
     }
 }

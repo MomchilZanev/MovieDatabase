@@ -3,19 +3,19 @@
 @using System.Web
 
 @inject SignInManager<MovieDatabaseUser> SignInManager
-@inject UserManager<MovieDatabaseUser> UserManager
 
 @{
     var currentQuery = HttpUtility.UrlEncode(@Context.Request.QueryString.ToString());
+    var currentAction = HttpUtility.UrlEncode(@Context.Request.Path.ToString());
 }
 
 @if (Model.Watchlisted && SignInManager.IsSignedIn(User))
 {
-    <a href="/Watchlist/AddRemove/?id=@Model.Id&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_true.svg" height="50" /><br /></a>
+    <a href="/Watchlist/Remove/?id=@Model.Id&returnAction=@currentAction&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_true.svg" height="50" /><br /></a>
 }
 else if (SignInManager.IsSignedIn(User))
 {
-    <a href="/Watchlist/AddRemove/?id=@Model.Id&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_false.svg" height="50" /><br /></a>
+    <a href="/Watchlist/Add/?id=@Model.Id&returnAction=@currentAction&returnQuery=@currentQuery" class="text-warning"><img src="~/icons/bookmark_false.svg" height="50" /><br /></a>
 }
 else
 {

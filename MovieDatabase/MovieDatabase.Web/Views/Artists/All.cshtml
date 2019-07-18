@@ -4,16 +4,35 @@
     ViewData["Title"] = "All Artists";
 }
 
+<div class="form-group d-flex justify-content-between">
+    <input type="text" class="form-control col-6 text-dark bg-white btn-outline-warning" id="artists-search-bar" placeholder="Search Artists..." />
+</div>
+
 @foreach (var artist in Model)
 {
-    <div class="row">
+    <div class="row my-3">
         <div class="col-2">
             <a href="/Artists/Details/@artist.Id"><img class="rounded" src="@artist.PhotoLink" height="275" width="200"></a>
         </div>
-        <div class="col-10 text-warning">
+        <div class="artist col-10 text-warning">
             <h2><a href="/Artists/Details/@artist.Id" class="text-warning ml-4">@artist.FullName</a></h2>
             <p class="font-weight-light text-warning ml-4" style="font-size: larger">@artist.Biography</p>
         </div>
     </div>
-    <br />
 }
+
+<script>
+    $('#artists-search-bar').on("change paste keyup", function () {
+        $('.artist').parent().show();
+
+        let searchValue = $('#artists-search-bar').val();
+
+        for (let elem of $('.artist')) {
+            let movieName = $($(elem).children()[0]).text();
+
+            if (!movieName.toLowerCase().includes(searchValue.toLowerCase())) {
+                $(elem).parent().hide();
+            }
+        }
+    });
+</script>

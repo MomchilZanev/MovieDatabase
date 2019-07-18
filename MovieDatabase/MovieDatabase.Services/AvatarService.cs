@@ -17,7 +17,7 @@ namespace MovieDatabase.Services
 
         public async Task ChangeUserAvatar(string userId, IFormFile avatar)
         {
-            var user = dbContext.Users.Find(userId);
+            var user = await dbContext.Users.FindAsync(userId);
 
             if (avatar != null && avatar.Length > 0 && avatar.Length < 64000)
             {
@@ -31,13 +31,13 @@ namespace MovieDatabase.Services
 
                 user.AvatarLink = $"/user_avatars/{fileName}";
 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
         }
 
-        public string GetUserAvatarLink(string userId)
+        public async Task<string> GetUserAvatarLink(string userId)
         {
-            var user = dbContext.Users.Find(userId);
+            var user = await dbContext.Users.FindAsync(userId);
 
             return user.AvatarLink;
         }

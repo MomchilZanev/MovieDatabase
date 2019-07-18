@@ -1,6 +1,7 @@
 ﻿using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Models.ViewModels.Artist;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -10,12 +11,12 @@ namespace MovieDatabase.Services.Contracts
 
         List<ArtistNameViewModel> GetAllArtistNames();
 
-        ArtistDetailsViewModel GetArtistAndDetailsById(string artistId);
+        Task<ArtistDetailsViewModel> GetArtistAndDetailsByIdAsync(string artistId);
 
-        ArtistFullBioViewModel GetArtistFullBioById(string artistId);        
+        Task<ArtistFullBioViewModel> GetArtistFullBioByIdAsync(string artistId);        
 
         List<ArtistAllViewModel> OrderArtists(List<ArtistAllViewModel> artistsAllViewModel, string orderBy);
 
-        bool CreateArtist(CreateArtistInputModel input);
+        Task<bool> CreateArtistAsync(CreateArtistInputModel input);
     }
 }

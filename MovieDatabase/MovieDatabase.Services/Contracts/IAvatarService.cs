@@ -7,6 +7,6 @@ namespace MovieDatabase.Services.Contracts
     {
         Task ChangeUserAvatar(string userId, IFormFile avatar);
 
-        string GetUserAvatarLink(string userId);
+        Task<string> GetUserAvatarLink(string userId);
     }
 }

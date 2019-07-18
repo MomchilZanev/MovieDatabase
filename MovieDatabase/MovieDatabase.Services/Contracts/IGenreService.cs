@@ -1,6 +1,7 @@
 ﻿using MovieDatabase.Models.InputModels.Genre;
 using MovieDatabase.Models.ViewModels.Genre;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -8,6 +9,6 @@ namespace MovieDatabase.Services.Contracts
     {
         List<GenreAllViewModel> GetAllGenreNames();
 
-        bool CreateGenre(CreateGenreInputModel input);
+        Task<bool> CreateGenreAsync(CreateGenreInputModel input);
     }
 }

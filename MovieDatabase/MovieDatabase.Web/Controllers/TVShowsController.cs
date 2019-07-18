@@ -3,23 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.TVShow;
 using MovieDatabase.Services.Contracts;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
     public class TVShowsController : Controller
     {
         private readonly ITVShowService tvShowService;
-        private readonly IGenreService genreService;
-        private readonly IArtistService artistService;
 
-        public TVShowsController(ITVShowService tvShowService, IGenreService genreService, IArtistService artistService)
+        public TVShowsController(ITVShowService tvShowService)
         {
             this.tvShowService = tvShowService;
-            this.genreService = genreService;
-            this.artistService = artistService;
         }
 
-        public IActionResult All(string orderBy, string genreFilter)
+        public async Task<IActionResult> All(string orderBy, string genreFilter)
         {
             string userId = "";
             if (User.Identity.IsAuthenticated)
@@ -41,7 +38,7 @@ namespace MovieDatabase.Web.Controllers
             return View(tvShowsAllViewModel);
         }
 
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             var userId = "";
             if (User.Identity.IsAuthenticated)
@@ -49,12 +46,12 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var tvShowDetailsViewModel = tvShowService.GetTVShowAndDetailsById(id, userId);
+            var tvShowDetailsViewModel = await tvShowService.GetTVShowAndDetailsByIdAsync(id, userId);
 
             return View(tvShowDetailsViewModel);
         }
 
-        public IActionResult SeasonDetails(string id)
+        public async Task<IActionResult> SeasonDetails(string id)
         {
             var userId = "";
             if (User.Identity.IsAuthenticated)
@@ -62,27 +59,27 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var seasonDetailsViewModel = tvShowService.GetSeasonAndDetailsById(id, userId);
+            var seasonDetailsViewModel = await tvShowService.GetSeasonAndDetailsByIdAsync(id, userId);
 
             return View(seasonDetailsViewModel);
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Create(CreateTVShowInputModel input)
+        public async Task<IActionResult> Create(CreateTVShowInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!tvShowService.CreateTVShow(input))
+            if (!await tvShowService.CreateTVShowAsync(input))
             {
                 return View(input);
             }
@@ -91,21 +88,21 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AddSeason()
+        public async Task<IActionResult> AddSeason()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddSeason(AddSeasonInputModel input)
+        public async Task<IActionResult> AddSeason(AddSeasonInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!tvShowService.AddSeasonToTVShow(input))
+            if (!await tvShowService.AddSeasonToTVShowAsync(input))
             {
                 return View(input);
             }
@@ -114,21 +111,21 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AddRole()
+        public async Task<IActionResult> AddRole()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddRole(AddRoleInputModel input)
+        public async Task<IActionResult> AddRole(AddRoleInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!tvShowService.AddRoleToTVShowSeason(input))
+            if (!await tvShowService.AddRoleToTVShowSeasonAsync(input))
             {
                 return View(input);
             }

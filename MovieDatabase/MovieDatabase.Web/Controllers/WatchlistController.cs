@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Services.Contracts;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -15,7 +16,7 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -25,7 +26,7 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Add(string id, string returnAction, string returnQuery)
+        public async Task<IActionResult> Add(string id, string returnAction, string returnQuery)
         {
             var idIsValidMovieOrTVShowId = watchlistService.IsValidMovieOrTVShowId(id);
             if (!idIsValidMovieOrTVShowId)
@@ -42,7 +43,7 @@ namespace MovieDatabase.Web.Controllers
                 {
                     return Redirect("/Home/Error");
                 }
-                watchlistService.AddMovieToUserWatchlist(userId, id);
+                await watchlistService.AddMovieToUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
             }
             else if (itemType == "TV Show")
@@ -51,7 +52,7 @@ namespace MovieDatabase.Web.Controllers
                 {
                     return Redirect("/Home/Error");
                 }
-                watchlistService.AddTVShowToUserWatchlist(userId, id);
+                await watchlistService.AddTVShowToUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
             }
             else
@@ -59,7 +60,7 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Remove(string id, string returnAction, string returnQuery)
+        public async Task<IActionResult> Remove(string id, string returnAction, string returnQuery)
         {
             var idIsValidMovieOrTVShowId = watchlistService.IsValidMovieOrTVShowId(id);
             if (!idIsValidMovieOrTVShowId)
@@ -76,7 +77,7 @@ namespace MovieDatabase.Web.Controllers
                 {
                     return Redirect("/Home/Error");
                 }
-                watchlistService.RemoveMovieFromUserWatchlist(userId, id);
+                await watchlistService.RemoveMovieFromUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
             }
             else if (itemType == "TV Show")
@@ -85,7 +86,7 @@ namespace MovieDatabase.Web.Controllers
                 {
                     return Redirect("/Home/Error");
                 }
-                watchlistService.RemoveTVShowFromUserWatchlist(userId, id);
+                await watchlistService.RemoveTVShowFromUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
             }
             else

@@ -6,6 +6,7 @@ using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -18,7 +19,7 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }        
 
-        public bool IsValidMovieOrSeasonId(string itemId)//TODO: Move to separate service
+        public bool IsValidMovieOrSeasonId(string itemId)
         {
             if (dbContext.Movies.Any(movie => movie.Id == itemId) || dbContext.Seasons.Any(t => t.Id == itemId))
             {
@@ -28,7 +29,7 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public string IsIdMovieOrSeasonId(string id)//TODO: Move to separate service
+        public string IsIdMovieOrSeasonId(string id)
         {
             if (dbContext.Movies.Any(movie => movie.Id == id))
             {
@@ -117,7 +118,7 @@ namespace MovieDatabase.Services
             return seasonReviewInputModel;
         }
 
-        public bool CreateMovieReview(string userId , CreateReviewInputModel input)
+        public async Task<bool> CreateMovieReviewAsync(string userId , CreateReviewInputModel input)
         {
             if (dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
             {
@@ -133,13 +134,13 @@ namespace MovieDatabase.Services
                 Date = DateTime.UtcNow,
             };
 
-            dbContext.MovieReviews.Add(movieReviewForDb);
-            dbContext.SaveChanges();
+            await dbContext.MovieReviews.AddAsync(movieReviewForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool CreateSeasonReview(string userId, CreateReviewInputModel input)
+        public async Task<bool> CreateSeasonReviewAsync(string userId, CreateReviewInputModel input)
         {
             if (dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
             {
@@ -155,13 +156,13 @@ namespace MovieDatabase.Services
                 Date = DateTime.UtcNow,
             };
 
-            dbContext.SeasonReviews.Add(seasonReviewForDb);
-            dbContext.SaveChanges();
+            await dbContext.SeasonReviews.AddAsync(seasonReviewForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool UpdateMovieReview(string userId, CreateReviewInputModel input)
+        public async Task<bool> UpdateMovieReviewAsync(string userId, CreateReviewInputModel input)
         {
             if (!dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
             {
@@ -175,12 +176,12 @@ namespace MovieDatabase.Services
             movieReviewFromDb.Rating = input.Rating;
             movieReviewFromDb.Date = DateTime.UtcNow;
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool UpdateSeasonReview(string userId, CreateReviewInputModel input)
+        public async Task<bool> UpdateSeasonReviewAsync(string userId, CreateReviewInputModel input)
         {
             if (!dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
             {
@@ -194,12 +195,12 @@ namespace MovieDatabase.Services
             seasonReviewFromDb.Rating = input.Rating;
             seasonReviewFromDb.Date = DateTime.UtcNow;
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool DeleteMovieReview(string userId, string movieId)
+        public async Task<bool> DeleteMovieReviewAsync(string userId, string movieId)
         {
             if (!dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId))
             {
@@ -211,12 +212,12 @@ namespace MovieDatabase.Services
 
             dbContext.MovieReviews.Remove(movieReviewFromDb);
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool DeleteSeasonReview(string userId, string seasonId)
+        public async Task<bool> DeleteSeasonReviewAsync(string userId, string seasonId)
         {
             if (!dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId))
             {
@@ -228,7 +229,7 @@ namespace MovieDatabase.Services
 
             dbContext.SeasonReviews.Remove(seasonReviewFromDb);
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }    

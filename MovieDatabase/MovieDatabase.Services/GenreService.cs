@@ -5,6 +5,7 @@ using MovieDatabase.Models.ViewModels.Genre;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -27,7 +28,7 @@ namespace MovieDatabase.Services
             return allGenreNames;
         }
 
-        public bool CreateGenre(CreateGenreInputModel input)
+        public async Task<bool> CreateGenreAsync(CreateGenreInputModel input)
         {
             if (dbContext.Genres.Any(genre => genre.Name == input.Name))
             {
@@ -39,8 +40,8 @@ namespace MovieDatabase.Services
                 Name = input.Name,
             };
 
-            dbContext.Genres.Add(genreForDb);
-            dbContext.SaveChanges();
+            await dbContext.Genres.AddAsync(genreForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }

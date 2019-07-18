@@ -1,6 +1,7 @@
 ﻿using MovieDatabase.Models.InputModels.Announcement;
 using MovieDatabase.Models.ViewModels.Announcement;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -10,6 +11,6 @@ namespace MovieDatabase.Services.Contracts
 
         List<AnnouncementViewModel> OrderAnnouncements(List<AnnouncementViewModel> announcements, string orderBy);
 
-        bool CreateAnnouncement(CreateAnnouncementInputModel input);
+        Task<bool> CreateAnnouncementAsync(CreateAnnouncementInputModel input);
     }
 }

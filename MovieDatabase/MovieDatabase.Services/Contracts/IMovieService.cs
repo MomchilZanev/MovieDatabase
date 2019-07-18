@@ -1,6 +1,7 @@
 ﻿using MovieDatabase.Models.InputModels.Movie;
 using MovieDatabase.Models.ViewModels.Movie;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -14,10 +15,10 @@ namespace MovieDatabase.Services.Contracts
 
         List<MovieAllViewModel> OrderMovies(List<MovieAllViewModel> moviesAllViewModel, string orderBy);
 
-        MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId);
+        Task<MovieDetailsViewModel> GetMovieAndDetailsByIdAsync(string movieId, string userId);
 
-        bool CreateMovie(CreateMovieInputModel input);
+        Task<bool> CreateMovieAsync(CreateMovieInputModel input);
 
-        bool AddRoleToMovie(AddRoleInputModel input);
+        Task<bool> AddRoleToMovieAsync(AddRoleInputModel input);
     }
 }

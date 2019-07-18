@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.Review;
 using MovieDatabase.Services.Contracts;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -15,7 +16,7 @@ namespace MovieDatabase.Web.Controllers
             this.reviewService = reviewService;
         }
 
-        public IActionResult All(string id)
+        public async Task<IActionResult> All(string id)
         {
             bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
             if (!idIsValidMovieOrSeasonId)
@@ -41,7 +42,7 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Create(string id)
+        public async Task<IActionResult> Create(string id)
         {
             bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
             if (!idIsValidMovieOrSeasonId)
@@ -54,7 +55,7 @@ namespace MovieDatabase.Web.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Create(CreateReviewInputModel input)
+        public async Task<IActionResult> Create(CreateReviewInputModel input)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +73,7 @@ namespace MovieDatabase.Web.Controllers
             var itemType = reviewService.IsIdMovieOrSeasonId(input.Id);
             if (itemType == "Movie")
             {
-                if (!reviewService.CreateMovieReview(userId, input))
+                if (!await reviewService.CreateMovieReviewAsync(userId, input))
                 {
                     return Redirect("/Home/Error");
                 }
@@ -81,7 +82,7 @@ namespace MovieDatabase.Web.Controllers
             }
             else if (itemType == "Season")
             {
-                if (!reviewService.CreateSeasonReview(userId, input))
+                if (!await reviewService.CreateSeasonReviewAsync(userId, input))
                 {
                     return Redirect("/Home/Error");
                 }
@@ -93,7 +94,7 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Update(string id)
+        public async Task<IActionResult> Update(string id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -123,7 +124,7 @@ namespace MovieDatabase.Web.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Update(CreateReviewInputModel input)
+        public async Task<IActionResult> Update(CreateReviewInputModel input)
         {
             if (!ModelState.IsValid)
             {
@@ -142,7 +143,7 @@ namespace MovieDatabase.Web.Controllers
             var itemType = reviewService.IsIdMovieOrSeasonId(input.Id);
             if (itemType == "Movie")
             {
-                if (!reviewService.UpdateMovieReview(userId, input))
+                if (!await reviewService.UpdateMovieReviewAsync(userId, input))
                 {
                     return Redirect("/Home/Error");
                 }
@@ -151,7 +152,7 @@ namespace MovieDatabase.Web.Controllers
             }
             else if (itemType == "Season")
             {
-                if (!reviewService.UpdateSeasonReview(userId, input))
+                if (!await reviewService.UpdateSeasonReviewAsync(userId, input))
                 {
                     return Redirect("/Home/Error");
                 }
@@ -163,7 +164,7 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
             if (!idIsValidMovieOrSeasonId)
@@ -176,7 +177,7 @@ namespace MovieDatabase.Web.Controllers
             var itemType = reviewService.IsIdMovieOrSeasonId(id);
             if (itemType == "Movie")
             {
-                if (!reviewService.DeleteMovieReview(userId, id))
+                if (!await reviewService.DeleteMovieReviewAsync(userId, id))
                 {
                     return Redirect("/Home/Error");
                 }
@@ -185,7 +186,7 @@ namespace MovieDatabase.Web.Controllers
             }
             else if (itemType == "Season")
             {
-                if (!reviewService.DeleteSeasonReview(userId, id))
+                if (!await reviewService.DeleteSeasonReviewAsync(userId, id))
                 {
                     return Redirect("/Home/Error");
                 }

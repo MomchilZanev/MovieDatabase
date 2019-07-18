@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Services.Contracts;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -14,21 +15,21 @@ namespace MovieDatabase.Web.Controllers
             this.artistService = artistService;
         }        
 
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
-            var artistDetailsViewModel = artistService.GetArtistAndDetailsById(id);
+            var artistDetailsViewModel = await artistService.GetArtistAndDetailsByIdAsync(id);
 
             return View(artistDetailsViewModel);
         }
 
-        public IActionResult FullBio(string id)
+        public async Task<IActionResult> FullBio(string id)
         {
-            var artistDetailsViewModel = artistService.GetArtistFullBioById(id);
+            var artistDetailsViewModel = await artistService.GetArtistFullBioByIdAsync(id);
             
             return View(artistDetailsViewModel);
         }
 
-        public IActionResult All(string orderBy)
+        public async Task<IActionResult> All(string orderBy)
         {
             var artistsAllViewModel = artistService.GetAllArtists();
 
@@ -48,14 +49,14 @@ namespace MovieDatabase.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Create(CreateArtistInputModel input)
+        public async Task<IActionResult> Create(CreateArtistInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!artistService.CreateArtist(input))
+            if (!await artistService.CreateArtistAsync(input))
             {
                 return View(input);
             }

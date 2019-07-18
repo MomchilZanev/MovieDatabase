@@ -6,6 +6,7 @@ using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -30,7 +31,6 @@ namespace MovieDatabase.Services
                     Creator = announcement.Creator,
                     OfficialArticleLink = announcement.OfficialArticleLink,
                 })
-                .OrderBy(a => a.Date)
                 .ToList();
 
             return announcementsAllViewModel;
@@ -49,7 +49,7 @@ namespace MovieDatabase.Services
             }
         }
 
-        public bool CreateAnnouncement(CreateAnnouncementInputModel input)
+        public async Task<bool> CreateAnnouncementAsync(CreateAnnouncementInputModel input)
         {
             if (dbContext.Announcements.Any(announcement => announcement.Title == input.Title && announcement.Content == input.Content))
             {
@@ -65,8 +65,8 @@ namespace MovieDatabase.Services
                 ImageLink = string.IsNullOrEmpty(input.ImageLink) ? "/images/no_image.png" : input.ImageLink,
                 Date = DateTime.UtcNow,
             };
-            dbContext.Announcements.Add(announcementForDb);
-            dbContext.SaveChanges();
+            await dbContext.Announcements.AddAsync(announcementForDb);
+            await dbContext.SaveChangesAsync();
             
             return true;
         }

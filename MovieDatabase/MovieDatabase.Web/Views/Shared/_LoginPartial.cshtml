@@ -10,7 +10,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
         string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        string fileName = avatarService.GetUserAvatarLink(userId);
+        string fileName = await avatarService.GetUserAvatarLink(userId);
 
         <li>
             <h2 class="navbar-text mx-2 text-warning">@User.Identity.Name</h2>

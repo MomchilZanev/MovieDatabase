@@ -1,5 +1,6 @@
 ﻿using MovieDatabase.Models.ViewModels.Watchlist;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -15,12 +16,12 @@ namespace MovieDatabase.Services.Contracts
 
         List<WatchlistAllViewModel> GetItemsInUserWatchlist(string userId);
 
-        bool AddMovieToUserWatchlist(string userId, string movieId);
+        Task AddMovieToUserWatchlistAsync(string userId, string movieId);
 
-        bool AddTVShowToUserWatchlist(string userId, string tvShowId);
+        Task AddTVShowToUserWatchlistAsync(string userId, string tvShowId);
 
-        bool RemoveMovieFromUserWatchlist(string userId, string movieId);
+        Task RemoveMovieFromUserWatchlistAsync(string userId, string movieId);
 
-        bool RemoveTVShowFromUserWatchlist(string userId, string tvShowId);
+        Task RemoveTVShowFromUserWatchlistAsync(string userId, string tvShowId);
     }
 }

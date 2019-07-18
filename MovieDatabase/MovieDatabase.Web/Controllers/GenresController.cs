@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.Genre;
 using MovieDatabase.Services.Contracts;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -15,21 +16,21 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Create(CreateGenreInputModel input)
+        public async Task<IActionResult> Create(CreateGenreInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!genreService.CreateGenre(input))
+            if (!await genreService.CreateGenreAsync(input))
             {
                 return View(input);
             }

@@ -6,6 +6,7 @@ using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -91,9 +92,9 @@ namespace MovieDatabase.Services
             }
         }        
 
-        public TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId)
+        public async Task<TVShowDetailsViewModel> GetTVShowAndDetailsByIdAsync(string tvShowId, string userId)
         {
-            var tvShowFromDb = dbContext.TVShows.Find(tvShowId);
+            var tvShowFromDb = await dbContext.TVShows.FindAsync(tvShowId);
 
             var tvShowDetailsViewModel = new TVShowDetailsViewModel
             {
@@ -121,9 +122,9 @@ namespace MovieDatabase.Services
             return tvShowDetailsViewModel;
         }
 
-        public SeasonDetailsViewModel GetSeasonAndDetailsById(string seasonId, string userId)
+        public async Task<SeasonDetailsViewModel> GetSeasonAndDetailsByIdAsync(string seasonId, string userId)
         {
-            var seasonFromDb = dbContext.Seasons.Find(seasonId);
+            var seasonFromDb = await dbContext.Seasons.FindAsync(seasonId);
 
             var randomReview = new SeasonReviewViewModel();
 
@@ -165,7 +166,7 @@ namespace MovieDatabase.Services
             return seasonDetailsViewModel;
         }
 
-        public bool CreateTVShow(CreateTVShowInputModel input)
+        public async Task<bool> CreateTVShowAsync(CreateTVShowInputModel input)
         {
             if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
             {
@@ -193,13 +194,13 @@ namespace MovieDatabase.Services
                 TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
             };
 
-            dbContext.TVShows.Add(tvShowForDb);
-            dbContext.SaveChanges();
+            await dbContext.TVShows.AddAsync(tvShowForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool AddSeasonToTVShow(AddSeasonInputModel input)
+        public async Task<bool> AddSeasonToTVShowAsync(AddSeasonInputModel input)
         {
             if (!dbContext.TVShows.Any(tvShow => tvShow.Name == input.TVShow))
             {
@@ -216,13 +217,13 @@ namespace MovieDatabase.Services
                 Episodes = input.Episodes,
                 LengthPerEpisode = input.LengthPerEpisode,
             };
-            dbContext.Seasons.Add(seasonForDb);
-            dbContext.SaveChanges();
+            await dbContext.Seasons.AddAsync(seasonForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
         
-        public bool AddRoleToTVShowSeason(AddRoleInputModel input)
+        public async Task<bool> AddRoleToTVShowSeasonAsync(AddRoleInputModel input)
         {
             if (!dbContext.Seasons.Any(season => season.Id == input.SeasonId))
             {
@@ -248,8 +249,8 @@ namespace MovieDatabase.Services
                 CharacterPlayed = input.CharacterPlayed,
             };
 
-            dbContext.SeasonRoles.Add(seasonRoleForDb);
-            dbContext.SaveChanges();
+            await dbContext.SeasonRoles.AddAsync(seasonRoleForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }        

@@ -6,6 +6,7 @@ using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -79,9 +80,9 @@ namespace MovieDatabase.Services
             }
         }
 
-        public MovieDetailsViewModel GetMovieAndDetailsById(string movieId, string userId)
+        public async Task<MovieDetailsViewModel> GetMovieAndDetailsByIdAsync(string movieId, string userId)
         {
-            var movieFromDb = dbContext.Movies.Find(movieId);
+            var movieFromDb = await dbContext.Movies.FindAsync(movieId);
 
             var randomReview = new MovieReviewViewModel();
 
@@ -125,7 +126,7 @@ namespace MovieDatabase.Services
             return movieDetailsViewModel;
         }
 
-        public bool CreateMovie(CreateMovieInputModel input)
+        public async Task<bool> CreateMovieAsync(CreateMovieInputModel input)
         {
             if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
             {
@@ -155,13 +156,13 @@ namespace MovieDatabase.Services
                 TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
             };
 
-            dbContext.Movies.Add(movieForDb);
-            dbContext.SaveChanges();
+            await dbContext.Movies.AddAsync(movieForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public bool AddRoleToMovie(AddRoleInputModel input)
+        public async Task<bool> AddRoleToMovieAsync(AddRoleInputModel input)
         {
             if (!dbContext.Movies.Any(movie => movie.Name == input.Movie))
             {
@@ -187,8 +188,8 @@ namespace MovieDatabase.Services
                 CharacterPlayed = input.CharacterPlayed,
             };
 
-            dbContext.MovieRoles.Add(movieRoleForDb);
-            dbContext.SaveChanges();
+            await dbContext.MovieRoles.AddAsync(movieRoleForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }

@@ -6,6 +6,7 @@ using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -46,9 +47,9 @@ namespace MovieDatabase.Services
             return allArtistNames;
         }
 
-        public ArtistFullBioViewModel GetArtistFullBioById(string artistId)
+        public async Task<ArtistFullBioViewModel> GetArtistFullBioByIdAsync(string artistId)
         {
-            var artistFromDb = dbContext.Artists.Find(artistId);
+            var artistFromDb = await dbContext.Artists.FindAsync(artistId);
 
             var artistFullBioViewModel = new ArtistFullBioViewModel
             {
@@ -62,9 +63,9 @@ namespace MovieDatabase.Services
             return artistFullBioViewModel;
         }
 
-        public ArtistDetailsViewModel GetArtistAndDetailsById(string artistId)
+        public async Task<ArtistDetailsViewModel> GetArtistAndDetailsByIdAsync(string artistId)
         {
-            var artistFromDb = dbContext.Artists.Find(artistId);
+            var artistFromDb = await dbContext.Artists.FindAsync(artistId);
 
             var artistDetailsViewModel = new ArtistDetailsViewModel
             {
@@ -107,7 +108,7 @@ namespace MovieDatabase.Services
             }
         }
 
-        public bool CreateArtist(CreateArtistInputModel input)
+        public async Task<bool> CreateArtistAsync(CreateArtistInputModel input)
         {
             if (dbContext.Artists.Any(artist => artist.FullName == input.FullName && artist.Biography == input.Biography && artist.BirthDate == artist.BirthDate))
             {
@@ -122,8 +123,8 @@ namespace MovieDatabase.Services
                 PhotoLink = string.IsNullOrEmpty(input.PhotoLink) ? "/images/no_artist_image.png" : input.PhotoLink,
             };
 
-            dbContext.Artists.Add(artistForDb);
-            dbContext.SaveChanges();
+            await dbContext.Artists.AddAsync(artistForDb);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }

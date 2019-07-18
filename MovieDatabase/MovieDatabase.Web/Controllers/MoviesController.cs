@@ -3,23 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.Movie;
 using MovieDatabase.Services.Contracts;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
     public class MoviesController : Controller
     {
         private readonly IMovieService movieService;
-        private readonly IGenreService genreService;
-        private readonly IArtistService artistService;
 
-        public MoviesController(IMovieService movieService, IGenreService genreService, IArtistService artistService)
+        public MoviesController(IMovieService movieService)
         {
             this.movieService = movieService;
-            this.genreService = genreService;
-            this.artistService = artistService;
         }
 
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(string id)
         {
             var userId = "";
             if (User.Identity.IsAuthenticated)
@@ -27,12 +24,12 @@ namespace MovieDatabase.Web.Controllers
                 userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
 
-            var movieViewModel = movieService.GetMovieAndDetailsById(id, userId);
+            var movieViewModel = await movieService.GetMovieAndDetailsByIdAsync(id, userId);
 
             return View(movieViewModel);
         }
 
-        public IActionResult All(string orderBy, string genreFilter)
+        public async Task<IActionResult> All(string orderBy, string genreFilter)
         {
             string userId = "";
             if (User.Identity.IsAuthenticated)
@@ -55,21 +52,21 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]        
-        public IActionResult Create(CreateMovieInputModel input)
+        public async Task<IActionResult> Create(CreateMovieInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!movieService.CreateMovie(input))
+            if (!await movieService.CreateMovieAsync(input))
             {
                 return View(input);
             }
@@ -78,21 +75,21 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AddRole()
+        public async Task<IActionResult> AddRole()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddRole(AddRoleInputModel input)
+        public async Task<IActionResult> AddRole(AddRoleInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!movieService.AddRoleToMovie(input))
+            if (!await movieService.AddRoleToMovieAsync(input))
             {
                 return View(input);
             }

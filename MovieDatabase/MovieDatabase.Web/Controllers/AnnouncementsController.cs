@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.Announcement;
 using MovieDatabase.Services.Contracts;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -14,7 +15,7 @@ namespace MovieDatabase.Web.Controllers
             this.announcementService = announcementService;
         }
 
-        public IActionResult All(string orderBy)
+        public async Task<IActionResult> All(string orderBy)
         {
             var allAnnouncementsViewModel = announcementService.GetAllAnnouncements();
 
@@ -27,21 +28,21 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]        
-        public IActionResult Create(CreateAnnouncementInputModel input)
+        public async Task<IActionResult> Create(CreateAnnouncementInputModel input)
         {
             if (!ModelState.IsValid)
             {
                 return View(input);
             }
 
-            if (!announcementService.CreateAnnouncement(input))
+            if (!await announcementService.CreateAnnouncementAsync(input))
             {
                 return View(input);
             }            

@@ -5,6 +5,7 @@ using MovieDatabase.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -102,7 +103,7 @@ namespace MovieDatabase.Services
             return watchlistAllViewModel;
         }
 
-        public bool AddMovieToUserWatchlist(string userId, string movieId)
+        public async Task AddMovieToUserWatchlistAsync(string userId, string movieId)
         {
             var movieUserForDb = new MovieUser
             {
@@ -110,13 +111,11 @@ namespace MovieDatabase.Services
                 UserId = userId,
             };
 
-            dbContext.MovieUsers.Add(movieUserForDb);
-            dbContext.SaveChanges();
-
-            return true;
+            await dbContext.MovieUsers.AddAsync(movieUserForDb);
+            await dbContext.SaveChangesAsync();
         }
 
-        public bool AddTVShowToUserWatchlist(string userId, string tvShowId)
+        public async Task AddTVShowToUserWatchlistAsync(string userId, string tvShowId)
         {
             var tvShowUserForDb = new TVShowUser
             {
@@ -124,32 +123,26 @@ namespace MovieDatabase.Services
                 UserId = userId,
             };
 
-            dbContext.TVShowUsers.Add(tvShowUserForDb);
-            dbContext.SaveChanges();
-
-            return true;
+            await dbContext.TVShowUsers.AddAsync(tvShowUserForDb);
+            await dbContext.SaveChangesAsync();
         }
 
-        public bool RemoveMovieFromUserWatchlist(string userId, string movieId)
+        public async Task RemoveMovieFromUserWatchlistAsync(string userId, string movieId)
         {
             var movieUserFromDb = dbContext.MovieUsers
                     .SingleOrDefault(movieUser => movieUser.MovieId == movieId && movieUser.UserId == userId);
 
             dbContext.MovieUsers.Remove(movieUserFromDb);
-            dbContext.SaveChanges();
-
-            return true;
+            await dbContext.SaveChangesAsync();
         }
 
-        public bool RemoveTVShowFromUserWatchlist(string userId, string tvShowId)
+        public async Task RemoveTVShowFromUserWatchlistAsync(string userId, string tvShowId)
         {
             var tvShowUserFromDb = dbContext.TVShowUsers
                     .SingleOrDefault(tvShowUser => tvShowUser.TVShowId == tvShowId && tvShowUser.UserId == userId);
 
             dbContext.TVShowUsers.Remove(tvShowUserFromDb);
-            dbContext.SaveChanges();
-
-            return true;
+            await dbContext.SaveChangesAsync();
         }
     }
 }

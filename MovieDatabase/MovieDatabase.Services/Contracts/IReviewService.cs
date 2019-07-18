@@ -1,6 +1,7 @@
 ﻿using MovieDatabase.Models.InputModels.Review;
 using MovieDatabase.Models.ViewModels.Review;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -20,16 +21,16 @@ namespace MovieDatabase.Services.Contracts
 
         CreateReviewInputModel GetSeasonReview(string userId, string seasonId);
 
-        bool CreateMovieReview(string userId, CreateReviewInputModel input);
+        Task<bool> CreateMovieReviewAsync(string userId, CreateReviewInputModel input);
 
-        bool CreateSeasonReview(string userId, CreateReviewInputModel input);
+        Task<bool> CreateSeasonReviewAsync(string userId, CreateReviewInputModel input);
 
-        bool UpdateMovieReview(string userId, CreateReviewInputModel input);
+        Task<bool> UpdateMovieReviewAsync(string userId, CreateReviewInputModel input);
 
-        bool UpdateSeasonReview(string userId, CreateReviewInputModel input);
+        Task<bool> UpdateSeasonReviewAsync(string userId, CreateReviewInputModel input);
 
-        bool DeleteMovieReview(string userId, string movieId);
+        Task<bool> DeleteMovieReviewAsync(string userId, string movieId);
 
-        bool DeleteSeasonReview(string userId, string seasonId);
+        Task<bool> DeleteSeasonReviewAsync(string userId, string seasonId);
     }
 }

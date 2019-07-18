@@ -1,6 +1,7 @@
 ﻿using MovieDatabase.Models.InputModels.TVShow;
 using MovieDatabase.Models.ViewModels.TVShow;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services.Contracts
 {
@@ -8,22 +9,22 @@ namespace MovieDatabase.Services.Contracts
     {
         List<TVShowNameViewModel> GetAllTVShowNames();
 
+        List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames();
+
         List<TVShowAllViewModel> GetAllTVShows(string userId);
 
         List<TVShowAllViewModel> FilterTVShowsByGenre(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter);
 
         List<TVShowAllViewModel> OrderTVShows(List<TVShowAllViewModel> tvShowsAllViewModel, string orderBy);
 
-        TVShowDetailsViewModel GetTVShowAndDetailsById(string tvShowId, string userId);
+        Task<TVShowDetailsViewModel> GetTVShowAndDetailsByIdAsync(string tvShowId, string userId);
 
-        SeasonDetailsViewModel GetSeasonAndDetailsById(string seasonId, string userId);
+        Task<SeasonDetailsViewModel> GetSeasonAndDetailsByIdAsync(string seasonId, string userId);
 
-        bool CreateTVShow(CreateTVShowInputModel input);
+        Task<bool> CreateTVShowAsync(CreateTVShowInputModel input);
 
-        bool AddSeasonToTVShow(AddSeasonInputModel input);
+        Task<bool> AddSeasonToTVShowAsync(AddSeasonInputModel input);
 
-        bool AddRoleToTVShowSeason(AddRoleInputModel input);
-
-        List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames();
+        Task<bool> AddRoleToTVShowSeasonAsync(AddRoleInputModel input);
     }
 }

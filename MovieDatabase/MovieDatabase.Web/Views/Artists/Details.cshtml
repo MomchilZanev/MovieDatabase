@@ -1,5 +1,4 @@
-﻿@using MovieDatabase.Common
-@model MovieDatabase.Models.ViewModels.Artist.ArtistDetailsViewModel
+﻿@model MovieDatabase.Models.ViewModels.Artist.ArtistDetailsViewModel
 
 @{
     ViewData["Title"] = "Artist Details";
@@ -22,7 +21,7 @@
         else
         {
             <p class="font-weight-light text-left ml-4 mt-3" style="font-size:large">
-                @Model.Biography.Substring(0, 1200)... <a class="font-weight-bold text-warning ml-2" href="/Artists/FullBio/@Model.Id">See full bio >></a>
+                @Model.Biography.Substring(0, GlobalConstants.artistDetailsMiniBiographyMaxCharLength)@GlobalConstants.fourDots <a class="font-weight-bold text-warning ml-2" href="/Artists/FullBio/@Model.Id">See full bio >></a>
             </p>
         }
     </div>

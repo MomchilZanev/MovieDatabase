@@ -74,7 +74,7 @@ namespace MovieDatabase.Services
                 {
                     Id = movieUser.MovieId,
                     Name = movieUser.Movie.Name,
-                    Description = movieUser.Movie.Description.Substring(0, Math.Min(GlobalConstants.movieTvShowPreviewDescriptionMaxCharLength, movieUser.Movie.Description.Length)) + "....",
+                    Description = movieUser.Movie.Description.Substring(0, Math.Min(GlobalConstants.movieTvShowPreviewDescriptionMaxCharLength, movieUser.Movie.Description.Length)) + GlobalConstants.fourDots,
                     CoverImageLink = movieUser.Movie.CoverImageLink,
                     ReleaseDate = movieUser.Movie.ReleaseDate,
                     Rating = movieUser.Movie.Rating,
@@ -91,7 +91,7 @@ namespace MovieDatabase.Services
                 {
                     Id = tvShowUser.TVShowId,
                     Name = tvShowUser.TVShow.Name,
-                    Description = tvShowUser.TVShow.Description.Substring(0, Math.Min(500, tvShowUser.TVShow.Description.Length)) + "....",
+                    Description = tvShowUser.TVShow.Description.Substring(0, Math.Min(500, tvShowUser.TVShow.Description.Length)) + GlobalConstants.fourDots,
                     CoverImageLink = tvShowUser.TVShow.CoverImageLink,
                     ReleaseDate = tvShowUser.TVShow.FirstAired,
                     Rating = tvShowUser.TVShow.OverallRating,

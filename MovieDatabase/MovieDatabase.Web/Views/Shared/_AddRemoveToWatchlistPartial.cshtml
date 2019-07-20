@@ -1,8 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using MovieDatabase.Domain
-@using System.Web
-
-@inject SignInManager<MovieDatabaseUser> SignInManager
+﻿@inject SignInManager<MovieDatabaseUser> SignInManager
 
 @{
     var currentQuery = HttpUtility.UrlEncode(@Context.Request.QueryString.ToString());

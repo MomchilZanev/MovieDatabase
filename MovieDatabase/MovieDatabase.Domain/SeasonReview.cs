@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Domain
@@ -14,10 +15,10 @@ namespace MovieDatabase.Domain
         public virtual MovieDatabaseUser User { get; set; }        
 
         [Required]
-        [StringLength(10000, MinimumLength = 10)]
+        [StringLength(ValidationConstants.reviewContentMaximumLength, MinimumLength = ValidationConstants.reviewContentMinimumLength)]
         public string Content { get; set; }
 
-        [Range(1, 10)]
+        [Range(ValidationConstants.reviewMinimumRating, ValidationConstants.reviewMaximumRating)]
         public int Rating { get; set; }
 
         public DateTime Date { get; set; }

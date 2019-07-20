@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,13 +20,13 @@ namespace MovieDatabase.Domain
         public string Id { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(ValidationConstants.artistFullNameMaximumLength, MinimumLength = ValidationConstants.artistFullNameMinimumLength)]
         public string FullName { get; set; }
 
         public DateTime BirthDate { get; set; }
 
         [Required]
-        [StringLength(10000, MinimumLength = 25)]
+        [StringLength(ValidationConstants.artistBiographyMaximumLength, MinimumLength = ValidationConstants.artistBiographyMinimumLength)]
         public string Biography { get; set; }
 
         [Required]

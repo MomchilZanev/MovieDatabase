@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Domain
@@ -9,15 +10,15 @@ namespace MovieDatabase.Domain
         public string Id { get; set; }
 
         [Required]
-        [StringLength(200, MinimumLength = 5)]
+        [StringLength(ValidationConstants.announcementTitleMaximumLength, MinimumLength = ValidationConstants.announcementTitleMinimumLength)]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(ValidationConstants.announcementCreatorMaximumLength, MinimumLength = ValidationConstants.announcementCreatorMinimumLength)]
         public string Creator { get; set; }
 
         [Required]
-        [StringLength(1000, MinimumLength = 10)]
+        [StringLength(ValidationConstants.announcementContentMaximumLength, MinimumLength = ValidationConstants.announcementContentMinimumLength)]
         public string Content { get; set; }
 
         public DateTime Date { get; set; }

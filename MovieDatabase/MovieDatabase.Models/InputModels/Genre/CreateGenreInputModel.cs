@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MovieDatabase.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.Genre
 {
@@ -6,7 +7,7 @@ namespace MovieDatabase.Models.InputModels.Genre
     {
         [Required]
         [Display(Name = "Genre Name")]
-        [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [StringLength(ValidationConstants.genreNameMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.genreNameMinimumLength)]
         public string Name { get; set; }
     }
 }

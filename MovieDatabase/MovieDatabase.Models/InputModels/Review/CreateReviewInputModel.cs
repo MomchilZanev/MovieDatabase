@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MovieDatabase.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.Review
 {
@@ -8,10 +9,10 @@ namespace MovieDatabase.Models.InputModels.Review
         public string Id { get; set; }
 
         [Required]
-        [StringLength(10000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 10)]
+        [StringLength(ValidationConstants.reviewContentMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.reviewContentMinimumLength)]
         public string Content { get; set; }
 
-        [Range(1, 10, ErrorMessage = "The {0} must be between {1} and {2}")]
+        [Range(ValidationConstants.reviewMinimumRating, ValidationConstants.reviewMaximumRating, ErrorMessage = "The {0} must be between {1} and {2}")]
         public int Rating { get; set; }
     }
 }

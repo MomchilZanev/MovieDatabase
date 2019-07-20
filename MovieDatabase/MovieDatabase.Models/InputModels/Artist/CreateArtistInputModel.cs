@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Models.CustomValidationAttributes;
+﻿using MovieDatabase.Common;
+using MovieDatabase.Models.CustomValidationAttributes;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +9,7 @@ namespace MovieDatabase.Models.InputModels.Artist
     {
         [Required]
         [Display(Name = "Full Name")]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [StringLength(ValidationConstants.artistFullNameMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.artistFullNameMinimumLength)]
         public string FullName { get; set; }
 
         [Required]
@@ -17,7 +18,7 @@ namespace MovieDatabase.Models.InputModels.Artist
         public DateTime BirthDate { get; set; }
 
         [Required]
-        [StringLength(10000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 25)]
+        [StringLength(ValidationConstants.artistBiographyMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.artistBiographyMinimumLength)]
         public string Biography { get; set; }
 
         [Display(Name = "Photo Link")]

@@ -1,19 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MovieDatabase.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.Announcement
 {
     public class CreateAnnouncementInputModel
     {
         [Required]
-        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
+        [StringLength(ValidationConstants.announcementTitleMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.announcementTitleMinimumLength)]
         public string Title { get; set; }
 
         [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [StringLength(ValidationConstants.announcementCreatorMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.announcementCreatorMinimumLength)]
         public string Creator { get; set; }
 
         [Required]
-        [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 10)]
+        [StringLength(ValidationConstants.announcementContentMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.announcementContentMinimumLength)]
         public string Content { get; set; }
 
         [Display(Name = "Image Link")]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,15 +18,15 @@ namespace MovieDatabase.Domain
         [Key]
         public string Id { get; set; }
 
-        [Range(1, 2147483647)]
+        [Range(ValidationConstants.seasonMinimumSeasonNumber, ValidationConstants.seasonMaximumSeasonNumber)]
         public int SeasonNumber { get; set; }
 
         public DateTime ReleaseDate { get; set; }
 
-        [Range(3, 44)]
+        [Range(ValidationConstants.seasonMinimumEpisodes, ValidationConstants.seasonMaximumEpisodes)]
         public int Episodes { get; set; }
 
-        [Range(20, 120)]
+        [Range(ValidationConstants.seasonMinimumLengthPerEpisode, ValidationConstants.seasonMaximumLengthPerEpisode)]
         public int LengthPerEpisode { get; set; }
 
         public double Rating => Reviews.Any() ? Reviews.Average(review => review.Rating) : 0;

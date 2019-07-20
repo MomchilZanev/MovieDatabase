@@ -20,7 +20,7 @@ namespace MovieDatabase.Services
         {
             var user = await dbContext.Users.FindAsync(userId);
 
-            if (avatar != null && avatar.Length > 0 && avatar.Length < 64000)
+            if (avatar != null && avatar.Length > 0 && avatar.Length < ValidationConstants.userAvatarMaximumFileSizeInBytes)
             {
                 var fileName = user.UserName + GlobalConstants.imageFileSuffix;
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.userAvatarsDirectory, fileName);

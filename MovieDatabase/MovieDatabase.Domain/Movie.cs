@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,16 +19,16 @@ namespace MovieDatabase.Domain
         public string Id { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(ValidationConstants.movieNameMaximumLength, MinimumLength = ValidationConstants.movieNameMinimumLength)]
         public string Name { get; set; }
 
         public DateTime ReleaseDate { get; set; }
 
         [Required]
-        [StringLength(1000, MinimumLength = 25)]
+        [StringLength(ValidationConstants.movieDescriptionMaximumLength, MinimumLength = ValidationConstants.movieDescriptionMinimumLength)]
         public string Description { get; set; }
 
-        [Range(60, 300)]
+        [Range(ValidationConstants.movieMinimumLengthInMinutes, ValidationConstants.movieMaximumLengthInMinutes)]
         public int Length { get; set; }
 
         public virtual Genre Genre { get; set; }

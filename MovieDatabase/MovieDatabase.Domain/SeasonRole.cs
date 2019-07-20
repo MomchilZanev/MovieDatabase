@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MovieDatabase.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Domain
 {
@@ -13,7 +14,7 @@ namespace MovieDatabase.Domain
         public virtual Artist Artist { get; set; }
 
         [Required]
-        [StringLength(30, MinimumLength = 3)]
+        [StringLength(ValidationConstants.roleCharacterPlayedMaximumLength, MinimumLength = ValidationConstants.roleCharacterPlayedMinimumLength)]
         public string CharacterPlayed { get; set; }
     }
 }

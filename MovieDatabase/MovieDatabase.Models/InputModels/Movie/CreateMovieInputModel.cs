@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.Movie
@@ -7,7 +8,7 @@ namespace MovieDatabase.Models.InputModels.Movie
     {
 
         [Required]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [StringLength(ValidationConstants.movieNameMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.movieNameMinimumLength)]
         public string Name { get; set; }
 
         [Required]
@@ -18,12 +19,12 @@ namespace MovieDatabase.Models.InputModels.Movie
         public string Genre { get; set; }
 
         [Required]
-        [Range(60, 300)]
+        [Range(ValidationConstants.movieMinimumLengthInMinutes, ValidationConstants.movieMaximumLengthInMinutes)]
         [Display(Name = "Length (in minutes)")]
         public int Length { get; set; }
 
         [Required]
-        [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 25)]
+        [StringLength(ValidationConstants.movieDescriptionMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.movieDescriptionMinimumLength)]
         public string Description { get; set; }     
 
         [Display(Name = "Cover Image Link")]

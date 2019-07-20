@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieDatabase.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.TVShow
@@ -13,12 +14,12 @@ namespace MovieDatabase.Models.InputModels.TVShow
         public DateTime ReleaseDate { get; set; }
 
         [Required]
-        [Range(3, 44)]
+        [Range(ValidationConstants.seasonMinimumEpisodes, ValidationConstants.seasonMaximumEpisodes)]
         [Display(Name = "Number of Episodes")]
         public int Episodes { get; set; }
 
         [Required]
-        [Range(20, 120)]
+        [Range(ValidationConstants.seasonMinimumLengthPerEpisode, ValidationConstants.seasonMaximumLengthPerEpisode)]
         [Display(Name = "Length per Episode (in minutes)")]
         public int LengthPerEpisode { get; set; }
     }

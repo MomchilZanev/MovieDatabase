@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MovieDatabase.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Domain
 {
@@ -9,7 +10,7 @@ namespace MovieDatabase.Domain
         public string Id { get; set; }
 
         [Required]
-        [StringLength(30, MinimumLength = 3)]
+        [StringLength(ValidationConstants.genreNameMaximumLength, MinimumLength = ValidationConstants.genreNameMinimumLength)]
         public string Name { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.Genre;
 using MovieDatabase.Services.Contracts;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace MovieDatabase.Web.Controllers
 {
     public class GenresController : Controller
     {
+        private const string redirectHome = "/Home/Index";
+
         private readonly IGenreService genreService;
 
         public GenresController(IGenreService genreService)
@@ -15,14 +18,14 @@ namespace MovieDatabase.Web.Controllers
             this.genreService = genreService;
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create()
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public async Task<IActionResult> Create(CreateGenreInputModel input)
         {
             if (!ModelState.IsValid)
@@ -35,7 +38,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            return Redirect("/Home/Index");
+            return Redirect(redirectHome);
         }
     }
 }

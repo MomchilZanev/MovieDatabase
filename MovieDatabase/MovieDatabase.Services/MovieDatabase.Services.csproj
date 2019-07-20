@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MovieDatabase.Common\MovieDatabase.Common.csproj" />
     <ProjectReference Include="..\MovieDatabase.Data\MovieDatabase.Data.csproj" />
     <ProjectReference Include="..\MovieDatabase.Domain\MovieDatabase.Domain.csproj" />
     <ProjectReference Include="..\MovieDatabase.Models\MovieDatabase.Models.csproj" />

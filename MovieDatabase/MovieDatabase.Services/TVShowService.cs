@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Data;
+﻿using MovieDatabase.Common;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.TVShow;
 using MovieDatabase.Models.ViewModels.TVShow;
@@ -79,13 +80,13 @@ namespace MovieDatabase.Services
         {
             switch (orderBy)
             {
-                case "release":
+                case GlobalConstants.moviesTvShowsOrderByRelease:
                     return tvShowsAllViewModel.OrderByDescending(tvShow => tvShow.FirstAired).ToList();
-                case "popularity":
+                case GlobalConstants.moviesTvShowsOrderByPopularity:
                     return tvShowsAllViewModel.OrderByDescending(tvShow => tvShow.TotalReviews).ToList();
-                case "rating":
+                case GlobalConstants.moviesTvShowsOrderByRating:
                     return tvShowsAllViewModel.OrderByDescending(tvShow => tvShow.Rating).ToList();
-                case "soon":
+                case GlobalConstants.moviesTvShowsShowComingSoon:
                     return tvShowsAllViewModel.Where(tvShow => tvShow.FirstAired > DateTime.UtcNow).OrderByDescending(tvShow => tvShow.FirstAired).ToList();
                 default:
                     return tvShowsAllViewModel.ToList();
@@ -190,8 +191,8 @@ namespace MovieDatabase.Services
                 Genre = genreFromDb,
                 Creator = creatorFromDb,
                 Description = input.Description,
-                CoverImageLink = (input.CoverImageLink == "" || input.CoverImageLink == null) ? "/images/no_image.png" : input.CoverImageLink,
-                TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
+                CoverImageLink = string.IsNullOrEmpty(input.CoverImageLink) ? GlobalConstants.noImageLink : input.CoverImageLink,
+                TrailerLink = string.IsNullOrEmpty(input.TrailerLink) ? GlobalConstants.noTrailerLink : input.TrailerLink,
             };
 
             await dbContext.TVShows.AddAsync(tvShowForDb);

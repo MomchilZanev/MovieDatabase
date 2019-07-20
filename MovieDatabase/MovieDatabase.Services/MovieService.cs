@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Data;
+﻿using MovieDatabase.Common;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Movie;
 using MovieDatabase.Models.ViewModels.Movie;
@@ -67,13 +68,13 @@ namespace MovieDatabase.Services
         {
             switch (orderBy)
             {
-                case "release":
+                case GlobalConstants.moviesTvShowsOrderByRelease:
                     return moviesAllViewModel.OrderByDescending(movie => movie.ReleaseDate).ToList();
-                case "popularity":
+                case GlobalConstants.moviesTvShowsOrderByPopularity:
                     return moviesAllViewModel.OrderByDescending(movie => movie.TotalReviews).ToList();
-                case "rating":
+                case GlobalConstants.moviesTvShowsOrderByRating:
                     return moviesAllViewModel.OrderByDescending(movie => movie.Rating).ToList();
-                case "soon":
+                case GlobalConstants.moviesTvShowsShowComingSoon:
                     return moviesAllViewModel.Where(movie => movie.ReleaseDate > DateTime.UtcNow).OrderBy(movie => movie.ReleaseDate).ToList();
                 default:
                     return moviesAllViewModel.ToList();
@@ -152,8 +153,8 @@ namespace MovieDatabase.Services
                 Length = input.Length,
                 Director = directorFromDb,
                 Description = input.Description,
-                CoverImageLink = (input.CoverImageLink == "" || input.CoverImageLink == null) ? "/images/no_image.png" : input.CoverImageLink,
-                TrailerLink = (input.TrailerLink == "" || input.TrailerLink == null) ? "https://www.youtube.com/embed/KAOdjqyG37A" : input.TrailerLink,
+                CoverImageLink = string.IsNullOrEmpty(input.CoverImageLink) ? GlobalConstants.noImageLink : input.CoverImageLink,
+                TrailerLink = string.IsNullOrEmpty(input.TrailerLink) ? GlobalConstants.noTrailerLink : input.TrailerLink,
             };
 
             await dbContext.Movies.AddAsync(movieForDb);

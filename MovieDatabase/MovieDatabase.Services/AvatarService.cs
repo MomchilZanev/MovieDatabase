@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Services.Contracts;
 using System.IO;
@@ -21,15 +22,15 @@ namespace MovieDatabase.Services
 
             if (avatar != null && avatar.Length > 0 && avatar.Length < 64000)
             {
-                var fileName = user.UserName + ".jpg";
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\user_avatars", fileName);
+                var fileName = user.UserName + GlobalConstants.imageFileSuffix;
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), GlobalConstants.userAvatarsDirectory, fileName);
 
                 using (var fileSrteam = new FileStream(filePath, FileMode.Create))
                 {
                     await avatar.CopyToAsync(fileSrteam);
                 }
 
-                user.AvatarLink = $"/user_avatars/{fileName}";
+                user.AvatarLink = GlobalConstants.avatarLinkPrefix + fileName;
 
                 await dbContext.SaveChangesAsync();
             }

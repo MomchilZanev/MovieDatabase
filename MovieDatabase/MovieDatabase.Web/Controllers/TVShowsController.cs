@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.TVShow;
 using MovieDatabase.Services.Contracts;
 using System.Security.Claims;
@@ -9,6 +10,8 @@ namespace MovieDatabase.Web.Controllers
 {
     public class TVShowsController : Controller
     {
+        private const string redirectTVShowsAllAndOrder = "/TVShows/All?orderBy=" + GlobalConstants.moviesTvShowsOrderByRelease;
+
         private readonly ITVShowService tvShowService;
 
         public TVShowsController(ITVShowService tvShowService)
@@ -16,7 +19,7 @@ namespace MovieDatabase.Web.Controllers
             this.tvShowService = tvShowService;
         }
 
-        public async Task<IActionResult> All(string orderBy, string genreFilter)
+        public IActionResult All(string orderBy, string genreFilter)
         {
             string userId = "";
             if (User.Identity.IsAuthenticated)
@@ -64,14 +67,14 @@ namespace MovieDatabase.Web.Controllers
             return View(seasonDetailsViewModel);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create()
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public async Task<IActionResult> Create(CreateTVShowInputModel input)
         {
             if (!ModelState.IsValid)
@@ -84,17 +87,17 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            return Redirect("/TVShows/All?orderBy=release");
+            return Redirect(redirectTVShowsAllAndOrder);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddSeason()
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
+        public IActionResult AddSeason()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public async Task<IActionResult> AddSeason(AddSeasonInputModel input)
         {
             if (!ModelState.IsValid)
@@ -107,17 +110,17 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            return Redirect("/TVShows/All?orderBy=release");
+            return Redirect(redirectTVShowsAllAndOrder);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddRole()
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
+        public IActionResult AddRole()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public async Task<IActionResult> AddRole(AddRoleInputModel input)
         {
             if (!ModelState.IsValid)
@@ -130,7 +133,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            return Redirect("/TVShows/All?orderBy=release");
+            return Redirect(redirectTVShowsAllAndOrder);
         }
     }
 }

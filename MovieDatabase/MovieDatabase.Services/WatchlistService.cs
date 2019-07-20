@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Data;
+﻿using MovieDatabase.Common;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.ViewModels.Watchlist;
 using MovieDatabase.Services.Contracts;
@@ -32,14 +33,14 @@ namespace MovieDatabase.Services
         {
             if (dbContext.Movies.Any(movie => movie.Id == id))
             {
-                return "Movie";
+                return GlobalConstants.Movie;
             }
             else if (dbContext.TVShows.Any(tvShow => tvShow.Id == id))
             {
-                return "TV Show";
+                return GlobalConstants.TV_Show;
             }
 
-            return "Neither";
+            return GlobalConstants.Neither;
         }
 
         public bool MovieIsInUserWatchlist(string userId, string movieId)
@@ -73,11 +74,11 @@ namespace MovieDatabase.Services
                 {
                     Id = movieUser.MovieId,
                     Name = movieUser.Movie.Name,
-                    Description = movieUser.Movie.Description.Substring(0, Math.Min(500, movieUser.Movie.Description.Length)) + "....",
+                    Description = movieUser.Movie.Description.Substring(0, Math.Min(GlobalConstants.movieTvShowPreviewDescriptionMaxCharLength, movieUser.Movie.Description.Length)) + "....",
                     CoverImageLink = movieUser.Movie.CoverImageLink,
                     ReleaseDate = movieUser.Movie.ReleaseDate,
                     Rating = movieUser.Movie.Rating,
-                    Category = "Movies",
+                    Category = GlobalConstants.moviesCategory,
                 })
                 .ToList();
 
@@ -94,7 +95,7 @@ namespace MovieDatabase.Services
                     CoverImageLink = tvShowUser.TVShow.CoverImageLink,
                     ReleaseDate = tvShowUser.TVShow.FirstAired,
                     Rating = tvShowUser.TVShow.OverallRating,
-                    Category = "TVShows",
+                    Category = GlobalConstants.tvShowsCategory,
                 })
                 .ToList();
 

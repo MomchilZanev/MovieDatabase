@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Data;
+﻿using MovieDatabase.Common;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Review;
 using MovieDatabase.Models.ViewModels.Review;
@@ -33,14 +34,14 @@ namespace MovieDatabase.Services
         {
             if (dbContext.Movies.Any(movie => movie.Id == id))
             {
-                return "Movie";
+                return GlobalConstants.Movie;
             }
             else if (dbContext.Seasons.Any(season => season.Id == id))
             {
-                return "Season";
+                return GlobalConstants.Season;
             }
 
-            return "Neither";
+            return GlobalConstants.Neither;
         }
 
         public bool ReviewExists(string userId, string itemId)
@@ -79,7 +80,7 @@ namespace MovieDatabase.Services
                     .Select(seasonReview => new ReviewAllViewModel
                     {
                         User = seasonReview.User.UserName,
-                        Item = seasonReview.Season.TVShow.Name + " Season " + seasonReview.Season.SeasonNumber,
+                        Item = seasonReview.Season.TVShow.Name + GlobalConstants._Season_ + seasonReview.Season.SeasonNumber,
                         Content = seasonReview.Content,
                         Rating = seasonReview.Rating,
                         Date = seasonReview.Date,

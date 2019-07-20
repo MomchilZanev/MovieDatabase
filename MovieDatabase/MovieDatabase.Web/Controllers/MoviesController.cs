@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.Movie;
 using MovieDatabase.Services.Contracts;
 using System.Security.Claims;
@@ -9,6 +10,8 @@ namespace MovieDatabase.Web.Controllers
 {
     public class MoviesController : Controller
     {
+        private const string redirectMoviesAllAndOrder = "/Movies/All?orderBy=" + GlobalConstants.moviesTvShowsOrderByRelease;
+
         private readonly IMovieService movieService;
 
         public MoviesController(IMovieService movieService)
@@ -29,7 +32,7 @@ namespace MovieDatabase.Web.Controllers
             return View(movieViewModel);
         }
 
-        public async Task<IActionResult> All(string orderBy, string genreFilter)
+        public IActionResult All(string orderBy, string genreFilter)
         {
             string userId = "";
             if (User.Identity.IsAuthenticated)
@@ -51,14 +54,14 @@ namespace MovieDatabase.Web.Controllers
             return View(moviesAllViewModel);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create()
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]        
+        [Authorize(Roles = GlobalConstants.adminRoleName)]        
         public async Task<IActionResult> Create(CreateMovieInputModel input)
         {
             if (!ModelState.IsValid)
@@ -71,17 +74,17 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            return Redirect("/Movies/All?orderBy=release");
+            return Redirect(redirectMoviesAllAndOrder);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddRole()
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
+        public IActionResult AddRole()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public async Task<IActionResult> AddRole(AddRoleInputModel input)
         {
             if (!ModelState.IsValid)
@@ -94,7 +97,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            return Redirect("/Movies/All?orderBy=release");
+            return Redirect(redirectMoviesAllAndOrder);
         }
     }
 }

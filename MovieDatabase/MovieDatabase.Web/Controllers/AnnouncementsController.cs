@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.Announcement;
 using MovieDatabase.Services.Contracts;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace MovieDatabase.Web.Controllers
 {
     public class AnnouncementsController : Controller
     {
+        private const string redirectAnnuncementsAllAndOrder = "/Announcements/All/?orderBy=" + GlobalConstants.announcementsOrderByLatest;
+
         private readonly IAnnouncementService announcementService;
 
         public AnnouncementsController(IAnnouncementService announcementService)
@@ -15,7 +18,7 @@ namespace MovieDatabase.Web.Controllers
             this.announcementService = announcementService;
         }
 
-        public async Task<IActionResult> All(string orderBy)
+        public IActionResult All(string orderBy)
         {
             var allAnnouncementsViewModel = announcementService.GetAllAnnouncements();
 
@@ -27,14 +30,14 @@ namespace MovieDatabase.Web.Controllers
             return View(allAnnouncementsViewModel);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create()
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]        
+        [Authorize(Roles = GlobalConstants.adminRoleName)]        
         public async Task<IActionResult> Create(CreateAnnouncementInputModel input)
         {
             if (!ModelState.IsValid)
@@ -47,7 +50,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }            
 
-            return Redirect("/Announcements/All/?orderBy=latest");
+            return Redirect(redirectAnnuncementsAllAndOrder);
         }
     }
 }

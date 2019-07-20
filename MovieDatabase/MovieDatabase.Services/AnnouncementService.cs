@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Data;
+﻿using MovieDatabase.Common;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Announcement;
 using MovieDatabase.Models.ViewModels.Announcement;
@@ -25,7 +26,7 @@ namespace MovieDatabase.Services
                 .Select(announcement => new AnnouncementViewModel
                 {
                     Title = announcement.Title,
-                    Content = announcement.Content + "....",
+                    Content = announcement.Content + GlobalConstants.fourDots,
                     ImageLink = announcement.ImageLink,
                     Date = announcement.Date,
                     Creator = announcement.Creator,
@@ -40,9 +41,9 @@ namespace MovieDatabase.Services
         {
             switch (orderBy)
             {
-                case "latest":
+                case GlobalConstants.announcementsOrderByLatest:
                     return announcements.OrderByDescending(announcment => announcment.Date).ToList();
-                case "oldest":
+                case GlobalConstants.announcementsOrderByOldest:
                     return announcements.OrderBy(announcement => announcement.Date).ToList();
                 default:
                     return announcements.ToList();
@@ -62,7 +63,7 @@ namespace MovieDatabase.Services
                 Title = input.Title,
                 Content = input.Content,
                 OfficialArticleLink = input.OfficialArticleLink,
-                ImageLink = string.IsNullOrEmpty(input.ImageLink) ? "/images/no_image.png" : input.ImageLink,
+                ImageLink = string.IsNullOrEmpty(input.ImageLink) ? GlobalConstants.noImageLink : input.ImageLink,
                 Date = DateTime.UtcNow,
             };
             await dbContext.Announcements.AddAsync(announcementForDb);

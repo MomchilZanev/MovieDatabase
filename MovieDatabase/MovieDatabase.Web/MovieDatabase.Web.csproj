@@ -15,6 +15,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\MovieDatabase.Common\MovieDatabase.Common.csproj" />
     <ProjectReference Include="..\MovieDatabase.Data\MovieDatabase.Data.csproj" />
     <ProjectReference Include="..\MovieDatabase.Models\MovieDatabase.Models.csproj" />
     <ProjectReference Include="..\MovieDatabase.Services\MovieDatabase.Services.csproj" />

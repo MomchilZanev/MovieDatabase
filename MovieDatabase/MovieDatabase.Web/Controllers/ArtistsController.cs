@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Services.Contracts;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace MovieDatabase.Web.Controllers
 {
     public class ArtistsController : Controller
     {
+        private const string redirectArtistsAllAndOrder = "/Artists/All/?orderBy=" + GlobalConstants.artistsOrderByMostPopular;
+
         private readonly IArtistService artistService;
 
         public ArtistsController(IArtistService artistService)
@@ -29,7 +32,7 @@ namespace MovieDatabase.Web.Controllers
             return View(artistDetailsViewModel);
         }
 
-        public async Task<IActionResult> All(string orderBy)
+        public IActionResult All(string orderBy)
         {
             var artistsAllViewModel = artistService.GetAllArtists();
 
@@ -41,14 +44,14 @@ namespace MovieDatabase.Web.Controllers
             return View(artistsAllViewModel);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public async Task<IActionResult> Create(CreateArtistInputModel input)
         {
             if (!ModelState.IsValid)
@@ -61,7 +64,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            return Redirect("/Artists/All/?orderBy=youngest");
+            return Redirect(redirectArtistsAllAndOrder);
         }
     }
 }

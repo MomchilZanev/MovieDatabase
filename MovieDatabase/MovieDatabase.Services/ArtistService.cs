@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Data;
+﻿using MovieDatabase.Common;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Models.ViewModels.Artist;
@@ -27,7 +28,7 @@ namespace MovieDatabase.Services
                     Id = artist.Id,
                     FullName = artist.FullName,
                     PhotoLink = artist.PhotoLink,
-                    Biography = artist.Biography.Substring(0, Math.Min(800, artist.Biography.Length)) + "....",
+                    Biography = artist.Biography.Substring(0, Math.Min(GlobalConstants.artistPreviewBiographyMaxCharLength, artist.Biography.Length)) + GlobalConstants.fourDots,
                     BirthDate = artist.BirthDate,
                     CareerProjects = artist.MovieRoles.Count() + artist.SeasonRoles.Count() + artist.MoviesDirected.Count() + artist.TVShowsCreated.Count(),
                 })
@@ -87,7 +88,7 @@ namespace MovieDatabase.Services
 
             foreach (var seasonRole in artistFromDb.SeasonRoles)
             {
-                artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + " Season " + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
+                artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + GlobalConstants._Season_ + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
             }
 
             return artistDetailsViewModel;
@@ -97,11 +98,11 @@ namespace MovieDatabase.Services
         {
             switch (orderBy)
             {
-                case "youngest":
+                case GlobalConstants.artistsOrderByYoungest:
                     return artistsAllViewModel.OrderByDescending(artist => artist.BirthDate).ToList();
-                case "oldest":
+                case GlobalConstants.artistsOrderByOldest:
                     return artistsAllViewModel.OrderBy(artist => artist.BirthDate).ToList();
-                case "popularity":
+                case GlobalConstants.artistsOrderByMostPopular:
                     return artistsAllViewModel.OrderByDescending(artist => artist.CareerProjects).ToList();
                 default:
                     return artistsAllViewModel.ToList();
@@ -120,7 +121,7 @@ namespace MovieDatabase.Services
                 FullName = input.FullName,
                 BirthDate = input.BirthDate,
                 Biography = input.Biography,
-                PhotoLink = string.IsNullOrEmpty(input.PhotoLink) ? "/images/no_artist_image.png" : input.PhotoLink,
+                PhotoLink = string.IsNullOrEmpty(input.PhotoLink) ? GlobalConstants.noArtistImage : input.PhotoLink,
             };
 
             await dbContext.Artists.AddAsync(artistForDb);

@@ -62,8 +62,8 @@
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
-                                        <a class="nav-link text-warning" href="/Movies/Create">Add Movie entry</a>
-                                        <a class="nav-link text-warning" href="/Movies/AddRole">Add Role to Movie</a>
+                                        <a class="nav-link text-warning" href="/Administration/Movies/Create">Add Movie entry</a>
+                                        <a class="nav-link text-warning" href="/Administration/Movies/AddRole">Add Role to Movie</a>
                                     }
                                 </div>
                             </div>
@@ -81,9 +81,9 @@
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
-                                        <a class="nav-link text-warning" href="/TVShows/Create">Add TV Show Entry</a>
-                                        <a class="nav-link text-warning" href="/TVShows/AddSeason">Add Season to TV Show</a>
-                                        <a class="nav-link text-warning" href="/TVShows/AddRole">Add Role to Season</a>
+                                        <a class="nav-link text-warning" href="/Administration/TVShows/Create">Add TV Show Entry</a>
+                                        <a class="nav-link text-warning" href="/Administration/TVShows/AddSeason">Add Season to TV Show</a>
+                                        <a class="nav-link text-warning" href="/Administration/TVShows/AddRole">Add Role to Season</a>
                                     }
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
-                                        <a class="nav-link text-warning" href="/Artists/Create">Create Entry</a>
+                                        <a class="nav-link text-warning" href="/Administration/Artists/Create">Create Entry</a>
                                     }
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
-                                        <a class="nav-link text-warning" href="/Announcements/Create">Create Entry</a>
+                                        <a class="nav-link text-warning" href="/Administration/Announcements/Create">Create Entry</a>
                                     }
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a href="/Genres/Create" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">Add new genre</a>
+                                <a href="/Administration/Genres/Create" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">Add new genre</a>
                             </li>
                         }
                     </ul>

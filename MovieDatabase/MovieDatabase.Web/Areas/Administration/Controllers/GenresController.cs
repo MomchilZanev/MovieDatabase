@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using MovieDatabase.Common;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.InputModels.Genre;
 using MovieDatabase.Services.Contracts;
 using System.Threading.Tasks;
 
-namespace MovieDatabase.Web.Controllers
+namespace MovieDatabase.Web.Areas.Administration.Controllers
 {
-    public class GenresController : Controller
+    public class GenresController : AdministrationController
     {
         private const string redirectHome = "/Home/Index";
 
@@ -18,14 +16,12 @@ namespace MovieDatabase.Web.Controllers
             this.genreService = genreService;
         }
 
-        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = GlobalConstants.adminRoleName)]
         public async Task<IActionResult> Create(CreateGenreInputModel input)
         {
             if (!ModelState.IsValid)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Models.ViewModels;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {

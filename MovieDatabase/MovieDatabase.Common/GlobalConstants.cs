@@ -2,8 +2,6 @@
 {
     public class GlobalConstants
     {
-        public const string adminRoleName = "Admin";
-
         public const string noImageLink = "/images/no_image.jpg";
 
         public const string noTrailerLink = "https://www.youtube.com/embed/KAOdjqyG37A";

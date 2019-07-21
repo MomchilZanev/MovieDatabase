@@ -63,6 +63,7 @@ namespace MovieDatabase.Services
                     .Select(movieReview => new ReviewAllViewModel
                     {
                         User = movieReview.User.UserName,
+                        ItemId = movieReview.MovieId,
                         Item = movieReview.Movie.Name,
                         Content = movieReview.Content,
                         Rating = movieReview.Rating,
@@ -80,6 +81,7 @@ namespace MovieDatabase.Services
                     .Select(seasonReview => new ReviewAllViewModel
                     {
                         User = seasonReview.User.UserName,
+                        ItemId = seasonReview.SeasonId,
                         Item = seasonReview.Season.TVShow.Name + GlobalConstants._Season_ + seasonReview.Season.SeasonNumber,
                         Content = seasonReview.Content,
                         Rating = seasonReview.Rating,

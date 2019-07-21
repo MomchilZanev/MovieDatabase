@@ -54,6 +54,7 @@ namespace MovieDatabase.Web
             services.AddTransient<IReviewService, ReviewService>();
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IAvatarService, AvatarService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddMvc(options =>
             {

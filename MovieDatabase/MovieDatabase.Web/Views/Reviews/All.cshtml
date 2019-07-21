@@ -9,12 +9,17 @@
 
 @foreach (var review in Model)
 {
-    <div class="text-justify text-warning mt-2">
-        <h5 style="color:yellow; font-size:x-large">★ <span style="font-size:large">@review.Rating</span><span style="font-size:small">/10</span></h5>
-        <h5 style="font-size:medium; color:yellow;">@review.Date.ToString("dd MMMM yyyy") | by @review.User</h5>
+<div class="text-justify text-warning mt-2">
+    <h5 style="color:yellow; font-size:x-large">★ <span style="font-size:large">@review.Rating</span><span style="font-size:small">/10</span></h5>
+    <h5 style="font-size:medium; color:yellow;">@review.Date.ToString("dd MMMM yyyy") | by @review.User</h5>
 
-        <div style="white-space: pre-wrap; font-size:large;" class="font-weight-light text-warning text-left mt-2 mb-1">@review.Content</div>
-    </div>
+    <div style="white-space: pre-wrap; font-size:large;" class="font-weight-light text-warning text-left mt-2 mb-1">@review.Content</div>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="text-danger text-right" href="/Administration/Reviews/Delete?userName=@review.User&itemId=@review.ItemId">[DELETE REVIEW]</a>
+    }
+</div>
 
     <hr class="mb-2" style="height:2px;border:none;background-color:orangered;" />
 }

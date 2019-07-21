@@ -1,10 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.ViewModels.Review
 {
     public class ReviewAllViewModel
     {
+        public string ItemId { get; set; }
+
         public string Item { get; set; }
 
         public string User { get; set; }

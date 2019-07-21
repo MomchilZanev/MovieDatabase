@@ -7,9 +7,15 @@
 @foreach (var announcement in Model)
 {
     <h3><a href="@announcement.OfficialArticleLink" class="text-warning">@announcement.Title</a></h3>
-    <h6 class="text-warning font-italic mt-2 mb-3">
-        | @announcement.Date.ToString("dddd, dd MMMM yyyy") | by @announcement.Creator | 
-    </h6>
+    <div class="d-flex justify-content-between">
+        <h6 class="text-warning font-italic mt-2 mb-3">
+            | @announcement.Date.ToString("dddd, dd MMMM yyyy") | by @announcement.Creator |
+        </h6>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="text-danger mr-2" href="/Administration/Announcements/Delete/@announcement.Id">[DELETE ANNOUNCEMENT]</a>
+        }
+    </div>
     <div class="row">
         <div class="col-2">
             <a href="@announcement.OfficialArticleLink"><img class="rounded" src="@announcement.ImageLink" height="295" width="200"></a>

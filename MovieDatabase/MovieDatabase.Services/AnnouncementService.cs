@@ -25,6 +25,7 @@ namespace MovieDatabase.Services
             var announcementsAllViewModel = dbContext.Announcements
                 .Select(announcement => new AnnouncementViewModel
                 {
+                    Id = announcement.Id,
                     Title = announcement.Title,
                     Content = announcement.Content + GlobalConstants.fourDots,
                     ImageLink = announcement.ImageLink,
@@ -69,6 +70,21 @@ namespace MovieDatabase.Services
             await dbContext.Announcements.AddAsync(announcementForDb);
             await dbContext.SaveChangesAsync();
             
+            return true;
+        }
+
+        public async Task<bool> DeleteAnnouncementAsync(string announcementId)
+        {
+            if (!dbContext.Announcements.Any(announcement => announcement.Id == announcementId))
+            {
+                return false;
+            }
+
+            var announcementFromDb = dbContext.Announcements.SingleOrDefault(announcement => announcement.Id == announcementId);
+
+            dbContext.Announcements.Remove(announcementFromDb);
+            await dbContext.SaveChangesAsync();
+
             return true;
         }
     }

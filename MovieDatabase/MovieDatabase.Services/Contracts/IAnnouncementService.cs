@@ -12,5 +12,7 @@ namespace MovieDatabase.Services.Contracts
         List<AnnouncementViewModel> OrderAnnouncements(List<AnnouncementViewModel> announcements, string orderBy);
 
         Task<bool> CreateAnnouncementAsync(CreateAnnouncementInputModel input);
+
+        Task<bool> DeleteAnnouncementAsync(string announcementId);
     }
 }

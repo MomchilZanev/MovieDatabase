@@ -4,6 +4,8 @@ namespace MovieDatabase.Models.ViewModels.Announcement
 {
     public class AnnouncementViewModel
     {
+        public string Id { get; set; }
+
         public string Title { get; set; }
 
         public string Content { get; set; }

@@ -1,0 +1,98 @@
+﻿@model MovieDatabase.Models.InputModels.Movie.UpdateMovieInputModel
+
+@{
+    ViewData["Title"] = "Update Movie";
+}
+
+<h2 class="text-warning mt-4 ml-3">Update Movie</h2>
+<hr class="col-7 ml-3 mt-2" style="height:3px;border:none;background-color:goldenrod;" />
+
+<form asp-area="Administration" asp-controller="Movies" asp-action="Update" method="post" class="text-warning">
+
+    <div asp-validation-summary="All" class="text-danger ml-5"></div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mb-3 col-8">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control mb-2" placeholder="Movie name">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 col-4">
+            <label asp-for="Length"></label>
+            <input asp-for="Length" type="number" placeholder="Movie length" class="form-control mb-2">
+            <span asp-validation-for="Length" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-6">
+            <label asp-for="Director"></label>
+            <select asp-for="Director" class="form-control mb-2" placeholder="Director">
+                <option disabled selected>@Model.Director  (current)</option>
+                <vc:all-artist-names></vc:all-artist-names>
+            </select>
+            <span asp-validation-for="Director" class="text-danger"></span>
+        </div>
+
+        <div class="mt-3 mb-3 col-6">
+            <label asp-for="Genre"></label>
+            <select asp-for="Genre" class="form-control mb-2" placeholder="Artists biography">
+                <option disabled selected>@Model.Genre (current)</option>
+                <vc:all-genre-names></vc:all-genre-names>
+            </select>
+            <span asp-validation-for="Genre" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-4">
+            <label asp-for="ReleaseDate"></label>
+            <input asp-for="ReleaseDate" type="text" class="form-control mb-2" placeholder="Release date">
+            <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+        </div>
+
+
+        <div class="mt-3 mb-3 col-8">
+            <label asp-for="CoverImageLink"></label>
+            <input asp-for="CoverImageLink" class="form-control mb-2" placeholder="Cover image">
+            <span asp-validation-for="CoverImageLink" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-12">
+            <label asp-for="TrailerLink"></label>
+            <input asp-for="TrailerLink" class="form-control mb-2" placeholder="https://www.youtube.com/embed/VIDEO_ID">
+            <span asp-validation-for="TrailerLink" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 col-12">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control mb-2" rows="10" placeholder="Short summary"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row col-8 d-flex justify-content-between">
+        <div class="mt-3 mb-3 col-12">
+            <hr class="mb-1 mt-0" style="height:3px;border:none;background-color:goldenrod;" />
+            <input type="submit" class="btn btn-dark btn-outline-warning mt-3 col-12" value="Update" />
+        </div>
+    </div>
+</form>
+
+<script>
+    jQuery('#ReleaseDate').datetimepicker(
+        {
+            theme: 'dark',
+            timepicker: false,
+            format: 'd.m.Y',
+        });
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

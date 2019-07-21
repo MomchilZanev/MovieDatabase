@@ -129,5 +129,25 @@ namespace MovieDatabase.Services
 
             return true;
         }
+
+        public async Task<bool> UpdateArtistAsync(UpdateArtistInputModel input)
+        {
+            if (!dbContext.Artists.Any(artist => artist.Id == input.Id))
+            {
+                return false;
+            }
+
+            var artistFromDb = await dbContext.Artists.FindAsync(input.Id);
+
+            artistFromDb.FullName = input.FullName;
+            artistFromDb.BirthDate = input.BirthDate;
+            artistFromDb.Biography = input.Biography;
+            artistFromDb.PhotoLink = input.PhotoLink;
+
+            dbContext.Update(artistFromDb);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

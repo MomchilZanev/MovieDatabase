@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Services.Contracts;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
@@ -8,18 +7,20 @@ namespace MovieDatabase.Web.Controllers
     public class MoviesController : Controller
     {
         private readonly IMovieService movieService;
+        private readonly IUserService userService;
 
-        public MoviesController(IMovieService movieService)
+        public MoviesController(IMovieService movieService, IUserService userService)
         {
             this.movieService = movieService;
+            this.userService = userService;
         }
 
         public async Task<IActionResult> Details(string id)
         {
-            var userId = "";
+            string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                userId = userService.GetUserIdFromUserName(User.Identity.Name);
             }
 
             var movieViewModel = await movieService.GetMovieAndDetailsByIdAsync(id, userId);
@@ -29,10 +30,10 @@ namespace MovieDatabase.Web.Controllers
 
         public IActionResult All(string orderBy, string genreFilter)
         {
-            string userId = "";
+            string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                userId = userService.GetUserIdFromUserName(User.Identity.Name);
             }
 
             var moviesAllViewModel = movieService.GetAllMovies(userId);

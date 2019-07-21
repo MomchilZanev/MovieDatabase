@@ -4,8 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.TVShow
 {
-    public class AddSeasonInputModel
+    public class UpdateSeasonInputModel
     {
+        [Required]
+        public string Id { get; set; }
+
         [Required]
         [Display(Name = "TV Show")]
         public string TVShow { get; set; }

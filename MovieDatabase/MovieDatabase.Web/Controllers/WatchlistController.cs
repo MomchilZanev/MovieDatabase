@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Common;
 using MovieDatabase.Services.Contracts;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
@@ -12,16 +11,18 @@ namespace MovieDatabase.Web.Controllers
         private const string redirectError = "/Home/Error";
 
         private readonly IWatchlistService watchlistService;
+        private readonly IUserService userService;
 
-        public WatchlistController(IWatchlistService watchlistService)
+        public WatchlistController(IWatchlistService watchlistService, IUserService userService)
         {
             this.watchlistService = watchlistService;
+            this.userService = userService;
         }
 
         [Authorize]
         public IActionResult Index()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = userService.GetUserIdFromUserName(User.Identity.Name);
 
             var watchlistAllViewModel = watchlistService.GetItemsInUserWatchlist(userId);
 
@@ -37,7 +38,7 @@ namespace MovieDatabase.Web.Controllers
                 return Redirect(redirectError);
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = userService.GetUserIdFromUserName(User.Identity.Name);
 
             var itemType = watchlistService.IsIdMovieOrTVShowId(id);
             if (itemType == GlobalConstants.Movie)
@@ -71,7 +72,7 @@ namespace MovieDatabase.Web.Controllers
                 return Redirect(redirectError);
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = userService.GetUserIdFromUserName(User.Identity.Name);
 
             var itemType = watchlistService.IsIdMovieOrTVShowId(id);
             if (itemType == GlobalConstants.Movie)

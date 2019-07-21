@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Services.Contracts;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
@@ -8,18 +7,20 @@ namespace MovieDatabase.Web.Controllers
     public class TVShowsController : Controller
     {
         private readonly ITVShowService tvShowService;
+        private readonly IUserService userService;
 
-        public TVShowsController(ITVShowService tvShowService)
+        public TVShowsController(ITVShowService tvShowService, IUserService userService)
         {
             this.tvShowService = tvShowService;
+            this.userService = userService;
         }
 
         public IActionResult All(string orderBy, string genreFilter)
         {
-            string userId = "";
+            string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                userId = userService.GetUserIdFromUserName(User.Identity.Name);
             }
 
             var tvShowsAllViewModel = tvShowService.GetAllTVShows(userId);
@@ -38,23 +39,17 @@ namespace MovieDatabase.Web.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            var userId = "";
-            if (User.Identity.IsAuthenticated)
-            {
-                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            }
-
-            var tvShowDetailsViewModel = await tvShowService.GetTVShowAndDetailsByIdAsync(id, userId);
+            var tvShowDetailsViewModel = await tvShowService.GetTVShowAndDetailsByIdAsync(id);
 
             return View(tvShowDetailsViewModel);
         }
 
         public async Task<IActionResult> SeasonDetails(string id)
         {
-            var userId = "";
+            string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                userId = userService.GetUserIdFromUserName(User.Identity.Name);
             }
 
             var seasonDetailsViewModel = await tvShowService.GetSeasonAndDetailsByIdAsync(id, userId);

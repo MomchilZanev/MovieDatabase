@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.Review;
 using MovieDatabase.Services.Contracts;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
@@ -15,10 +14,12 @@ namespace MovieDatabase.Web.Controllers
         private const string redirectSeasonDetails = "/TVShows/SeasonDetails/";
 
         private readonly IReviewService reviewService;
+        private readonly IUserService userService;
 
-        public ReviewsController(IReviewService reviewService)
+        public ReviewsController(IReviewService reviewService, IUserService userService)
         {
             this.reviewService = reviewService;
+            this.userService = userService;
         }
 
         public IActionResult All(string id)
@@ -73,7 +74,7 @@ namespace MovieDatabase.Web.Controllers
                 return Redirect(redirectError);
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
 
             var itemType = reviewService.IsIdMovieOrSeasonId(input.Id);
             if (itemType == GlobalConstants.Movie)
@@ -101,7 +102,7 @@ namespace MovieDatabase.Web.Controllers
         [Authorize]
         public IActionResult Update(string id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
 
             bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
             bool reviewExists = reviewService.ReviewExists(userId, id);
@@ -136,7 +137,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
 
             bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(input.Id);
             bool reviewExists = reviewService.ReviewExists(userId, input.Id);
@@ -177,7 +178,7 @@ namespace MovieDatabase.Web.Controllers
                 return Redirect(redirectError);
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
 
             var itemType = reviewService.IsIdMovieOrSeasonId(id);
             if (itemType == GlobalConstants.Movie)

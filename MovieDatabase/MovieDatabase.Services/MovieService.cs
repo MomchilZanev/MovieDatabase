@@ -22,7 +22,7 @@ namespace MovieDatabase.Services
             this.reviewService = reviewService;
         }
 
-        public List<MovieAllViewModel> GetAllMovies(string userId)
+        public List<MovieAllViewModel> GetAllMovies(string userId = null)
         {
             var allMoviesFromDb = dbContext.Movies.ToList();
 
@@ -81,7 +81,7 @@ namespace MovieDatabase.Services
             }
         }
 
-        public async Task<MovieDetailsViewModel> GetMovieAndDetailsByIdAsync(string movieId, string userId)
+        public async Task<MovieDetailsViewModel> GetMovieAndDetailsByIdAsync(string movieId, string userId = null)
         {
             var movieFromDb = await dbContext.Movies.FindAsync(movieId);
 
@@ -190,6 +190,41 @@ namespace MovieDatabase.Services
             };
 
             await dbContext.MovieRoles.AddAsync(movieRoleForDb);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UpdateMovieAsync(UpdateMovieInputModel input)
+        {
+            if (!dbContext.Movies.Any(movie => movie.Id == input.Id))
+            {
+                return false;
+            }
+            if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
+            {
+                return false;
+            }
+            if (!dbContext.Artists.Any(artist => artist.FullName == input.Director))
+            {
+                return false;
+            }
+
+            var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
+            var directorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
+
+            var movieFromDb = await dbContext.Movies.FindAsync(input.Id);
+
+            movieFromDb.Name = input.Name;
+            movieFromDb.Genre = genreFromDb;
+            movieFromDb.ReleaseDate = input.ReleaseDate;
+            movieFromDb.Length = input.Length;
+            movieFromDb.Description = input.Description;
+            movieFromDb.CoverImageLink = input.CoverImageLink;
+            movieFromDb.TrailerLink = input.TrailerLink;
+            movieFromDb.Director = directorFromDb;
+
+            dbContext.Update(movieFromDb);
             await dbContext.SaveChangesAsync();
 
             return true;

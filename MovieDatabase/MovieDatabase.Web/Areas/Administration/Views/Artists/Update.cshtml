@@ -1,0 +1,55 @@
+﻿@model MovieDatabase.Models.InputModels.Artist.UpdateArtistInputModel
+
+@{
+    ViewData["Title"] = "Update Artist";
+}
+
+<h2 class="text-warning mb-3">Update Artist</h2>
+
+<form asp-area="Administration" asp-controller="Artists" asp-action="Update" method="post" class="text-warning">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <hr class="col-3" style="height:3px;border:none;background-color:goldenrod;" />
+
+    <div class="mt-3 mb-3">
+        <label asp-for="FullName"></label>
+        <input asp-for="FullName" class="form-control col-5 mb-2" placeholder="Artist name">
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="BirthDate"></label>
+        <input asp-for="BirthDate" type="text" placeholder="Birth date" class="form-control col-7 mb-2">
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-3">
+        <label asp-for="Biography"></label>
+        <textarea asp-for="Biography" class="form-control col-8 mb-2" rows="20" placeholder="Artists biography"></textarea>
+        <span asp-validation-for="Biography" class="text-danger"></span>
+    </div>
+
+    <div class="mt-3 mb-4">
+        <label asp-for="PhotoLink"></label>
+        <input asp-for="PhotoLink" class="form-control col-7 mb-4" placeholder="Profile picture">
+        <span asp-validation-for="PhotoLink" class="text-danger"></span>
+    </div>
+
+    <hr class="col-5 mt-4" style="height:3px;border:none;background-color:goldenrod;" />
+
+    <input type="submit" class="btn btn-dark btn-outline-warning mt-2 col-4" value="Update" />
+</form>
+
+<script>
+    jQuery('#BirthDate').datetimepicker(
+        {
+            theme: 'dark',
+            timepicker: false,
+            format: 'd.m.Y',
+        });
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

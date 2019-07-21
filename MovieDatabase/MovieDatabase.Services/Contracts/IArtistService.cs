@@ -18,5 +18,7 @@ namespace MovieDatabase.Services.Contracts
         List<ArtistAllViewModel> OrderArtists(List<ArtistAllViewModel> artistsAllViewModel, string orderBy);
 
         Task<bool> CreateArtistAsync(CreateArtistInputModel input);
+
+        Task<bool> UpdateArtistAsync(UpdateArtistInputModel input);
     }
 }

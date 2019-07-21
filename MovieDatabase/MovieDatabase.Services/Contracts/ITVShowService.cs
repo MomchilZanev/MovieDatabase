@@ -11,20 +11,24 @@ namespace MovieDatabase.Services.Contracts
 
         List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames();
 
-        List<TVShowAllViewModel> GetAllTVShows(string userId);
+        List<TVShowAllViewModel> GetAllTVShows(string userId = null);
 
         List<TVShowAllViewModel> FilterTVShowsByGenre(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter);
 
         List<TVShowAllViewModel> OrderTVShows(List<TVShowAllViewModel> tvShowsAllViewModel, string orderBy);
 
-        Task<TVShowDetailsViewModel> GetTVShowAndDetailsByIdAsync(string tvShowId, string userId);
+        Task<TVShowDetailsViewModel> GetTVShowAndDetailsByIdAsync(string tvShowId);
 
-        Task<SeasonDetailsViewModel> GetSeasonAndDetailsByIdAsync(string seasonId, string userId);
+        Task<SeasonDetailsViewModel> GetSeasonAndDetailsByIdAsync(string seasonId, string userId = null);
 
         Task<bool> CreateTVShowAsync(CreateTVShowInputModel input);
 
         Task<bool> AddSeasonToTVShowAsync(AddSeasonInputModel input);
 
         Task<bool> AddRoleToTVShowSeasonAsync(AddRoleInputModel input);
+
+        Task<bool> UpdateTVShowAsync(UpdateTVShowInputModel input);
+
+        Task<bool> UpdateSeasonAsync(UpdateSeasonInputModel input);
     }
 }

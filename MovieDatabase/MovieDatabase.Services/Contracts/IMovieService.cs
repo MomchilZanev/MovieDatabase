@@ -7,7 +7,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IMovieService
     {
-        List<MovieAllViewModel> GetAllMovies(string userId);
+        List<MovieAllViewModel> GetAllMovies(string userId = null);
 
         List<MovieNameViewModel> GetAllMovieNames();
 
@@ -15,10 +15,12 @@ namespace MovieDatabase.Services.Contracts
 
         List<MovieAllViewModel> OrderMovies(List<MovieAllViewModel> moviesAllViewModel, string orderBy);
 
-        Task<MovieDetailsViewModel> GetMovieAndDetailsByIdAsync(string movieId, string userId);
+        Task<MovieDetailsViewModel> GetMovieAndDetailsByIdAsync(string movieId, string userId = null);
 
         Task<bool> CreateMovieAsync(CreateMovieInputModel input);
 
         Task<bool> AddRoleToMovieAsync(AddRoleInputModel input);
+
+        Task<bool> UpdateMovieAsync(UpdateMovieInputModel input);
     }
 }

@@ -1,10 +1,10 @@
-﻿using MovieDatabase.Common;
+﻿using AutoMapper;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Announcement;
 using MovieDatabase.Models.ViewModels.Announcement;
 using MovieDatabase.Services.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,26 +14,19 @@ namespace MovieDatabase.Services
     public class AnnouncementService : IAnnouncementService
     {
         private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public AnnouncementService(MovieDatabaseDbContext dbContext)
+        public AnnouncementService(MovieDatabaseDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }        
 
         public List<AnnouncementViewModel> GetAllAnnouncements()
         {
-            var announcementsAllViewModel = dbContext.Announcements
-                .Select(announcement => new AnnouncementViewModel
-                {
-                    Id = announcement.Id,
-                    Title = announcement.Title,
-                    Content = announcement.Content + GlobalConstants.fourDots,
-                    ImageLink = announcement.ImageLink,
-                    Date = announcement.Date,
-                    Creator = announcement.Creator,
-                    OfficialArticleLink = announcement.OfficialArticleLink,
-                })
-                .ToList();
+            var announcementsFromDb = dbContext.Announcements.ToList();
+
+            var announcementsAllViewModel = mapper.Map<List<Announcement>, List<AnnouncementViewModel>>(announcementsFromDb);
 
             return announcementsAllViewModel;
         }
@@ -56,18 +49,11 @@ namespace MovieDatabase.Services
             if (dbContext.Announcements.Any(announcement => announcement.Title == input.Title && announcement.Content == input.Content))
             {
                 return false;
-            }            
+            }
 
-            var announcementForDb = new Announcement
-            {
-                Creator = input.Creator,
-                Title = input.Title,
-                Content = input.Content,
-                OfficialArticleLink = input.OfficialArticleLink,
-                ImageLink = string.IsNullOrEmpty(input.ImageLink) ? GlobalConstants.noImageLink : input.ImageLink,
-                Date = DateTime.UtcNow,
-            };
-            await dbContext.Announcements.AddAsync(announcementForDb);
+            var announcementFromDb = mapper.Map<CreateAnnouncementInputModel, Announcement>(input);
+
+            await dbContext.Announcements.AddAsync(announcementFromDb);
             await dbContext.SaveChangesAsync();
             
             return true;

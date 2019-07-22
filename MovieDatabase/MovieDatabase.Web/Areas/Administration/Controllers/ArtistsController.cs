@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.Artist;
+using MovieDatabase.Models.ViewModels.Artist;
 using MovieDatabase.Services.Contracts;
 using System.Threading.Tasks;
 
@@ -12,10 +14,12 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         private const string redirectArtistsDetails = "/Artists/Details/";
 
         private readonly IArtistService artistService;
+        private readonly IMapper mapper;
 
-        public ArtistsController(IArtistService artistService)
+        public ArtistsController(IArtistService artistService, IMapper mapper)
         {
             this.artistService = artistService;
+            this.mapper = mapper;
         }
 
         public IActionResult Create()
@@ -43,14 +47,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         {
             var artistDetailsModel = await artistService.GetArtistAndDetailsByIdAsync(id);
 
-            var artistInputModel = new UpdateArtistInputModel
-            {
-                Id = artistDetailsModel.Id,
-                FullName = artistDetailsModel.FullName,
-                BirthDate = artistDetailsModel.BirthDate,
-                Biography = artistDetailsModel.Biography,
-                PhotoLink = artistDetailsModel.PhotoLink,
-            };
+            var artistInputModel = mapper.Map<ArtistDetailsViewModel, UpdateArtistInputModel>(artistDetailsModel);
 
             return View(artistInputModel);
         }

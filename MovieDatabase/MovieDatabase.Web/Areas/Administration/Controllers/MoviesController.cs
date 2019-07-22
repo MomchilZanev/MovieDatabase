@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.Movie;
+using MovieDatabase.Models.ViewModels.Movie;
 using MovieDatabase.Services.Contracts;
 using System.Threading.Tasks;
 
@@ -12,10 +14,12 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         private const string redirectMovieDetails = "/Movies/Details/";
 
         private readonly IMovieService movieService;
+        private readonly IMapper mapper;
 
-        public MoviesController(IMovieService movieService)
+        public MoviesController(IMovieService movieService, IMapper mapper)
         {
             this.movieService = movieService;
+            this.mapper = mapper;
         }
 
         public IActionResult Create()
@@ -45,7 +49,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRole(AddRoleInputModel input)
+        public async Task<IActionResult> AddRole(AddMovieRoleInputModel input)
         {
             if (!ModelState.IsValid)
             {
@@ -64,18 +68,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         {
             var movieDetailsModel = await movieService.GetMovieAndDetailsByIdAsync(id);
 
-            var movieInputModel = new UpdateMovieInputModel
-            {
-                Id = movieDetailsModel.Id,
-                Name = movieDetailsModel.Name,
-                ReleaseDate = movieDetailsModel.ReleaseDate,
-                Genre = movieDetailsModel.Genre,
-                Director = movieDetailsModel.Director,
-                Length = movieDetailsModel.Length,
-                Description = movieDetailsModel.Description,
-                CoverImageLink = movieDetailsModel.CoverImageLink,
-                TrailerLink = movieDetailsModel.TrailerLink,
-            };
+            var movieInputModel = mapper.Map<MovieDetailsViewModel, UpdateMovieInputModel>(movieDetailsModel);
 
             return View(movieInputModel);
         }

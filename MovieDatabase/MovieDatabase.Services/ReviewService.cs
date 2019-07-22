@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Common;
+﻿using AutoMapper;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Review;
@@ -14,10 +15,12 @@ namespace MovieDatabase.Services
     public class ReviewService : IReviewService
     {
         private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public ReviewService(MovieDatabaseDbContext dbContext)
+        public ReviewService(MovieDatabaseDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }        
 
         public bool IsValidMovieOrSeasonId(string itemId)
@@ -57,36 +60,18 @@ namespace MovieDatabase.Services
 
         public List<ReviewAllViewModel> GetAllMovieReviews(string movieId)
         {
-            var movieReviewsFromDb = dbContext.MovieReviews.Where(movieReview => movieReview.MovieId == movieId);
+            var movieReviewsFromDb = dbContext.MovieReviews.Where(movieReview => movieReview.MovieId == movieId).ToList();
 
-            var reviewsAllViewModel = movieReviewsFromDb
-                    .Select(movieReview => new ReviewAllViewModel
-                    {
-                        User = movieReview.User.UserName,
-                        ItemId = movieReview.MovieId,
-                        Item = movieReview.Movie.Name,
-                        Content = movieReview.Content,
-                        Rating = movieReview.Rating,
-                        Date = movieReview.Date,
-                    }).ToList();
+            var reviewsAllViewModel = mapper.Map<List<MovieReview>, List<ReviewAllViewModel>>(movieReviewsFromDb);
 
             return reviewsAllViewModel;
         }
 
         public List<ReviewAllViewModel> GetAllSeasonReviews(string seasonId)
         {
-            var seasonReviewsFromDb = dbContext.SeasonReviews.Where(seasonReview => seasonReview.SeasonId == seasonId);
+            var seasonReviewsFromDb = dbContext.SeasonReviews.Where(seasonReview => seasonReview.SeasonId == seasonId).ToList();
 
-            var reviewsAllViewModel = seasonReviewsFromDb
-                    .Select(seasonReview => new ReviewAllViewModel
-                    {
-                        User = seasonReview.User.UserName,
-                        ItemId = seasonReview.SeasonId,
-                        Item = seasonReview.Season.TVShow.Name + GlobalConstants._Season_ + seasonReview.Season.SeasonNumber,
-                        Content = seasonReview.Content,
-                        Rating = seasonReview.Rating,
-                        Date = seasonReview.Date,
-                    }).ToList();
+            var reviewsAllViewModel = mapper.Map<List<SeasonReview>, List<ReviewAllViewModel>>(seasonReviewsFromDb);
 
             return reviewsAllViewModel;
         }
@@ -96,12 +81,7 @@ namespace MovieDatabase.Services
             var movieReviewFromDb = dbContext.MovieReviews
                     .SingleOrDefault(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId);
 
-            var movieReviewInputModel = new CreateReviewInputModel
-            {
-                Id = movieReviewFromDb.MovieId,
-                Content = movieReviewFromDb.Content,
-                Rating = movieReviewFromDb.Rating,
-            };
+            var movieReviewInputModel = mapper.Map<MovieReview, CreateReviewInputModel>(movieReviewFromDb);
 
             return movieReviewInputModel;
         }
@@ -111,12 +91,7 @@ namespace MovieDatabase.Services
             var seasonReviewFromDb = dbContext.SeasonReviews
                     .SingleOrDefault(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId);
 
-            var seasonReviewInputModel = new CreateReviewInputModel
-            {
-                Id = seasonReviewFromDb.SeasonId,
-                Content = seasonReviewFromDb.Content,
-                Rating = seasonReviewFromDb.Rating,
-            };
+            var seasonReviewInputModel = mapper.Map<SeasonReview, CreateReviewInputModel>(seasonReviewFromDb);
 
             return seasonReviewInputModel;
         }
@@ -128,14 +103,8 @@ namespace MovieDatabase.Services
                 return false;
             }
 
-            var movieReviewForDb = new MovieReview
-            {
-                MovieId = input.Id,
-                UserId = userId,
-                Content = input.Content,
-                Rating = input.Rating,
-                Date = DateTime.UtcNow,
-            };
+            var movieReviewForDb = mapper.Map<CreateReviewInputModel, MovieReview>(input);
+            movieReviewForDb.UserId = userId;
 
             await dbContext.MovieReviews.AddAsync(movieReviewForDb);
             await dbContext.SaveChangesAsync();
@@ -150,14 +119,8 @@ namespace MovieDatabase.Services
                 return false;
             }
 
-            var seasonReviewForDb = new SeasonReview
-            {
-                SeasonId = input.Id,
-                UserId = userId,
-                Content = input.Content,
-                Rating = input.Rating,
-                Date = DateTime.UtcNow,
-            };
+            var seasonReviewForDb = mapper.Map<CreateReviewInputModel, SeasonReview>(input);
+            seasonReviewForDb.UserId = userId;
 
             await dbContext.SeasonReviews.AddAsync(seasonReviewForDb);
             await dbContext.SaveChangesAsync();

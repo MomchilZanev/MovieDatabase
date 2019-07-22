@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MovieDatabase.Common\MovieDatabase.Common.csproj" />
     <ProjectReference Include="..\MovieDatabase.Data\MovieDatabase.Data.csproj" />
     <ProjectReference Include="..\MovieDatabase.Domain\MovieDatabase.Domain.csproj" />

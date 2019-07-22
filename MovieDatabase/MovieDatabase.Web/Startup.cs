@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -10,6 +11,7 @@ using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Services;
 using MovieDatabase.Services.Contracts;
+using MovieDatabase.Web.AutoMapperProfiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,10 +43,12 @@ namespace MovieDatabase.Web
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 3;
             })
-				.AddDefaultUI(UIFramework.Bootstrap4)
+                .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddDefaultTokenProviders()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<MovieDatabaseDbContext>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddTransient<IAnnouncementService, AnnouncementService>();
             services.AddTransient<IArtistService, ArtistService>();
@@ -134,7 +138,7 @@ namespace MovieDatabase.Web
                     Title = "‘Game of Thrones’ Destroys Single Season Emmy Nomination Record",
                     Content = "At least “Game of Thrones'” final season wasn’t a colossal disappointment with regards to Emmy nominations.HBO’s dragon drama left its final season’s naysayers in the show’s fiery wake at the Emmy nominations,scoring a mind - boggling 32 nominations,the most nominations for a single season of any show in history. It was unclear heading into nominations whether industry voters would be as disappointed with the final season of the fantasy behemoth as some fans were, but Tuesday’s haul definitively proved otherwise. Beyond nabbing its eighth nomination for outstanding drama series, “Game of Thrones” earned several other notable nominations, including one for writing, three for direction, plus an astonishing 10 total acting mentions, including Kit Harington for lead actor, Emilia Clarke for lead actress, Gwendoline Christie, Lena Headey, Sophie Turner, and Maisie Williams for supporting actress, Alfie Allen, Nikolaj Coster - Waldau, and Peter Dinklage for supporting actor, and",
                     ImageLink = "https://m.media-amazon.com/images/M/MV5BMjA5NzA5NjMwNl5BMl5BanBnXkFtZTgwNjg2OTk2NzM@._V1_.jpg",
-                    Date =DateTime.Parse("16 July 2019"),
+                    Date = DateTime.Parse("16 July 2019"),
                     OfficialArticleLink = "https://www.indiewire.com/2019/07/game-of-thrones-single-season-emmy-nomination-record-1202158251/"
                 };
 
@@ -152,7 +156,7 @@ namespace MovieDatabase.Web
                 context.Announcements.Add(announcement2);
                 context.SaveChanges();
             }
-            
+
             if (!context.Artists.Any())
             {
                 var artist1 = new Artist
@@ -318,7 +322,7 @@ Born in Oakland, California and raised in Hayward, Ali received his Bachelor of 
 
                 context.SaveChanges();
             }
-            
+
             if (!context.Movies.Any())
             {
                 var movie1 = new Movie
@@ -433,7 +437,7 @@ Born in Oakland, California and raised in Hayward, Ali received his Bachelor of 
                 context.Seasons.Add(season1);
                 context.Seasons.Add(season2);
                 context.Seasons.Add(season3);
-                
+
                 context.SaveChanges();
             }
         }

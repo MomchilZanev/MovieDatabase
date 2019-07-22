@@ -25,7 +25,7 @@ namespace MovieDatabase.Services.Contracts
 
         Task<bool> AddSeasonToTVShowAsync(AddSeasonInputModel input);
 
-        Task<bool> AddRoleToTVShowSeasonAsync(AddRoleInputModel input);
+        Task<bool> AddRoleToTVShowSeasonAsync(AddSeasonRoleInputModel input);
 
         Task<bool> UpdateTVShowAsync(UpdateTVShowInputModel input);
 

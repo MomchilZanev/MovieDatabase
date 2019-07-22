@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Data;
+﻿using AutoMapper;
+using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Genre;
 using MovieDatabase.Models.ViewModels.Genre;
@@ -12,18 +13,19 @@ namespace MovieDatabase.Services
     public class GenreService : IGenreService
     {
         private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public GenreService(MovieDatabaseDbContext dbContext)
+        public GenreService(MovieDatabaseDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public List<GenreAllViewModel> GetAllGenreNames()
         {
-            var allGenreNames = dbContext.Genres.Select(genre => new GenreAllViewModel
-            {
-                Name = genre.Name,
-            }).ToList();
+            var genresFromDb = dbContext.Genres.ToList();
+
+            var allGenreNames = mapper.Map<List<Genre>, List<GenreAllViewModel>>(genresFromDb);
 
             return allGenreNames;
         }
@@ -35,10 +37,7 @@ namespace MovieDatabase.Services
                 return false;
             };
 
-            var genreForDb = new Genre
-            {
-                Name = input.Name,
-            };
+            var genreForDb = mapper.Map<CreateGenreInputModel, Genre>(input);
 
             await dbContext.Genres.AddAsync(genreForDb);
             await dbContext.SaveChangesAsync();

@@ -1,9 +1,9 @@
-﻿using MovieDatabase.Common;
+﻿using AutoMapper;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.ViewModels.Watchlist;
 using MovieDatabase.Services.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +13,12 @@ namespace MovieDatabase.Services
     public class WatchlistService : IWatchlistService
     {
         private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public WatchlistService(MovieDatabaseDbContext dbContext)
+        public WatchlistService(MovieDatabaseDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public bool IsValidMovieOrTVShowId(string id)
@@ -67,38 +69,12 @@ namespace MovieDatabase.Services
         {
             var watchlistAllViewModel = new List<WatchlistAllViewModel>();
 
-            var moviesFromDb = dbContext.MovieUsers.Where(movieUser => movieUser.UserId == userId).ToList();
-
-            var moviesWatchlistAllViewModel = moviesFromDb
-                .Select(movieUser => new WatchlistAllViewModel
-                {
-                    Id = movieUser.MovieId,
-                    Name = movieUser.Movie.Name,
-                    Description = movieUser.Movie.Description.Substring(0, Math.Min(GlobalConstants.movieTvShowPreviewDescriptionMaxCharLength, movieUser.Movie.Description.Length)) + GlobalConstants.fourDots,
-                    CoverImageLink = movieUser.Movie.CoverImageLink,
-                    ReleaseDate = movieUser.Movie.ReleaseDate,
-                    Rating = movieUser.Movie.Rating,
-                    Category = GlobalConstants.moviesCategory,
-                })
-                .ToList();
-
+            var movieUsersFromDb = dbContext.MovieUsers.Where(movieUser => movieUser.UserId == userId).ToList();
+            var moviesWatchlistAllViewModel = mapper.Map<List<MovieUser>, List<WatchlistAllViewModel>>(movieUsersFromDb);
             watchlistAllViewModel.AddRange(moviesWatchlistAllViewModel);
 
-            var tvShowsFromDb = dbContext.TVShowUsers.Where(tvShowUser => tvShowUser.UserId == userId).ToList();
-
-            var tvShowsWatchlistAllViewModel = tvShowsFromDb
-                .Select(tvShowUser => new WatchlistAllViewModel
-                {
-                    Id = tvShowUser.TVShowId,
-                    Name = tvShowUser.TVShow.Name,
-                    Description = tvShowUser.TVShow.Description.Substring(0, Math.Min(500, tvShowUser.TVShow.Description.Length)) + GlobalConstants.fourDots,
-                    CoverImageLink = tvShowUser.TVShow.CoverImageLink,
-                    ReleaseDate = tvShowUser.TVShow.FirstAired,
-                    Rating = tvShowUser.TVShow.OverallRating,
-                    Category = GlobalConstants.tvShowsCategory,
-                })
-                .ToList();
-
+            var tvShowUsersFromDb = dbContext.TVShowUsers.Where(tvShowUser => tvShowUser.UserId == userId).ToList();
+            var tvShowsWatchlistAllViewModel = mapper.Map<List<TVShowUser>, List<WatchlistAllViewModel>>(tvShowUsersFromDb);
             watchlistAllViewModel.AddRange(tvShowsWatchlistAllViewModel);
 
             return watchlistAllViewModel;

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Common;
 using MovieDatabase.Models.InputModels.TVShow;
+using MovieDatabase.Models.ViewModels.TVShow;
 using MovieDatabase.Services.Contracts;
 using System.Threading.Tasks;
 
@@ -12,10 +14,12 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         private const string redirectTVShowDetails = "/TVShows/Details/";
 
         private readonly ITVShowService tvShowService;
+        private readonly IMapper mapper;
 
-        public TVShowsController(ITVShowService tvShowService)
+        public TVShowsController(ITVShowService tvShowService, IMapper mapper)
         {
             this.tvShowService = tvShowService;
+            this.mapper = mapper;
         }
 
         public IActionResult Create()
@@ -66,7 +70,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRole(AddRoleInputModel input)
+        public async Task<IActionResult> AddRole(AddSeasonRoleInputModel input)
         {
             if (!ModelState.IsValid)
             {
@@ -85,16 +89,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         {
             var tvShowDetailsModel = await tvShowService.GetTVShowAndDetailsByIdAsync(id);
 
-            var tvShowInputModel = new UpdateTVShowInputModel
-            {
-                Id = tvShowDetailsModel.Id,
-                Name = tvShowDetailsModel.Name,
-                Genre = tvShowDetailsModel.Genre,
-                Creator = tvShowDetailsModel.Creator,
-                Description = tvShowDetailsModel.Description,
-                CoverImageLink = tvShowDetailsModel.CoverImageLink,
-                TrailerLink = tvShowDetailsModel.TrailerLink,
-            };
+            var tvShowInputModel = mapper.Map<TVShowDetailsViewModel, UpdateTVShowInputModel>(tvShowDetailsModel);
 
             return View(tvShowInputModel);
         }
@@ -119,14 +114,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         {
             var seasonDetailsModel = await tvShowService.GetSeasonAndDetailsByIdAsync(id);
 
-            var seasonInputModel = new UpdateSeasonInputModel
-            {
-                Id = seasonDetailsModel.Id,
-                TVShow = seasonDetailsModel.TVShow,
-                Episodes = seasonDetailsModel.Episodes,
-                LengthPerEpisode = seasonDetailsModel.LengthPerEpisode,
-                ReleaseDate = seasonDetailsModel.ReleaseDate,
-            };
+            var seasonInputModel = mapper.Map<SeasonDetailsViewModel, UpdateSeasonInputModel>(seasonDetailsModel);
 
             return View(seasonInputModel);
         }

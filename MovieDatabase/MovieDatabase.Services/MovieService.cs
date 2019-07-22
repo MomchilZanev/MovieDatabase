@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Common;
+﻿using AutoMapper;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Movie;
@@ -15,41 +16,35 @@ namespace MovieDatabase.Services
     {
         private readonly MovieDatabaseDbContext dbContext;
         private readonly IReviewService reviewService;
+        private readonly IWatchlistService watchlistService;
+        private readonly IMapper mapper;
 
-        public MovieService(MovieDatabaseDbContext dbContext, IReviewService reviewService)
+        public MovieService(MovieDatabaseDbContext dbContext, IReviewService reviewService, IWatchlistService watchlistService, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.reviewService = reviewService;
+            this.watchlistService = watchlistService;
+            this.mapper = mapper;
         }
 
         public List<MovieAllViewModel> GetAllMovies(string userId = null)
         {
             var allMoviesFromDb = dbContext.Movies.ToList();
 
-            var moviesAllViewModel = allMoviesFromDb
-                .Select(movie => new MovieAllViewModel
-                {
-                    Id = movie.Id,
-                    Name = movie.Name,
-                    Genre = movie.Genre.Name,
-                    CoverImageLink = movie.CoverImageLink,
-                    Rating = movie.Rating,
-                    ReleaseDate = movie.ReleaseDate,
-                    TotalReviews = movie.TotalReviews,
-
-                    Watchlisted = dbContext.MovieUsers.Any(movieUser => movieUser.MovieId == movie.Id && movieUser.UserId == userId),//TODO
-                })
-                .ToList();
+            var moviesAllViewModel = mapper.Map<List<Movie>, List<MovieAllViewModel>>(allMoviesFromDb);
+            foreach (var movie in moviesAllViewModel)
+            {
+                movie.Watchlisted = watchlistService.MovieIsInUserWatchlist(userId, movie.Id);
+            }
 
             return moviesAllViewModel;
         }
 
         public List<MovieNameViewModel> GetAllMovieNames()
         {
-            var allMovieNames = dbContext.Movies.Select(movie => new MovieNameViewModel
-            {
-                Name = movie.Name,
-            }).ToList();
+            var allMovies = dbContext.Movies.ToList();
+
+            var allMovieNames = mapper.Map<List<Movie>, List<MovieNameViewModel>>(allMovies);
 
             return allMovieNames;
         }
@@ -86,7 +81,6 @@ namespace MovieDatabase.Services
             var movieFromDb = await dbContext.Movies.FindAsync(movieId);
 
             var randomReview = new MovieReviewViewModel();
-
             if (movieFromDb.Reviews.Count > 0)
             {
                 Random rnd = new Random();
@@ -101,28 +95,10 @@ namespace MovieDatabase.Services
                 randomReview.Date = reviewFromDb.Date;
             }
 
-            var movieDetailsViewModel = new MovieDetailsViewModel
-            {
-                Id = movieFromDb.Id,
-                Name = movieFromDb.Name,
-                Director = movieFromDb.Director.FullName,
-                CoverImageLink = movieFromDb.CoverImageLink,
-                TrailerLink = movieFromDb.TrailerLink,
-                Description = movieFromDb.Description,
-                Genre = movieFromDb.Genre.Name,
-                Length = movieFromDb.Length,
-                Rating = movieFromDb.Rating,
-                ReleaseDate = movieFromDb.ReleaseDate,
-                Cast = movieFromDb.Cast.Select(x => new MovieCastViewModel
-                {
-                    Actor = x.Artist.FullName,
-                    MovieCharacter = x.CharacterPlayed,
-                }).ToList(),
-                RandomReview = randomReview,
-                ReviewsCount = movieFromDb.TotalReviews,
-
-                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movieFromDb.Id), 
-            };
+            var movieDetailsViewModel = mapper.Map<Movie, MovieDetailsViewModel>(movieFromDb);
+            movieDetailsViewModel.RandomReview = randomReview;
+            movieDetailsViewModel.Cast = mapper.Map<List<MovieRole>, List<MovieCastViewModel>>(movieFromDb.Cast.ToList());
+            movieDetailsViewModel.IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movieFromDb.Id);
 
             return movieDetailsViewModel;
         }
@@ -145,17 +121,9 @@ namespace MovieDatabase.Services
             var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
             var directorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
 
-            var movieForDb = new Movie
-            {
-                Name = input.Name,
-                Genre = genreFromDb,
-                ReleaseDate = input.ReleaseDate,
-                Length = input.Length,
-                Director = directorFromDb,
-                Description = input.Description,
-                CoverImageLink = string.IsNullOrEmpty(input.CoverImageLink) ? GlobalConstants.noImageLink : input.CoverImageLink,
-                TrailerLink = string.IsNullOrEmpty(input.TrailerLink) ? GlobalConstants.noTrailerLink : input.TrailerLink,
-            };
+            var movieForDb = mapper.Map<CreateMovieInputModel, Movie>(input);
+            movieForDb.Genre = genreFromDb;
+            movieForDb.Director = directorFromDb;
 
             await dbContext.Movies.AddAsync(movieForDb);
             await dbContext.SaveChangesAsync();
@@ -163,7 +131,7 @@ namespace MovieDatabase.Services
             return true;
         }
 
-        public async Task<bool> AddRoleToMovieAsync(AddRoleInputModel input)
+        public async Task<bool> AddRoleToMovieAsync(AddMovieRoleInputModel input)
         {
             if (!dbContext.Movies.Any(movie => movie.Name == input.Movie))
             {
@@ -182,12 +150,9 @@ namespace MovieDatabase.Services
                 return false;
             }
 
-            var movieRoleForDb = new MovieRole
-            {
-                Movie = movieFromDb,
-                Artist = artistFromDb,
-                CharacterPlayed = input.CharacterPlayed,
-            };
+            var movieRoleForDb = mapper.Map<AddMovieRoleInputModel, MovieRole>(input);
+            movieRoleForDb.Movie = movieFromDb;
+            movieRoleForDb.Artist = artistFromDb;
 
             await dbContext.MovieRoles.AddAsync(movieRoleForDb);
             await dbContext.SaveChangesAsync();
@@ -214,7 +179,6 @@ namespace MovieDatabase.Services
             var directorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
 
             var movieFromDb = await dbContext.Movies.FindAsync(input.Id);
-
             movieFromDb.Name = input.Name;
             movieFromDb.Genre = genreFromDb;
             movieFromDb.ReleaseDate = input.ReleaseDate;

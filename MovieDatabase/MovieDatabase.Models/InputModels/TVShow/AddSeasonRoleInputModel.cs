@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.TVShow
 {
-    public class AddRoleInputModel
+    public class AddSeasonRoleInputModel
     {
         [Required]
         [Display(Name = "Season")]

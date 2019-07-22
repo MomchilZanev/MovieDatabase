@@ -19,7 +19,7 @@ namespace MovieDatabase.Services.Contracts
 
         Task<bool> CreateMovieAsync(CreateMovieInputModel input);
 
-        Task<bool> AddRoleToMovieAsync(AddRoleInputModel input);
+        Task<bool> AddRoleToMovieAsync(AddMovieRoleInputModel input);
 
         Task<bool> UpdateMovieAsync(UpdateMovieInputModel input);
     }

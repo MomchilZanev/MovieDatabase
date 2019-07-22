@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MovieDatabase.Models.InputModels.Movie
 {
-    public class AddRoleInputModel
+    public class AddMovieRoleInputModel
     {
         [Required]
         public string Movie { get; set; }

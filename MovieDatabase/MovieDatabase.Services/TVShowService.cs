@@ -1,4 +1,5 @@
-﻿using MovieDatabase.Common;
+﻿using AutoMapper;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.TVShow;
@@ -15,53 +16,44 @@ namespace MovieDatabase.Services
     {
         private readonly MovieDatabaseDbContext dbContext;
         private readonly IReviewService reviewService;
+        private readonly IWatchlistService watchlistService;
+        private readonly IMapper mapper;
 
-        public TVShowService(MovieDatabaseDbContext dbContext, IReviewService reviewService)
+        public TVShowService(MovieDatabaseDbContext dbContext, IReviewService reviewService, IWatchlistService watchlistService, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.reviewService = reviewService;
+            this.watchlistService = watchlistService;
+            this.mapper = mapper;
         }
 
         public List<TVShowNameViewModel> GetAllTVShowNames()
         {
-            var allTVShowNames = dbContext.TVShows.Select(tvShow => new TVShowNameViewModel
-            {
-                Name = tvShow.Name
-            }).ToList();
+            var allTVShowsFromDb = dbContext.TVShows.ToList();
+
+            var allTVShowNames = mapper.Map<List<TVShow>, List<TVShowNameViewModel>>(allTVShowsFromDb);
 
             return allTVShowNames;
         }
 
         public List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames()
         {
-            var tvShowsAndSeasonsViewModel = dbContext.Seasons.Select(season => new SeasonsAndTVShowNameViewModel
-            {
-                SeasonId = season.Id,
-                SeasonNumber = season.SeasonNumber,
-                TVShowName = season.TVShow.Name,
-            }).ToList();
+            var tvShowsAndSeasonsFromDb = dbContext.Seasons.ToList();
+
+            var tvShowsAndSeasonsViewModel = mapper.Map<List<Season>, List<SeasonsAndTVShowNameViewModel>>(tvShowsAndSeasonsFromDb);
 
             return tvShowsAndSeasonsViewModel;
         }
 
         public List<TVShowAllViewModel> GetAllTVShows(string userId = null)
         {
-            var allTVShowsFromDb = dbContext.TVShows.ToList();            
+            var allTVShowsFromDb = dbContext.TVShows.ToList();
 
-            var tvShowAllViewModel = allTVShowsFromDb
-                .Select(tvShow => new TVShowAllViewModel
-                {
-                    Id = tvShow.Id,
-                    Name = tvShow.Name,
-                    Genre = tvShow.Genre.Name,
-                    Description = tvShow.Description,
-                    CoverImageLink = tvShow.CoverImageLink,
-                    FirstAired = tvShow.FirstAired,
-                    Rating = tvShow.OverallRating,
-                    TotalReviews = tvShow.TotalReviews,
-
-                    Watchlisted = dbContext.TVShowUsers.Any(tvShowUser => tvShowUser.TVShowId == tvShow.Id && tvShowUser.UserId == userId), //TODO
-                }).ToList();
+            var tvShowAllViewModel = mapper.Map<List<TVShow>, List<TVShowAllViewModel>>(allTVShowsFromDb);
+            foreach (var tvShow in tvShowAllViewModel)
+            {
+                tvShow.Watchlisted = watchlistService.TVShowIsInUserWatchlist(userId, tvShow.Id);
+            }
 
             return tvShowAllViewModel;
         }
@@ -97,20 +89,7 @@ namespace MovieDatabase.Services
         {
             var tvShowFromDb = await dbContext.TVShows.FindAsync(tvShowId);
 
-            var tvShowDetailsViewModel = new TVShowDetailsViewModel
-            {
-                Id = tvShowFromDb.Id,
-                Name = tvShowFromDb.Name,
-                Creator = tvShowFromDb.Creator.FullName,
-                CoverImageLink = tvShowFromDb.CoverImageLink,
-                TrailerLink = tvShowFromDb.TrailerLink,
-                Description = tvShowFromDb.Description,
-                Genre = tvShowFromDb.Genre.Name,
-                Rating = tvShowFromDb.OverallRating,
-                FirstAired = tvShowFromDb.FirstAired,
-                Seasons = new Dictionary<string, int>(),
-                Episodes = tvShowFromDb.Seasons.Sum(s => s.Episodes),
-            };
+            var tvShowDetailsViewModel = mapper.Map<TVShow, TVShowDetailsViewModel>(tvShowFromDb);
 
             if (tvShowFromDb.Seasons.Any())
             {
@@ -144,25 +123,10 @@ namespace MovieDatabase.Services
                 randomReview.Date = reviewFromDb.Date;
             }
 
-            var seasonDetailsViewModel = new SeasonDetailsViewModel
-            {
-                Id = seasonFromDb.Id,
-                TVShow = seasonFromDb.TVShow.Name,
-                SeasonNumber = seasonFromDb.SeasonNumber,
-                Episodes = seasonFromDb.Episodes,
-                LengthPerEpisode = seasonFromDb.LengthPerEpisode,
-                Rating = seasonFromDb.Rating,
-                ReleaseDate = seasonFromDb.ReleaseDate,
-                Cast = seasonFromDb.Cast.Select(actor => new SeasonCastViewModel
-                {
-                    Actor = actor.Artist.FullName,
-                    TVShowCharacter = actor.CharacterPlayed,
-                }).ToList(),
-                RandomReview = randomReview,
-                ReviewsCount = seasonFromDb.TotalReviews,
-
-                IsReviewedByCurrentUser = reviewService.ReviewExists(userId, seasonFromDb.Id),
-            };
+            var seasonDetailsViewModel = mapper.Map<Season, SeasonDetailsViewModel>(seasonFromDb);
+            seasonDetailsViewModel.RandomReview = randomReview;
+            seasonDetailsViewModel.Cast = mapper.Map<List<SeasonRole>, List<SeasonCastViewModel>>(seasonFromDb.Cast.ToList());
+            seasonDetailsViewModel.IsReviewedByCurrentUser = reviewService.ReviewExists(userId, seasonFromDb.Id);
 
             return seasonDetailsViewModel;
         }
@@ -185,15 +149,9 @@ namespace MovieDatabase.Services
             var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
             var creatorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Creator);
 
-            var tvShowForDb = new TVShow
-            {
-                Name = input.Name,
-                Genre = genreFromDb,
-                Creator = creatorFromDb,
-                Description = input.Description,
-                CoverImageLink = string.IsNullOrEmpty(input.CoverImageLink) ? GlobalConstants.noImageLink : input.CoverImageLink,
-                TrailerLink = string.IsNullOrEmpty(input.TrailerLink) ? GlobalConstants.noTrailerLink : input.TrailerLink,
-            };
+            var tvShowForDb = mapper.Map<CreateTVShowInputModel, TVShow>(input);
+            tvShowForDb.Genre = genreFromDb;
+            tvShowForDb.Creator = creatorFromDb;
 
             await dbContext.TVShows.AddAsync(tvShowForDb);
             await dbContext.SaveChangesAsync();
@@ -210,21 +168,17 @@ namespace MovieDatabase.Services
 
             var tvShowFromDb = dbContext.TVShows.SingleOrDefault(t => t.Name == input.TVShow);
 
-            var seasonForDb = new Season
-            {
-                TVShow = tvShowFromDb,
-                SeasonNumber = tvShowFromDb.Seasons.Count() + 1,
-                ReleaseDate = input.ReleaseDate,
-                Episodes = input.Episodes,
-                LengthPerEpisode = input.LengthPerEpisode,
-            };
+            var seasonForDb = mapper.Map<AddSeasonInputModel, Season>(input);
+            seasonForDb.TVShow = tvShowFromDb;
+            seasonForDb.SeasonNumber = tvShowFromDb.Seasons.Count() + 1;
+
             await dbContext.Seasons.AddAsync(seasonForDb);
             await dbContext.SaveChangesAsync();
 
             return true;
         }
         
-        public async Task<bool> AddRoleToTVShowSeasonAsync(AddRoleInputModel input)
+        public async Task<bool> AddRoleToTVShowSeasonAsync(AddSeasonRoleInputModel input)
         {
             if (!dbContext.Seasons.Any(season => season.Id == input.SeasonId))
             {
@@ -243,12 +197,9 @@ namespace MovieDatabase.Services
                 return false;
             }
 
-            var seasonRoleForDb = new SeasonRole
-            {
-                Season = seasonFromDb,
-                Artist = artistFromDb,
-                CharacterPlayed = input.CharacterPlayed,
-            };
+            var seasonRoleForDb = mapper.Map<AddSeasonRoleInputModel, SeasonRole>(input);
+            seasonRoleForDb.Season = seasonFromDb;
+            seasonRoleForDb.Artist = artistFromDb;
 
             await dbContext.SeasonRoles.AddAsync(seasonRoleForDb);
             await dbContext.SaveChangesAsync();

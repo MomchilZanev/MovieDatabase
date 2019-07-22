@@ -1,10 +1,10 @@
-﻿using MovieDatabase.Common;
+﻿using AutoMapper;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Artist;
 using MovieDatabase.Models.ViewModels.Artist;
 using MovieDatabase.Services.Contracts;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,52 +14,37 @@ namespace MovieDatabase.Services
     public class ArtistService : IArtistService
     {
         private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public ArtistService(MovieDatabaseDbContext dbContext)
+        public ArtistService(MovieDatabaseDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public List<ArtistAllViewModel> GetAllArtists()
         {
-            var artistsAllViewModel = dbContext.Artists
-                .Select(artist => new ArtistAllViewModel
-                {
-                    Id = artist.Id,
-                    FullName = artist.FullName,
-                    PhotoLink = artist.PhotoLink,
-                    Biography = artist.Biography.Substring(0, Math.Min(GlobalConstants.artistPreviewBiographyMaxCharLength, artist.Biography.Length)) + GlobalConstants.fourDots,
-                    BirthDate = artist.BirthDate,
-                    CareerProjects = artist.MovieRoles.Count() + artist.SeasonRoles.Count() + artist.MoviesDirected.Count() + artist.TVShowsCreated.Count(),
-                })
-                .ToList();
+            var artistsFromDb = dbContext.Artists.ToList();
 
+            var artistsAllViewModel = mapper.Map<List<Artist>, List<ArtistAllViewModel>>(artistsFromDb);
 
             return artistsAllViewModel;
         }
 
         public List<ArtistNameViewModel> GetAllArtistNames()
         {
-            var allArtistNames = dbContext.Artists.Select(artist => new ArtistNameViewModel
-            {
-                FullName = artist.FullName,
-            }).ToList();
+            var artistsFromDb = dbContext.Artists.ToList();
+
+            var allArtistNames = mapper.Map<List<Artist>, List<ArtistNameViewModel>>(artistsFromDb);
 
             return allArtistNames;
-        }
+        }   
 
         public async Task<ArtistFullBioViewModel> GetArtistFullBioByIdAsync(string artistId)
         {
             var artistFromDb = await dbContext.Artists.FindAsync(artistId);
 
-            var artistFullBioViewModel = new ArtistFullBioViewModel
-            {
-                Id = artistFromDb.Id,
-                FullName = artistFromDb.FullName,
-                BirthDate = artistFromDb.BirthDate,
-                Biography = artistFromDb.Biography,
-                PhotoLink = artistFromDb.PhotoLink,
-            };
+            var artistFullBioViewModel = mapper.Map<Artist, ArtistFullBioViewModel>(artistFromDb);
 
             return artistFullBioViewModel;
         }
@@ -68,24 +53,12 @@ namespace MovieDatabase.Services
         {
             var artistFromDb = await dbContext.Artists.FindAsync(artistId);
 
-            var artistDetailsViewModel = new ArtistDetailsViewModel
-            {
-                Id = artistFromDb.Id,
-                FullName = artistFromDb.FullName,
-                BirthDate = artistFromDb.BirthDate,
-                Biography = artistFromDb.Biography,
-                PhotoLink = artistFromDb.PhotoLink,
-                MoviesDirected = artistFromDb.MoviesDirected.Select(m => m.Name).ToList(),
-                TVShowsCreated = artistFromDb.TVShowsCreated.Select(t => t.Name).ToList(),
-                MovieRoles = new Dictionary<string, string>(),
-                SeasonRoles = new Dictionary<string, string>(),
-            };
+            var artistDetailsViewModel = mapper.Map<Artist, ArtistDetailsViewModel>(artistFromDb);
 
             foreach (var movieRole in artistFromDb.MovieRoles)
             {
                 artistDetailsViewModel.MovieRoles.Add(movieRole.Movie.Name, movieRole.CharacterPlayed);
             }
-
             foreach (var seasonRole in artistFromDb.SeasonRoles)
             {
                 artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + GlobalConstants._Season_ + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
@@ -116,13 +89,7 @@ namespace MovieDatabase.Services
                 return false;
             }
 
-            var artistForDb = new Artist
-            {
-                FullName = input.FullName,
-                BirthDate = input.BirthDate,
-                Biography = input.Biography,
-                PhotoLink = string.IsNullOrEmpty(input.PhotoLink) ? GlobalConstants.noArtistImage : input.PhotoLink,
-            };
+            var artistForDb = mapper.Map<CreateArtistInputModel, Artist>(input);
 
             await dbContext.Artists.AddAsync(artistForDb);
             await dbContext.SaveChangesAsync();

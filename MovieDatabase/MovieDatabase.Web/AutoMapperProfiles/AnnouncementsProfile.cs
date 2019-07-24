@@ -15,7 +15,7 @@ namespace MovieDatabase.Web.AutoMapperProfiles
 
             CreateMap<CreateAnnouncementInputModel, Announcement>()
                 .ForMember(x => x.Date, y => y.MapFrom(src => DateTime.UtcNow))
-                .ForMember(x => x.ImageLink, y => y.MapFrom(src => string.IsNullOrEmpty(src.ImageLink) ? GlobalConstants.noImageLink : src.ImageLink));
+                .ForMember(x => x.ImageLink, y => y.MapFrom(src => (string.IsNullOrEmpty(src.ImageLink) || string.IsNullOrWhiteSpace(src.ImageLink)) ? GlobalConstants.noImageLink : src.ImageLink));
         }
     }
 }

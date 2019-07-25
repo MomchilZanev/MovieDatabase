@@ -3,6 +3,7 @@ using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Services.Contracts;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
@@ -38,9 +39,13 @@ namespace MovieDatabase.Services
 
         public async Task<string> GetUserAvatarLink(string userId)
         {
-            var user = await dbContext.Users.FindAsync(userId);
+            if (dbContext.Users.Any(user => user.Id == userId))
+            {
+                var userFromDb = await dbContext.Users.FindAsync(userId);
+                return userFromDb.AvatarLink;
+            }
 
-            return user.AvatarLink;
+            return GlobalConstants.avatarLinkPrefix + "no_avatar.jpg";
         }
     }
 }

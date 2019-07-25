@@ -28,7 +28,7 @@ namespace MovieDatabase.Web.AutoMapperProfiles
                 .ForMember(x => x.SeasonRoles, y => y.MapFrom(src => new Dictionary<string, string>()));
 
             CreateMap<CreateArtistInputModel, Artist>()
-                .ForMember(x => x.PhotoLink, y => y.MapFrom(src => string.IsNullOrEmpty(src.PhotoLink) ? GlobalConstants.noArtistImage : src.PhotoLink));
+                .ForMember(x => x.PhotoLink, y => y.MapFrom(src => (string.IsNullOrEmpty(src.PhotoLink) || string.IsNullOrWhiteSpace(src.PhotoLink)) ? GlobalConstants.noArtistImage : src.PhotoLink));
 
             CreateMap<ArtistDetailsViewModel, UpdateArtistInputModel>();
         }

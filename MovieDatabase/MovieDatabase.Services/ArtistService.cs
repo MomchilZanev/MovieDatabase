@@ -55,14 +55,17 @@ namespace MovieDatabase.Services
 
             var artistDetailsViewModel = mapper.Map<Artist, ArtistDetailsViewModel>(artistFromDb);
 
-            foreach (var movieRole in artistFromDb.MovieRoles)
+            if (artistFromDb != null)
             {
-                artistDetailsViewModel.MovieRoles.Add(movieRole.Movie.Name, movieRole.CharacterPlayed);
-            }
-            foreach (var seasonRole in artistFromDb.SeasonRoles)
-            {
-                artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + GlobalConstants._Season_ + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
-            }
+                foreach (var movieRole in artistFromDb.MovieRoles)
+                {
+                    artistDetailsViewModel.MovieRoles.Add(movieRole.Movie.Name, movieRole.CharacterPlayed);
+                }
+                foreach (var seasonRole in artistFromDb.SeasonRoles)
+                {
+                    artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + GlobalConstants._Season_ + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
+                }
+            }            
 
             return artistDetailsViewModel;
         }
@@ -109,7 +112,7 @@ namespace MovieDatabase.Services
             artistFromDb.FullName = input.FullName;
             artistFromDb.BirthDate = input.BirthDate;
             artistFromDb.Biography = input.Biography;
-            artistFromDb.PhotoLink = input.PhotoLink;
+            artistFromDb.PhotoLink = (string.IsNullOrEmpty(input.PhotoLink) || string.IsNullOrWhiteSpace(input.PhotoLink)) ? GlobalConstants.noArtistImage : input.PhotoLink;
 
             dbContext.Update(artistFromDb);
             await dbContext.SaveChangesAsync();

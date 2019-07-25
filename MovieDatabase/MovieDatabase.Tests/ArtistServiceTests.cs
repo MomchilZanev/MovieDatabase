@@ -118,7 +118,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public void GetAllArtistNamesReturnEmptyListWithEmptyDb()
+        public void GetAllArtistNamesShouldReturnEmptyListWithEmptyDb()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllArtistNames_Db_1")

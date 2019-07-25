@@ -15,9 +15,14 @@ namespace MovieDatabase.Services
 
         public string GetUserIdFromUserName(string userName)
         {
-            var userId = dbContext.Users.SingleOrDefault(user => user.UserName == userName).Id;
+            if (dbContext.Users.Any(user => user.UserName == userName))
+            {
+                var userId = dbContext.Users.SingleOrDefault(user => user.UserName == userName).Id;
 
-            return userId;
+                return userId;
+            }
+
+            return null;
         }
     }
 }

@@ -41,7 +41,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task GetAllAnnouncementsShouldReturnAllAnnouncementsProperly()
+        public async Task GetAllArtistsShouldReturnAllArtistsProperly()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllArtists_Db_2")

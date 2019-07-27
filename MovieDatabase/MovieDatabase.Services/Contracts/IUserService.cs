@@ -1,7 +1,9 @@
-﻿namespace MovieDatabase.Services.Contracts
+﻿using System.Threading.Tasks;
+
+namespace MovieDatabase.Services.Contracts
 {
     public interface IUserService
     {
-        string GetUserIdFromUserName(string userName);
+        Task<string> GetUserIdFromUserNameAsync(string userName);
     }
 }

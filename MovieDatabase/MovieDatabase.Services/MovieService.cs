@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
@@ -27,31 +28,31 @@ namespace MovieDatabase.Services
             this.mapper = mapper;
         }
 
-        public List<MovieAllViewModel> GetAllMovies(string userId = null)
+        public async Task<List<MovieAllViewModel>> GetAllMoviesAsync(string userId = null)
         {
-            var allMoviesFromDb = dbContext.Movies.ToList();
+            var allMoviesFromDb = await dbContext.Movies.ToListAsync();
 
             var moviesAllViewModel = mapper.Map<List<Movie>, List<MovieAllViewModel>>(allMoviesFromDb);
             foreach (var movie in moviesAllViewModel)
             {
-                movie.Watchlisted = watchlistService.MovieIsInUserWatchlist(userId, movie.Id);
+                movie.Watchlisted = await watchlistService.MovieIsInUserWatchlistAsync(userId, movie.Id);
             }
 
             return moviesAllViewModel;
         }
 
-        public List<MovieNameViewModel> GetAllMovieNames()
+        public async Task<List<MovieNameViewModel>> GetAllMovieNamesAsync()
         {
-            var allMovies = dbContext.Movies.ToList();
+            var allMovies = await dbContext.Movies.ToListAsync();
 
             var allMovieNames = mapper.Map<List<Movie>, List<MovieNameViewModel>>(allMovies);
 
             return allMovieNames;
         }
 
-        public List<MovieAllViewModel> FilterMoviesByGenre(List<MovieAllViewModel> moviesAllViewModel, string genreFilter)
+        public async Task<List<MovieAllViewModel>> FilterMoviesByGenreAsync(List<MovieAllViewModel> moviesAllViewModel, string genreFilter)
         {
-            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
+            if (await dbContext.Genres.AnyAsync(genre => genre.Name == genreFilter))
             {
                 return moviesAllViewModel = moviesAllViewModel.Where(movie => movie.Genre == genreFilter).ToList();
             }
@@ -98,28 +99,28 @@ namespace MovieDatabase.Services
             var movieDetailsViewModel = mapper.Map<Movie, MovieDetailsViewModel>(movieFromDb);
             movieDetailsViewModel.RandomReview = randomReview;
             movieDetailsViewModel.Cast = mapper.Map<List<MovieRole>, List<MovieCastViewModel>>(movieFromDb.Cast.ToList());
-            movieDetailsViewModel.IsReviewedByCurrentUser = reviewService.ReviewExists(userId, movieFromDb.Id);
+            movieDetailsViewModel.IsReviewedByCurrentUser = await reviewService.ReviewExistsAsync(userId, movieFromDb.Id);
 
             return movieDetailsViewModel;
         }
 
         public async Task<bool> CreateMovieAsync(CreateMovieInputModel input)
         {
-            if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
+            if (!await dbContext.Genres.AnyAsync(genre => genre.Name == input.Genre))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(artist => artist.FullName == input.Director))
+            if (!await dbContext.Artists.AnyAsync(artist => artist.FullName == input.Director))
             {
                 return false;
             }
-            if (dbContext.Movies.Any(movie => movie.Name == input.Name))
+            if (await dbContext.Movies.AnyAsync(movie => movie.Name == input.Name))
             {
                 return false;
             }
 
-            var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
-            var directorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
+            var genreFromDb = await dbContext.Genres.SingleOrDefaultAsync(g => g.Name == input.Genre);
+            var directorFromDb = await dbContext.Artists.SingleOrDefaultAsync(a => a.FullName == input.Director);
 
             var movieForDb = mapper.Map<CreateMovieInputModel, Movie>(input);
             movieForDb.Genre = genreFromDb;
@@ -133,19 +134,19 @@ namespace MovieDatabase.Services
 
         public async Task<bool> AddRoleToMovieAsync(AddMovieRoleInputModel input)
         {
-            if (!dbContext.Movies.Any(movie => movie.Name == input.Movie))
+            if (!await dbContext.Movies.AnyAsync(movie => movie.Name == input.Movie))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(artist => artist.FullName == input.Artist))
+            if (!await dbContext.Artists.AnyAsync(artist => artist.FullName == input.Artist))
             {
                 return false;
             }
 
-            var movieFromDb = dbContext.Movies.SingleOrDefault(movie => movie.Name == input.Movie);
-            var artistFromDb = dbContext.Artists.SingleOrDefault(artist => artist.FullName == input.Artist);
+            var movieFromDb = await dbContext.Movies.SingleOrDefaultAsync(movie => movie.Name == input.Movie);
+            var artistFromDb = await dbContext.Artists.SingleOrDefaultAsync(artist => artist.FullName == input.Artist);
 
-            if (dbContext.MovieRoles.Any(movieRole => movieRole.ArtistId == artistFromDb.Id && movieRole.MovieId == movieFromDb.Id))
+            if (await dbContext.MovieRoles.AnyAsync(movieRole => movieRole.ArtistId == artistFromDb.Id && movieRole.MovieId == movieFromDb.Id))
             {
                 return false;
             }
@@ -162,21 +163,21 @@ namespace MovieDatabase.Services
 
         public async Task<bool> UpdateMovieAsync(UpdateMovieInputModel input)
         {
-            if (!dbContext.Movies.Any(movie => movie.Id == input.Id))
+            if (!await dbContext.Movies.AnyAsync(movie => movie.Id == input.Id))
             {
                 return false;
             }
-            if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
+            if (!await dbContext.Genres.AnyAsync(genre => genre.Name == input.Genre))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(artist => artist.FullName == input.Director))
+            if (!await dbContext.Artists.AnyAsync(artist => artist.FullName == input.Director))
             {
                 return false;
             }
 
-            var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
-            var directorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Director);
+            var genreFromDb = await dbContext.Genres.SingleOrDefaultAsync(g => g.Name == input.Genre);
+            var directorFromDb = await dbContext.Artists.SingleOrDefaultAsync(a => a.FullName == input.Director);
 
             var movieFromDb = await dbContext.Movies.FindAsync(input.Id);
             movieFromDb.Name = input.Name;

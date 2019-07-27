@@ -5,7 +5,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IAvatarService
     {
-        Task ChangeUserAvatar(string userId, IFormFile avatar);
+        Task ChangeUserAvatarAsync(string userId, IFormFile avatar);
 
         Task<string> GetUserAvatarLink(string userId);
     }

@@ -22,15 +22,15 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
 
         public async Task<IActionResult> Delete(string userName, string itemId)
         {
-            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(itemId);
+            bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(itemId);
             if (!idIsValidMovieOrSeasonId)
             {
                 return Redirect(redirectError);
             }
 
-            var userId = userService.GetUserIdFromUserName(userName);
+            var userId = await userService.GetUserIdFromUserNameAsync(userName);
 
-            var itemType = reviewService.IsIdMovieOrSeasonId(itemId);
+            var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(itemId);
             if (itemType == GlobalConstants.Movie)
             {
                 if (!await reviewService.DeleteMovieReviewAsync(userId, itemId))

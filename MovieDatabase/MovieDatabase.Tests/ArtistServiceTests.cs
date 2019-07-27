@@ -18,7 +18,7 @@ namespace MovieDatabase.Tests
     public class ArtistServiceTests
     {
         [Fact]
-        public void GetAllArtistsShouldReturnEmptyListWithEmptyDb()
+        public async Task GetAllArtistsShouldReturnEmptyListWithEmptyDb()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllArtists_Db_1")
@@ -35,7 +35,7 @@ namespace MovieDatabase.Tests
 
             var artistService = new ArtistService(dbContext, mapper);
 
-            var actualResult = artistService.GetAllArtists();
+            var actualResult = await artistService.GetAllArtistsAsync();
 
             Assert.Equal(actualResult, expectedResult);
         }
@@ -105,7 +105,7 @@ namespace MovieDatabase.Tests
             var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
-            var actualResult = artistService.GetAllArtists();
+            var actualResult = await artistService.GetAllArtistsAsync();
 
             Assert.True(actualResult.Count() == 2);
             for (int i = 0; i < expectedResult.Count(); i++)
@@ -118,7 +118,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public void GetAllArtistNamesShouldReturnEmptyListWithEmptyDb()
+        public async Task GetAllArtistNamesShouldReturnEmptyListWithEmptyDb()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllArtistNames_Db_1")
@@ -135,7 +135,7 @@ namespace MovieDatabase.Tests
 
             var artistService = new ArtistService(dbContext, mapper);
 
-            var actualResult = artistService.GetAllArtistNames();
+            var actualResult = await artistService.GetAllArtistNamesAsync();
 
             Assert.Equal(actualResult, expectedResult);
         }
@@ -185,7 +185,7 @@ namespace MovieDatabase.Tests
             var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
-            var actualResult = artistService.GetAllArtists();
+            var actualResult = await artistService.GetAllArtistsAsync();
 
             Assert.True(actualResult.Count() == 2);
             for (int i = 0; i < expectedResult.Count(); i++)

@@ -20,11 +20,11 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var userId = userService.GetUserIdFromUserName(User.Identity.Name);
+            var userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
 
-            var watchlistAllViewModel = watchlistService.GetItemsInUserWatchlist(userId);
+            var watchlistAllViewModel = await watchlistService.GetItemsInUserWatchlistAsync(userId);
 
             return View(watchlistAllViewModel);
         }
@@ -32,18 +32,18 @@ namespace MovieDatabase.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Add(string id, string returnAction, string returnQuery)
         {
-            var idIsValidMovieOrTVShowId = watchlistService.IsValidMovieOrTVShowId(id);
+            var idIsValidMovieOrTVShowId = await watchlistService.IsValidMovieOrTVShowIdAsync(id);
             if (!idIsValidMovieOrTVShowId)
             {
                 return Redirect(redirectError);
             }
 
-            var userId = userService.GetUserIdFromUserName(User.Identity.Name);
+            var userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
 
-            var itemType = watchlistService.IsIdMovieOrTVShowId(id);
+            var itemType = await watchlistService.IsIdMovieOrTVShowIdAsync(id);
             if (itemType == GlobalConstants.Movie)
             {
-                if (watchlistService.MovieIsInUserWatchlist(userId, id))
+                if (await watchlistService.MovieIsInUserWatchlistAsync(userId, id))
                 {
                     return Redirect(redirectError);
                 }
@@ -52,7 +52,7 @@ namespace MovieDatabase.Web.Controllers
             }
             else if (itemType == GlobalConstants.TV_Show)
             {
-                if (watchlistService.TVShowIsInUserWatchlist(userId, id))
+                if (await watchlistService.TVShowIsInUserWatchlistAsync(userId, id))
                 {
                     return Redirect(redirectError);
                 }
@@ -66,18 +66,18 @@ namespace MovieDatabase.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Remove(string id, string returnAction, string returnQuery)
         {
-            var idIsValidMovieOrTVShowId = watchlistService.IsValidMovieOrTVShowId(id);
+            var idIsValidMovieOrTVShowId = await watchlistService.IsValidMovieOrTVShowIdAsync(id);
             if (!idIsValidMovieOrTVShowId)
             {
                 return Redirect(redirectError);
             }
 
-            var userId = userService.GetUserIdFromUserName(User.Identity.Name);
+            var userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
 
-            var itemType = watchlistService.IsIdMovieOrTVShowId(id);
+            var itemType = await watchlistService.IsIdMovieOrTVShowIdAsync(id);
             if (itemType == GlobalConstants.Movie)
             {
-                if (!watchlistService.MovieIsInUserWatchlist(userId, id))
+                if (!await watchlistService.MovieIsInUserWatchlistAsync(userId, id))
                 {
                     return Redirect(redirectError);
                 }
@@ -86,7 +86,7 @@ namespace MovieDatabase.Web.Controllers
             }
             else if (itemType == GlobalConstants.TV_Show)
             {
-                if (!watchlistService.TVShowIsInUserWatchlist(userId, id))
+                if (!await watchlistService.TVShowIsInUserWatchlistAsync(userId, id))
                 {
                     return Redirect(redirectError);
                 }

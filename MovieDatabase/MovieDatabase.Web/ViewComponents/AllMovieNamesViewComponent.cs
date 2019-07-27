@@ -15,7 +15,7 @@ namespace MovieDatabase.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var genresAllViewModel = movieService.GetAllMovieNames();
+            var genresAllViewModel = await movieService.GetAllMovieNamesAsync();
 
             return View(genresAllViewModel);
         }

@@ -1,6 +1,7 @@
-﻿using MovieDatabase.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieDatabase.Data;
 using MovieDatabase.Services.Contracts;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
 {
@@ -13,13 +14,13 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public string GetUserIdFromUserName(string userName)
+        public async Task<string> GetUserIdFromUserNameAsync(string userName)
         {
-            if (dbContext.Users.Any(user => user.UserName == userName))
+            if (await dbContext.Users.AnyAsync(user => user.UserName == userName))
             {
-                var userId = dbContext.Users.SingleOrDefault(user => user.UserName == userName).Id;
+                var userFromDb = await dbContext.Users.SingleOrDefaultAsync(user => user.UserName == userName);
 
-                return userId;
+                return userFromDb.Id;
             }
 
             return null;

@@ -30,7 +30,7 @@ namespace MovieDatabase.Tests
 
             var userService = new UserService(dbContext);
 
-            var actualResult =  userService.GetUserIdFromUserName("invalid");
+            var actualResult = await userService.GetUserIdFromUserNameAsync("invalid");
 
             Assert.True(actualResult == null);
         }
@@ -56,7 +56,7 @@ namespace MovieDatabase.Tests
 
             var userService = new UserService(dbContext);
 
-            var actualId = userService.GetUserIdFromUserName("user1");
+            var actualId = await userService.GetUserIdFromUserNameAsync("user1");
 
             Assert.Equal(actualId, expectedId);
         }

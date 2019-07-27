@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
@@ -22,18 +23,18 @@ namespace MovieDatabase.Services
             this.mapper = mapper;
         }
 
-        public List<ArtistAllViewModel> GetAllArtists()
+        public async Task<List<ArtistAllViewModel>> GetAllArtistsAsync()
         {
-            var artistsFromDb = dbContext.Artists.ToList();
+            var artistsFromDb = await dbContext.Artists.ToListAsync();
 
             var artistsAllViewModel = mapper.Map<List<Artist>, List<ArtistAllViewModel>>(artistsFromDb);
 
             return artistsAllViewModel;
         }
 
-        public List<ArtistNameViewModel> GetAllArtistNames()
+        public async Task<List<ArtistNameViewModel>> GetAllArtistNamesAsync()
         {
-            var artistsFromDb = dbContext.Artists.ToList();
+            var artistsFromDb = await dbContext.Artists.ToListAsync();
 
             var allArtistNames = mapper.Map<List<Artist>, List<ArtistNameViewModel>>(artistsFromDb);
 
@@ -87,7 +88,7 @@ namespace MovieDatabase.Services
 
         public async Task<bool> CreateArtistAsync(CreateArtistInputModel input)
         {
-            if (dbContext.Artists.Any(artist => artist.FullName == input.FullName && artist.Biography == input.Biography && artist.BirthDate == artist.BirthDate))
+            if (await dbContext.Artists.AnyAsync(artist => artist.FullName == input.FullName && artist.Biography == input.Biography && artist.BirthDate == artist.BirthDate))
             {
                 return false;
             }
@@ -102,7 +103,7 @@ namespace MovieDatabase.Services
 
         public async Task<bool> UpdateArtistAsync(UpdateArtistInputModel input)
         {
-            if (!dbContext.Artists.Any(artist => artist.Id == input.Id))
+            if (!await dbContext.Artists.AnyAsync(artist => artist.Id == input.Id))
             {
                 return false;
             }

@@ -7,9 +7,9 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IArtistService
     {
-        List<ArtistAllViewModel> GetAllArtists();
+        Task<List<ArtistAllViewModel>> GetAllArtistsAsync();
 
-        List<ArtistNameViewModel> GetAllArtistNames();
+        Task<List<ArtistNameViewModel>> GetAllArtistNamesAsync();
 
         Task<ArtistDetailsViewModel> GetArtistAndDetailsByIdAsync(string artistId);
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
@@ -23,9 +24,9 @@ namespace MovieDatabase.Services
             this.mapper = mapper;
         }        
 
-        public bool IsValidMovieOrSeasonId(string itemId)
+        public async Task<bool> IsValidMovieOrSeasonIdAsync(string itemId)
         {
-            if (dbContext.Movies.Any(movie => movie.Id == itemId) || dbContext.Seasons.Any(t => t.Id == itemId))
+            if (await dbContext.Movies.AnyAsync(movie => movie.Id == itemId) || await dbContext.Seasons.AnyAsync(t => t.Id == itemId))
             {
                 return true;
             }
@@ -33,13 +34,13 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public string IsIdMovieOrSeasonId(string id)
+        public async Task<string> IsIdMovieOrSeasonIdAsync(string id)
         {
-            if (dbContext.Movies.Any(movie => movie.Id == id))
+            if (await dbContext.Movies.AnyAsync(movie => movie.Id == id))
             {
                 return GlobalConstants.Movie;
             }
-            else if (dbContext.Seasons.Any(season => season.Id == id))
+            else if (await dbContext.Seasons.AnyAsync(season => season.Id == id))
             {
                 return GlobalConstants.Season;
             }
@@ -47,10 +48,10 @@ namespace MovieDatabase.Services
             return GlobalConstants.Neither;
         }
 
-        public bool ReviewExists(string userId, string itemId)
+        public async Task<bool> ReviewExistsAsync(string userId, string itemId)
         {
-            if (dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == itemId && movieReview.UserId == userId) ||
-                dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == itemId && seasonReview.UserId == userId))
+            if (await dbContext.MovieReviews.AnyAsync(movieReview => movieReview.MovieId == itemId && movieReview.UserId == userId) ||
+                await dbContext.SeasonReviews.AnyAsync(seasonReview => seasonReview.SeasonId == itemId && seasonReview.UserId == userId))
             {
                 return true;
             }
@@ -58,38 +59,38 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public List<ReviewAllViewModel> GetAllMovieReviews(string movieId)
+        public async Task<List<ReviewAllViewModel>> GetAllMovieReviewsAsync(string movieId)
         {
-            var movieReviewsFromDb = dbContext.MovieReviews.Where(movieReview => movieReview.MovieId == movieId).ToList();
+            var movieReviewsFromDb = await dbContext.MovieReviews.Where(movieReview => movieReview.MovieId == movieId).ToListAsync();
 
             var reviewsAllViewModel = mapper.Map<List<MovieReview>, List<ReviewAllViewModel>>(movieReviewsFromDb);
 
             return reviewsAllViewModel;
         }
 
-        public List<ReviewAllViewModel> GetAllSeasonReviews(string seasonId)
+        public async Task<List<ReviewAllViewModel>> GetAllSeasonReviewsAsync(string seasonId)
         {
-            var seasonReviewsFromDb = dbContext.SeasonReviews.Where(seasonReview => seasonReview.SeasonId == seasonId).ToList();
+            var seasonReviewsFromDb = await dbContext.SeasonReviews.Where(seasonReview => seasonReview.SeasonId == seasonId).ToListAsync();
 
             var reviewsAllViewModel = mapper.Map<List<SeasonReview>, List<ReviewAllViewModel>>(seasonReviewsFromDb);
 
             return reviewsAllViewModel;
         }
 
-        public CreateReviewInputModel GetMovieReview(string userId, string movieId)
+        public async Task<CreateReviewInputModel> GetMovieReviewAsync(string userId, string movieId)
         {
-            var movieReviewFromDb = dbContext.MovieReviews
-                    .SingleOrDefault(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId);
+            var movieReviewFromDb = await dbContext.MovieReviews
+                    .SingleOrDefaultAsync(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId);
 
             var movieReviewInputModel = mapper.Map<MovieReview, CreateReviewInputModel>(movieReviewFromDb);
 
             return movieReviewInputModel;
         }
 
-        public CreateReviewInputModel GetSeasonReview(string userId, string seasonId)
+        public async Task<CreateReviewInputModel> GetSeasonReviewAsync(string userId, string seasonId)
         {
-            var seasonReviewFromDb = dbContext.SeasonReviews
-                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId);
+            var seasonReviewFromDb = await dbContext.SeasonReviews
+                    .SingleOrDefaultAsync(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId);
 
             var seasonReviewInputModel = mapper.Map<SeasonReview, CreateReviewInputModel>(seasonReviewFromDb);
 
@@ -98,7 +99,7 @@ namespace MovieDatabase.Services
 
         public async Task<bool> CreateMovieReviewAsync(string userId , CreateReviewInputModel input)
         {
-            if (dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
+            if (await dbContext.MovieReviews.AnyAsync(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
             {
                 return false;
             }
@@ -114,7 +115,7 @@ namespace MovieDatabase.Services
 
         public async Task<bool> CreateSeasonReviewAsync(string userId, CreateReviewInputModel input)
         {
-            if (dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
+            if (await dbContext.SeasonReviews.AnyAsync(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
             {
                 return false;
             }
@@ -130,13 +131,13 @@ namespace MovieDatabase.Services
 
         public async Task<bool> UpdateMovieReviewAsync(string userId, CreateReviewInputModel input)
         {
-            if (!dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
+            if (!await dbContext.MovieReviews.AnyAsync(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
             {
                 return false;
             }
 
-            var movieReviewFromDb = dbContext.MovieReviews
-                    .SingleOrDefault(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId);
+            var movieReviewFromDb = await dbContext.MovieReviews
+                    .SingleOrDefaultAsync(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId);
 
             movieReviewFromDb.Content = input.Content;
             movieReviewFromDb.Rating = input.Rating;
@@ -149,13 +150,13 @@ namespace MovieDatabase.Services
 
         public async Task<bool> UpdateSeasonReviewAsync(string userId, CreateReviewInputModel input)
         {
-            if (!dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
+            if (!await dbContext.SeasonReviews.AnyAsync(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId))
             {
                 return false;
             }
 
-            var seasonReviewFromDb = dbContext.SeasonReviews
-                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId);
+            var seasonReviewFromDb = await dbContext.SeasonReviews
+                    .SingleOrDefaultAsync(seasonReview => seasonReview.SeasonId == input.Id && seasonReview.UserId == userId);
 
             seasonReviewFromDb.Content = input.Content;
             seasonReviewFromDb.Rating = input.Rating;
@@ -168,13 +169,13 @@ namespace MovieDatabase.Services
 
         public async Task<bool> DeleteMovieReviewAsync(string userId, string movieId)
         {
-            if (!dbContext.MovieReviews.Any(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId))
+            if (!await dbContext.MovieReviews.AnyAsync(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId))
             {
                 return false;
             }
 
-            var movieReviewFromDb = dbContext.MovieReviews
-                    .SingleOrDefault(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId);
+            var movieReviewFromDb = await dbContext.MovieReviews
+                    .SingleOrDefaultAsync(movieReview => movieReview.MovieId == movieId && movieReview.UserId == userId);
 
             dbContext.MovieReviews.Remove(movieReviewFromDb);
 
@@ -185,13 +186,13 @@ namespace MovieDatabase.Services
 
         public async Task<bool> DeleteSeasonReviewAsync(string userId, string seasonId)
         {
-            if (!dbContext.SeasonReviews.Any(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId))
+            if (!await dbContext.SeasonReviews.AnyAsync(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId))
             {
                 return false;
             }
 
-            var seasonReviewFromDb = dbContext.SeasonReviews
-                    .SingleOrDefault(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId);
+            var seasonReviewFromDb = await dbContext.SeasonReviews
+                    .SingleOrDefaultAsync(seasonReview => seasonReview.SeasonId == seasonId && seasonReview.UserId == userId);
 
             dbContext.SeasonReviews.Remove(seasonReviewFromDb);
 

@@ -7,19 +7,19 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IReviewService
     {
-        bool IsValidMovieOrSeasonId(string itemId);
+        Task<bool> IsValidMovieOrSeasonIdAsync(string itemId);
 
-        string IsIdMovieOrSeasonId(string id);
+        Task<string> IsIdMovieOrSeasonIdAsync(string id);
 
-        bool ReviewExists(string userId, string itemId);
+        Task<bool> ReviewExistsAsync(string userId, string itemId);
 
-        List<ReviewAllViewModel> GetAllMovieReviews(string movieId);
+        Task<List<ReviewAllViewModel>> GetAllMovieReviewsAsync(string movieId);
 
-        List<ReviewAllViewModel> GetAllSeasonReviews(string seasonId);
+        Task<List<ReviewAllViewModel>> GetAllSeasonReviewsAsync(string seasonId);
 
-        CreateReviewInputModel GetMovieReview(string userId, string movieId);
+        Task<CreateReviewInputModel> GetMovieReviewAsync(string userId, string movieId);
 
-        CreateReviewInputModel GetSeasonReview(string userId, string seasonId);
+        Task<CreateReviewInputModel> GetSeasonReviewAsync(string userId, string seasonId);
 
         Task<bool> CreateMovieReviewAsync(string userId, CreateReviewInputModel input);
 

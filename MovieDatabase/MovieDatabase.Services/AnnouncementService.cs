@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
@@ -21,10 +22,10 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
             this.mapper = mapper;
         }        
-
-        public List<AnnouncementViewModel> GetAllAnnouncements()
+        
+        public async Task<List<AnnouncementViewModel>> GetAllAnnouncementsAsync()
         {
-            var announcementsFromDb = dbContext.Announcements.ToList();
+            var announcementsFromDb = await dbContext.Announcements.ToListAsync();
 
             var announcementsAllViewModel = mapper.Map<List<Announcement>, List<AnnouncementViewModel>>(announcementsFromDb);
 
@@ -46,7 +47,7 @@ namespace MovieDatabase.Services
 
         public async Task<bool> CreateAnnouncementAsync(CreateAnnouncementInputModel input)
         {
-            if (dbContext.Announcements.Any(announcement => announcement.Title == input.Title && announcement.Content == input.Content))
+            if (await dbContext.Announcements.AnyAsync(announcement => announcement.Title == input.Title && announcement.Content == input.Content))
             {
                 return false;
             }
@@ -61,12 +62,12 @@ namespace MovieDatabase.Services
 
         public async Task<bool> DeleteAnnouncementAsync(string announcementId)
         {
-            if (!dbContext.Announcements.Any(announcement => announcement.Id == announcementId))
+            if (!await dbContext.Announcements.AnyAsync(announcement => announcement.Id == announcementId))
             {
                 return false;
             }
 
-            var announcementFromDb = dbContext.Announcements.SingleOrDefault(announcement => announcement.Id == announcementId);
+            var announcementFromDb = await dbContext.Announcements.SingleOrDefaultAsync(announcement => announcement.Id == announcementId);
 
             dbContext.Announcements.Remove(announcementFromDb);
             await dbContext.SaveChangesAsync();

@@ -27,9 +27,9 @@ namespace MovieDatabase.Web.Controllers
             return View(artistDetailsViewModel);
         }
 
-        public IActionResult All(string orderBy)
+        public async Task<IActionResult> All(string orderBy)
         {
-            var artistsAllViewModel = artistService.GetAllArtists();
+            var artistsAllViewModel = await artistService.GetAllArtistsAsync();
 
             if (!string.IsNullOrEmpty(orderBy))
             {

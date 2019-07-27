@@ -6,15 +6,15 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IWatchlistService
     {
-        bool IsValidMovieOrTVShowId(string id);
+        Task<bool> IsValidMovieOrTVShowIdAsync(string id);
 
-        string IsIdMovieOrTVShowId(string id);
+        Task<string> IsIdMovieOrTVShowIdAsync(string id);
 
-        bool MovieIsInUserWatchlist(string userId, string movieId);
+        Task<bool> MovieIsInUserWatchlistAsync(string userId, string movieId);
 
-        bool TVShowIsInUserWatchlist(string userId, string tvShowId);
+        Task<bool> TVShowIsInUserWatchlistAsync(string userId, string tvShowId);
 
-        List<WatchlistAllViewModel> GetItemsInUserWatchlist(string userId);
+        Task<List<WatchlistAllViewModel>> GetItemsInUserWatchlistAsync(string userId);
 
         Task AddMovieToUserWatchlistAsync(string userId, string movieId);
 

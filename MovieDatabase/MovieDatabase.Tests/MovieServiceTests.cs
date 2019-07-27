@@ -20,7 +20,7 @@ namespace MovieDatabase.Tests
     public class MovieServiceTests
     {
         [Fact]
-        public void GetAllMoviesShouldReturnEmptyListIfDbIsEmpty()
+        public async Task GetAllMoviesShouldReturnEmptyListIfDbIsEmpty()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllMovies_Db_1")
@@ -29,8 +29,8 @@ namespace MovieDatabase.Tests
 
             var reviewService = new Mock<IReviewService>();
             var watchlistService = new Mock<IWatchlistService>();
-            watchlistService.Setup(w => w.MovieIsInUserWatchlist("", ""))
-                        .Returns(false);
+            watchlistService.Setup(w => w.MovieIsInUserWatchlistAsync("", ""))
+                        .ReturnsAsync(false);
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -41,7 +41,7 @@ namespace MovieDatabase.Tests
 
             var expectedResult = new List<MovieAllViewModel>();
 
-            var actualResult = movieService.GetAllMovies();
+            var actualResult = await movieService.GetAllMoviesAsync();
 
             Assert.Equal(expectedResult, actualResult);
         }
@@ -90,8 +90,8 @@ namespace MovieDatabase.Tests
 
             var reviewService = new Mock<IReviewService>();
             var watchlistService = new Mock<IWatchlistService>();
-            watchlistService.Setup(w => w.MovieIsInUserWatchlist("", ""))
-                        .Returns(false);
+            watchlistService.Setup(w => w.MovieIsInUserWatchlistAsync("", ""))
+                        .ReturnsAsync(false);
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -124,7 +124,7 @@ namespace MovieDatabase.Tests
                 }
             };
 
-            var actualResult = movieService.GetAllMovies();
+            var actualResult = await movieService.GetAllMoviesAsync();
 
             Assert.True(actualResult.Count() == 2, "asasdad");
             Assert.True(expectedResult[0].Name == actualResult[0].Name);
@@ -144,7 +144,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public void GetAllMovieNamesShouldReturnEmptyListIfDbIsEmpty()
+        public async Task GetAllMovieNamesShouldReturnEmptyListIfDbIsEmpty()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllMovieNames_Db_1")
@@ -163,7 +163,7 @@ namespace MovieDatabase.Tests
 
             var expectedResult = new List<MovieNameViewModel>();
 
-            var actualResult = movieService.GetAllMovieNames();
+            var actualResult = await movieService.GetAllMovieNamesAsync();
 
             Assert.Equal(expectedResult, actualResult);
         }
@@ -232,7 +232,7 @@ namespace MovieDatabase.Tests
                 }
             };
 
-            var actualResult = movieService.GetAllMovies();
+            var actualResult = await movieService.GetAllMoviesAsync();
 
             Assert.True(actualResult.Count() == 2, "asasdad");
             Assert.True(expectedResult[0].Name == actualResult[0].Name);
@@ -294,7 +294,7 @@ namespace MovieDatabase.Tests
 
             var expectedResult = new List<MovieNameViewModel>();
 
-            var actualResult = movieService.FilterMoviesByGenre(input, genre);
+            var actualResult = await movieService.FilterMoviesByGenreAsync(input, genre);
 
             Assert.True(actualResult.Count() == expectedCount);
             if (actualResult.Count > 0)
@@ -304,7 +304,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public void FilterMoviesByGenreShouldReturnInputIfGenreGivenIsNotInDb()
+        public async Task FilterMoviesByGenreShouldReturnInputIfGenreGivenIsNotInDb()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "FilterMoviesByGenre_Db_1")
@@ -347,7 +347,7 @@ namespace MovieDatabase.Tests
 
             var expectedResult = new List<MovieNameViewModel>();
 
-            var actualResult = movieService.FilterMoviesByGenre(input, "genre");
+            var actualResult = await movieService.FilterMoviesByGenreAsync(input, "genre");
 
             Assert.True(actualResult.Count() == 2);
         }
@@ -751,8 +751,8 @@ namespace MovieDatabase.Tests
             var id = dbContext.Movies.First().Id;
 
             var reviewService = new Mock<IReviewService>();
-            reviewService.Setup(r => r.ReviewExists("", ""))
-                        .Returns(false);
+            reviewService.Setup(r => r.ReviewExistsAsync("", ""))
+                        .ReturnsAsync(false);
             var watchlistService = new Mock<IWatchlistService>();
 
             var config = new MapperConfiguration(cfg =>

@@ -7,7 +7,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IAnnouncementService
     {
-        List<AnnouncementViewModel> GetAllAnnouncements();
+        Task<List<AnnouncementViewModel>> GetAllAnnouncementsAsync();
 
         List<AnnouncementViewModel> OrderAnnouncements(List<AnnouncementViewModel> announcements, string orderBy);
 

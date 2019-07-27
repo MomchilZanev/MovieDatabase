@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Services.Contracts;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Controllers
 {
@@ -12,9 +13,9 @@ namespace MovieDatabase.Web.Controllers
             this.announcementService = announcementService;
         }
 
-        public IActionResult All(string orderBy)
+        public async Task<IActionResult> All(string orderBy)
         {
-            var allAnnouncementsViewModel = announcementService.GetAllAnnouncements();
+            var allAnnouncementsViewModel = await announcementService.GetAllAnnouncementsAsync();
 
             if (!string.IsNullOrEmpty(orderBy))
             {

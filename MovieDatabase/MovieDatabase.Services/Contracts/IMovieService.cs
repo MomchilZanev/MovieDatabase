@@ -7,11 +7,11 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IMovieService
     {
-        List<MovieAllViewModel> GetAllMovies(string userId = null);
+        Task<List<MovieAllViewModel>> GetAllMoviesAsync(string userId = null);
 
-        List<MovieNameViewModel> GetAllMovieNames();
+        Task<List<MovieNameViewModel>> GetAllMovieNamesAsync();
 
-        List<MovieAllViewModel> FilterMoviesByGenre(List<MovieAllViewModel> moviesAllViewModel, string genreFilter);
+        Task<List<MovieAllViewModel>> FilterMoviesByGenreAsync(List<MovieAllViewModel> moviesAllViewModel, string genreFilter);
 
         List<MovieAllViewModel> OrderMovies(List<MovieAllViewModel> moviesAllViewModel, string orderBy);
 

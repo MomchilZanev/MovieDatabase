@@ -16,7 +16,7 @@ namespace MovieDatabase.Tests
     public class GenreServiceTests
     {
         [Fact]
-        public void GetAllGenreNamesShouldReturnEmptyListIfDbIsEmpty()
+        public async Task GetAllGenreNamesShouldReturnEmptyListIfDbIsEmpty()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllGenreNames_Db_1")
@@ -33,7 +33,7 @@ namespace MovieDatabase.Tests
 
             var genreService = new GenreService(dbContext, mapper);
 
-            var actualResult = genreService.GetAllGenreNames();
+            var actualResult = await genreService.GetAllGenreNamesAsync();
 
             Assert.Equal(actualResult, expectedResult);
         }
@@ -69,7 +69,7 @@ namespace MovieDatabase.Tests
 
             var genreService = new GenreService(dbContext, mapper);
 
-            var actualResult = genreService.GetAllGenreNames();
+            var actualResult = await genreService.GetAllGenreNamesAsync();
 
             Assert.True(actualResult.Count() == 3);
             Assert.True(actualResult[0].Name == "genre1");

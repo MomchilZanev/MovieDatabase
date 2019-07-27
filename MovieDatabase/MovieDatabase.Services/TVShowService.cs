@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
@@ -27,40 +28,40 @@ namespace MovieDatabase.Services
             this.mapper = mapper;
         }
 
-        public List<TVShowNameViewModel> GetAllTVShowNames()
+        public async Task<List<TVShowNameViewModel>> GetAllTVShowNamesAsync()
         {
-            var allTVShowsFromDb = dbContext.TVShows.ToList();
+            var allTVShowsFromDb = await dbContext.TVShows.ToListAsync();
 
             var allTVShowNames = mapper.Map<List<TVShow>, List<TVShowNameViewModel>>(allTVShowsFromDb);
 
             return allTVShowNames;
         }
 
-        public List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames()
+        public async Task<List<SeasonsAndTVShowNameViewModel>> GetAllSeasonIdsSeasonNumbersAndTVShowNamesAsync()
         {
-            var tvShowsAndSeasonsFromDb = dbContext.Seasons.ToList();
+            var tvShowsAndSeasonsFromDb = await dbContext.Seasons.ToListAsync();
 
             var tvShowsAndSeasonsViewModel = mapper.Map<List<Season>, List<SeasonsAndTVShowNameViewModel>>(tvShowsAndSeasonsFromDb);
 
             return tvShowsAndSeasonsViewModel;
         }
 
-        public List<TVShowAllViewModel> GetAllTVShows(string userId = null)
+        public async Task<List<TVShowAllViewModel>> GetAllTVShowsAsync(string userId = null)
         {
-            var allTVShowsFromDb = dbContext.TVShows.ToList();
+            var allTVShowsFromDb = await dbContext.TVShows.ToListAsync();
 
             var tvShowAllViewModel = mapper.Map<List<TVShow>, List<TVShowAllViewModel>>(allTVShowsFromDb);
             foreach (var tvShow in tvShowAllViewModel)
             {
-                tvShow.Watchlisted = watchlistService.TVShowIsInUserWatchlist(userId, tvShow.Id);
+                tvShow.Watchlisted = await watchlistService.TVShowIsInUserWatchlistAsync(userId, tvShow.Id);
             }
 
             return tvShowAllViewModel;
         }
 
-        public List<TVShowAllViewModel> FilterTVShowsByGenre(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter)
+        public async Task<List<TVShowAllViewModel>> FilterTVShowsByGenreAsync(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter)
         {
-            if (dbContext.Genres.Any(genre => genre.Name == genreFilter))
+            if (await dbContext.Genres.AnyAsync(genre => genre.Name == genreFilter))
             {
                 tvShowsAllViewModel = tvShowsAllViewModel.Where(tvShow => tvShow.Genre == genreFilter).ToList();
             }
@@ -126,28 +127,28 @@ namespace MovieDatabase.Services
             var seasonDetailsViewModel = mapper.Map<Season, SeasonDetailsViewModel>(seasonFromDb);
             seasonDetailsViewModel.RandomReview = randomReview;
             seasonDetailsViewModel.Cast = mapper.Map<List<SeasonRole>, List<SeasonCastViewModel>>(seasonFromDb.Cast.ToList());
-            seasonDetailsViewModel.IsReviewedByCurrentUser = reviewService.ReviewExists(userId, seasonFromDb.Id);
+            seasonDetailsViewModel.IsReviewedByCurrentUser = await reviewService.ReviewExistsAsync(userId, seasonFromDb.Id);
 
             return seasonDetailsViewModel;
         }
 
         public async Task<bool> CreateTVShowAsync(CreateTVShowInputModel input)
         {
-            if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
+            if (!await dbContext.Genres.AnyAsync(genre => genre.Name == input.Genre))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(artist => artist.FullName == input.Creator))
+            if (!await dbContext.Artists.AnyAsync(artist => artist.FullName == input.Creator))
             {
                 return false;
             }
-            if (dbContext.TVShows.Any(tvShow => tvShow.Name == input.Name))
+            if (await dbContext.TVShows.AnyAsync(tvShow => tvShow.Name == input.Name))
             {
                 return false;
             }
 
-            var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
-            var creatorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Creator);
+            var genreFromDb = await dbContext.Genres.SingleOrDefaultAsync(g => g.Name == input.Genre);
+            var creatorFromDb = await dbContext.Artists.SingleOrDefaultAsync(a => a.FullName == input.Creator);
 
             var tvShowForDb = mapper.Map<CreateTVShowInputModel, TVShow>(input);
             tvShowForDb.Genre = genreFromDb;
@@ -161,12 +162,12 @@ namespace MovieDatabase.Services
 
         public async Task<bool> AddSeasonToTVShowAsync(AddSeasonInputModel input)
         {
-            if (!dbContext.TVShows.Any(tvShow => tvShow.Name == input.TVShow))
+            if (!await dbContext.TVShows.AnyAsync(tvShow => tvShow.Name == input.TVShow))
             {
                 return false;
             }
 
-            var tvShowFromDb = dbContext.TVShows.SingleOrDefault(t => t.Name == input.TVShow);
+            var tvShowFromDb = await dbContext.TVShows.SingleOrDefaultAsync(t => t.Name == input.TVShow);
 
             var seasonForDb = mapper.Map<AddSeasonInputModel, Season>(input);
             seasonForDb.TVShow = tvShowFromDb;
@@ -180,19 +181,19 @@ namespace MovieDatabase.Services
         
         public async Task<bool> AddRoleToTVShowSeasonAsync(AddSeasonRoleInputModel input)
         {
-            if (!dbContext.Seasons.Any(season => season.Id == input.SeasonId))
+            if (!await dbContext.Seasons.AnyAsync(season => season.Id == input.SeasonId))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(artist => artist.FullName == input.Artist))
+            if (!await dbContext.Artists.AnyAsync(artist => artist.FullName == input.Artist))
             {
                 return false;
             }
 
-            var seasonFromDb = dbContext.Seasons.SingleOrDefault(season => season.Id == input.SeasonId);
-            var artistFromDb = dbContext.Artists.SingleOrDefault(artist => artist.FullName == input.Artist);
+            var seasonFromDb = await dbContext.Seasons.SingleOrDefaultAsync(season => season.Id == input.SeasonId);
+            var artistFromDb = await dbContext.Artists.SingleOrDefaultAsync(artist => artist.FullName == input.Artist);
 
-            if (dbContext.SeasonRoles.Any(sr => sr.ArtistId == artistFromDb.Id && sr.SeasonId == seasonFromDb.Id))
+            if (await dbContext.SeasonRoles.AnyAsync(sr => sr.ArtistId == artistFromDb.Id && sr.SeasonId == seasonFromDb.Id))
             {
                 return false;
             }
@@ -209,21 +210,21 @@ namespace MovieDatabase.Services
 
         public async Task<bool> UpdateTVShowAsync(UpdateTVShowInputModel input)
         {
-            if (!dbContext.TVShows.Any(tvShow => tvShow.Id == input.Id))
+            if (!await dbContext.TVShows.AnyAsync(tvShow => tvShow.Id == input.Id))
             {
                 return false;
             }
-            if (!dbContext.Genres.Any(genre => genre.Name == input.Genre))
+            if (!await dbContext.Genres.AnyAsync(genre => genre.Name == input.Genre))
             {
                 return false;
             }
-            if (!dbContext.Artists.Any(artist => artist.FullName == input.Creator))
+            if (!await dbContext.Artists.AnyAsync(artist => artist.FullName == input.Creator))
             {
                 return false;
             }
 
-            var genreFromDb = dbContext.Genres.SingleOrDefault(g => g.Name == input.Genre);
-            var creatorFromDb = dbContext.Artists.SingleOrDefault(a => a.FullName == input.Creator);
+            var genreFromDb = await dbContext.Genres.SingleOrDefaultAsync(g => g.Name == input.Genre);
+            var creatorFromDb = await dbContext.Artists.SingleOrDefaultAsync(a => a.FullName == input.Creator);
 
             var tvShowFromDb = await dbContext.TVShows.FindAsync(input.Id);
 
@@ -242,18 +243,18 @@ namespace MovieDatabase.Services
 
         public async Task<bool> UpdateSeasonAsync(UpdateSeasonInputModel input)
         {
-            if (!dbContext.Seasons.Any(season => season.Id == input.Id))
+            if (!await dbContext.Seasons.AnyAsync(season => season.Id == input.Id))
             {
                 return false;
             }
-            if (!dbContext.TVShows.Any(tvShow => tvShow.Name == input.TVShow))
+            if (!await dbContext.TVShows.AnyAsync(tvShow => tvShow.Name == input.TVShow))
             {
                 return false;
             }
 
-            var tvShowFromDb = dbContext.TVShows.SingleOrDefault(tvShow => tvShow.Name == input.TVShow);
+            var tvShowFromDb = await dbContext.TVShows.SingleOrDefaultAsync(tvShow => tvShow.Name == input.TVShow);
             
-            var seasonFromDb = dbContext.Seasons.SingleOrDefault(season => season.Id == input.Id);
+            var seasonFromDb = await dbContext.Seasons.SingleOrDefaultAsync(season => season.Id == input.Id);
             if (tvShowFromDb != seasonFromDb.TVShow)
             {
                 seasonFromDb.SeasonNumber = tvShowFromDb.Seasons.Count() + 1;

@@ -7,13 +7,13 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface ITVShowService
     {
-        List<TVShowNameViewModel> GetAllTVShowNames();
+        Task<List<TVShowNameViewModel>> GetAllTVShowNamesAsync();
 
-        List<SeasonsAndTVShowNameViewModel> GetAllSeasonIdsSeasonNumbersAndTVShowNames();
+        Task<List<SeasonsAndTVShowNameViewModel>> GetAllSeasonIdsSeasonNumbersAndTVShowNamesAsync();
 
-        List<TVShowAllViewModel> GetAllTVShows(string userId = null);
+        Task<List<TVShowAllViewModel>> GetAllTVShowsAsync(string userId = null);
 
-        List<TVShowAllViewModel> FilterTVShowsByGenre(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter);
+        Task<List<TVShowAllViewModel>> FilterTVShowsByGenreAsync(List<TVShowAllViewModel> tvShowsAllViewModel, string genreFilter);
 
         List<TVShowAllViewModel> OrderTVShows(List<TVShowAllViewModel> tvShowsAllViewModel, string orderBy);
 

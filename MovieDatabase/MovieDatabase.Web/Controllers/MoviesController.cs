@@ -20,7 +20,7 @@ namespace MovieDatabase.Web.Controllers
             string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = userService.GetUserIdFromUserName(User.Identity.Name);
+                userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
             }
 
             var movieViewModel = await movieService.GetMovieAndDetailsByIdAsync(id, userId);
@@ -28,19 +28,19 @@ namespace MovieDatabase.Web.Controllers
             return View(movieViewModel);
         }
 
-        public IActionResult All(string orderBy, string genreFilter)
+        public async Task<IActionResult> All(string orderBy, string genreFilter)
         {
             string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = userService.GetUserIdFromUserName(User.Identity.Name);
+                userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
             }
 
-            var moviesAllViewModel = movieService.GetAllMovies(userId);
+            var moviesAllViewModel = await movieService.GetAllMoviesAsync(userId);
 
             if (!string.IsNullOrEmpty(genreFilter))
             {
-                moviesAllViewModel = movieService.FilterMoviesByGenre(moviesAllViewModel, genreFilter);
+                moviesAllViewModel = await movieService.FilterMoviesByGenreAsync(moviesAllViewModel, genreFilter);
             }
             if (!string.IsNullOrEmpty(orderBy))
             {

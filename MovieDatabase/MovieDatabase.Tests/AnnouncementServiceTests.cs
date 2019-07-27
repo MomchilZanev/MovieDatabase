@@ -18,7 +18,7 @@ namespace MovieDatabase.Tests
     public class AnnouncementServiceTests
     {
         [Fact]
-        public void GetAllAnnouncementsShouldReturnEmptyListWithEmptyDb()
+        public async Task GetAllAnnouncementsShouldReturnEmptyListWithEmptyDb()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllAnnouncements_Db_1")
@@ -35,13 +35,13 @@ namespace MovieDatabase.Tests
 
             var announcementService = new AnnouncementService(dbContext, mapper);
 
-            var actualResult = announcementService.GetAllAnnouncements();
+            var actualResult = await announcementService.GetAllAnnouncementsAsync();
 
             Assert.Equal(actualResult, expectedResult);
         }
 
         [Fact]
-        public void GetAllAnnouncementsShouldReturnAllAnnouncementsProperly()
+        public async Task GetAllAnnouncementsShouldReturnAllAnnouncementsProperly()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetAllAnnouncements_Db_2")
@@ -99,7 +99,7 @@ namespace MovieDatabase.Tests
             var mapper = config.CreateMapper();
             var announcementService = new AnnouncementService(dbContext, mapper);
 
-            var actualResult = announcementService.GetAllAnnouncements();
+            var actualResult = await announcementService.GetAllAnnouncementsAsync();
 
             for (int i = 0; i < expectedResult.Count(); i++)
             {

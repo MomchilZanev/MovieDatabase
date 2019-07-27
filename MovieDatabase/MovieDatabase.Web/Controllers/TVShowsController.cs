@@ -15,19 +15,19 @@ namespace MovieDatabase.Web.Controllers
             this.userService = userService;
         }
 
-        public IActionResult All(string orderBy, string genreFilter)
+        public async Task<IActionResult> All(string orderBy, string genreFilter)
         {
             string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = userService.GetUserIdFromUserName(User.Identity.Name);
+                userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
             }
 
-            var tvShowsAllViewModel = tvShowService.GetAllTVShows(userId);
+            var tvShowsAllViewModel = await tvShowService.GetAllTVShowsAsync(userId);
 
             if (!string.IsNullOrEmpty(genreFilter))
             {
-                tvShowsAllViewModel = tvShowService.FilterTVShowsByGenre(tvShowsAllViewModel, genreFilter);
+                tvShowsAllViewModel = await tvShowService.FilterTVShowsByGenreAsync(tvShowsAllViewModel, genreFilter);
             }
             if (!string.IsNullOrEmpty(orderBy))
             {
@@ -49,7 +49,7 @@ namespace MovieDatabase.Web.Controllers
             string userId = null;
             if (User.Identity.IsAuthenticated)
             {
-                userId = userService.GetUserIdFromUserName(User.Identity.Name);
+                userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
             }
 
             var seasonDetailsViewModel = await tvShowService.GetSeasonAndDetailsByIdAsync(id, userId);

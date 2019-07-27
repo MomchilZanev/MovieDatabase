@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Models.InputModels.Genre;
 using MovieDatabase.Models.ViewModels.Genre;
 using MovieDatabase.Services.Contracts;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
@@ -21,9 +21,9 @@ namespace MovieDatabase.Services
             this.mapper = mapper;
         }
 
-        public List<GenreAllViewModel> GetAllGenreNames()
+        public async Task<List<GenreAllViewModel>> GetAllGenreNamesAsync()
         {
-            var genresFromDb = dbContext.Genres.ToList();
+            var genresFromDb = await dbContext.Genres.ToListAsync();
 
             var allGenreNames = mapper.Map<List<Genre>, List<GenreAllViewModel>>(genresFromDb);
 
@@ -32,7 +32,7 @@ namespace MovieDatabase.Services
 
         public async Task<bool> CreateGenreAsync(CreateGenreInputModel input)
         {
-            if (dbContext.Genres.Any(genre => genre.Name == input.Name))
+            if (await dbContext.Genres.AnyAsync(genre => genre.Name == input.Name))
             {
                 return false;
             };

@@ -22,24 +22,24 @@ namespace MovieDatabase.Web.Controllers
             this.userService = userService;
         }
 
-        public IActionResult All(string id)
+        public async Task<IActionResult> All(string id)
         {
-            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
+            bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(id);
             if (!idIsValidMovieOrSeasonId)
             {
                 return Redirect(redirectError);
             }
 
-            var itemType = reviewService.IsIdMovieOrSeasonId(id);
+            var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(id);
             if (itemType == GlobalConstants.Movie)
             {
-                var movieReviews = reviewService.GetAllMovieReviews(id);
+                var movieReviews = await reviewService.GetAllMovieReviewsAsync(id);
 
                 return View(movieReviews);
             }
             else if (itemType == GlobalConstants.Season)
             {
-                var seasonReviews = reviewService.GetAllSeasonReviews(id);
+                var seasonReviews = await reviewService.GetAllSeasonReviewsAsync(id);
 
                 return View(seasonReviews);
             }
@@ -48,9 +48,9 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Create(string id)
+        public async Task<IActionResult> Create(string id)
         {
-            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
+            bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(id);
             if (!idIsValidMovieOrSeasonId)
             {
                 return Redirect(redirectError);
@@ -68,15 +68,15 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(input.Id);
+            bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(input.Id);
             if (!idIsValidMovieOrSeasonId)
             {
                 return Redirect(redirectError);
             }
 
-            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
+            string userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
 
-            var itemType = reviewService.IsIdMovieOrSeasonId(input.Id);
+            var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(input.Id);
             if (itemType == GlobalConstants.Movie)
             {
                 if (!await reviewService.CreateMovieReviewAsync(userId, input))
@@ -100,27 +100,27 @@ namespace MovieDatabase.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Update(string id)
+        public async Task<IActionResult> Update(string id)
         {
-            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
+            string userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
 
-            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
-            bool reviewExists = reviewService.ReviewExists(userId, id);
+            bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(id);
+            bool reviewExists = await reviewService.ReviewExistsAsync(userId, id);
             if (!(idIsValidMovieOrSeasonId && reviewExists))
             {
                 return Redirect(redirectError);
             }
 
-            var itemType = reviewService.IsIdMovieOrSeasonId(id);
+            var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(id);
             if (itemType == GlobalConstants.Movie)
             {
-                var movieReview = reviewService.GetMovieReview(userId, id);
+                var movieReview = await reviewService.GetMovieReviewAsync(userId, id);
 
                 return View(movieReview);
             }
             else if (itemType == GlobalConstants.Season)
             {
-                var seasonReview = reviewService.GetSeasonReview(userId, id);
+                var seasonReview = await reviewService.GetSeasonReviewAsync(userId, id);
 
                 return View(seasonReview);
             }
@@ -137,16 +137,16 @@ namespace MovieDatabase.Web.Controllers
                 return View(input);
             }
 
-            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
+            string userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
 
-            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(input.Id);
-            bool reviewExists = reviewService.ReviewExists(userId, input.Id);
+            bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(input.Id);
+            bool reviewExists = await reviewService.ReviewExistsAsync(userId, input.Id);
             if (!(idIsValidMovieOrSeasonId && reviewExists))
             {
                 return Redirect(redirectError);
             }
 
-            var itemType = reviewService.IsIdMovieOrSeasonId(input.Id);
+            var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(input.Id);
             if (itemType == GlobalConstants.Movie)
             {
                 if (!await reviewService.UpdateMovieReviewAsync(userId, input))
@@ -172,15 +172,15 @@ namespace MovieDatabase.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
-            bool idIsValidMovieOrSeasonId = reviewService.IsValidMovieOrSeasonId(id);
+            bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(id);
             if (!idIsValidMovieOrSeasonId)
             {
                 return Redirect(redirectError);
             }
 
-            string userId = userService.GetUserIdFromUserName(User.Identity.Name);
+            string userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
 
-            var itemType = reviewService.IsIdMovieOrSeasonId(id);
+            var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(id);
             if (itemType == GlobalConstants.Movie)
             {
                 if (!await reviewService.DeleteMovieReviewAsync(userId, id))

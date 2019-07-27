@@ -7,7 +7,7 @@ namespace MovieDatabase.Services.Contracts
 {
     public interface IGenreService
     {
-        List<GenreAllViewModel> GetAllGenreNames();
+        Task<List<GenreAllViewModel>> GetAllGenreNamesAsync();
 
         Task<bool> CreateGenreAsync(CreateGenreInputModel input);
     }

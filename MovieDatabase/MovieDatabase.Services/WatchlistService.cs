@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
@@ -21,9 +22,9 @@ namespace MovieDatabase.Services
             this.mapper = mapper;
         }
 
-        public bool IsValidMovieOrTVShowId(string id)
+        public async Task<bool> IsValidMovieOrTVShowIdAsync(string id)
         {
-            if (dbContext.Movies.Any(movie => movie.Id == id) || dbContext.TVShows.Any(tvShow => tvShow.Id == id))
+            if (await dbContext.Movies.AnyAsync(movie => movie.Id == id) || dbContext.TVShows.Any(tvShow => tvShow.Id == id))
             {
                 return true;
             }
@@ -31,13 +32,13 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public string IsIdMovieOrTVShowId(string id)
+        public async Task<string> IsIdMovieOrTVShowIdAsync(string id)
         {
-            if (dbContext.Movies.Any(movie => movie.Id == id))
+            if (await dbContext.Movies.AnyAsync(movie => movie.Id == id))
             {
                 return GlobalConstants.Movie;
             }
-            else if (dbContext.TVShows.Any(tvShow => tvShow.Id == id))
+            else if (await dbContext.TVShows.AnyAsync(tvShow => tvShow.Id == id))
             {
                 return GlobalConstants.TV_Show;
             }
@@ -45,9 +46,9 @@ namespace MovieDatabase.Services
             return GlobalConstants.Neither;
         }
 
-        public bool MovieIsInUserWatchlist(string userId, string movieId)
+        public async Task<bool> MovieIsInUserWatchlistAsync(string userId, string movieId)
         {
-            if (dbContext.MovieUsers.Any(movieUser => movieUser.MovieId == movieId && movieUser.UserId == userId))
+            if (await dbContext.MovieUsers.AnyAsync(movieUser => movieUser.MovieId == movieId && movieUser.UserId == userId))
             {
                 return true;
             }
@@ -55,9 +56,9 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public bool TVShowIsInUserWatchlist(string userId, string tvShowId)
+        public async Task<bool> TVShowIsInUserWatchlistAsync(string userId, string tvShowId)
         {
-            if (dbContext.TVShowUsers.Any(tvSHowuser => tvSHowuser.TVShowId == tvShowId && tvSHowuser.UserId == userId))
+            if (await dbContext.TVShowUsers.AnyAsync(tvSHowuser => tvSHowuser.TVShowId == tvShowId && tvSHowuser.UserId == userId))
             {
                 return true;
             }
@@ -65,15 +66,15 @@ namespace MovieDatabase.Services
             return false;
         }
 
-        public List<WatchlistAllViewModel> GetItemsInUserWatchlist(string userId)
+        public async Task<List<WatchlistAllViewModel>> GetItemsInUserWatchlistAsync(string userId)
         {
             var watchlistAllViewModel = new List<WatchlistAllViewModel>();
 
-            var movieUsersFromDb = dbContext.MovieUsers.Where(movieUser => movieUser.UserId == userId).ToList();
+            var movieUsersFromDb = await dbContext.MovieUsers.Where(movieUser => movieUser.UserId == userId).ToListAsync();
             var moviesWatchlistAllViewModel = mapper.Map<List<MovieUser>, List<WatchlistAllViewModel>>(movieUsersFromDb);
             watchlistAllViewModel.AddRange(moviesWatchlistAllViewModel);
 
-            var tvShowUsersFromDb = dbContext.TVShowUsers.Where(tvShowUser => tvShowUser.UserId == userId).ToList();
+            var tvShowUsersFromDb = await dbContext.TVShowUsers.Where(tvShowUser => tvShowUser.UserId == userId).ToListAsync();
             var tvShowsWatchlistAllViewModel = mapper.Map<List<TVShowUser>, List<WatchlistAllViewModel>>(tvShowUsersFromDb);
             watchlistAllViewModel.AddRange(tvShowsWatchlistAllViewModel);
 
@@ -106,8 +107,8 @@ namespace MovieDatabase.Services
 
         public async Task RemoveMovieFromUserWatchlistAsync(string userId, string movieId)
         {
-            var movieUserFromDb = dbContext.MovieUsers
-                    .SingleOrDefault(movieUser => movieUser.MovieId == movieId && movieUser.UserId == userId);
+            var movieUserFromDb = await dbContext.MovieUsers
+                    .SingleOrDefaultAsync(movieUser => movieUser.MovieId == movieId && movieUser.UserId == userId);
 
             dbContext.MovieUsers.Remove(movieUserFromDb);
             await dbContext.SaveChangesAsync();
@@ -115,8 +116,8 @@ namespace MovieDatabase.Services
 
         public async Task RemoveTVShowFromUserWatchlistAsync(string userId, string tvShowId)
         {
-            var tvShowUserFromDb = dbContext.TVShowUsers
-                    .SingleOrDefault(tvShowUser => tvShowUser.TVShowId == tvShowId && tvShowUser.UserId == userId);
+            var tvShowUserFromDb = await dbContext.TVShowUsers
+                    .SingleOrDefaultAsync(tvShowUser => tvShowUser.TVShowId == tvShowId && tvShowUser.UserId == userId);
 
             dbContext.TVShowUsers.Remove(tvShowUserFromDb);
             await dbContext.SaveChangesAsync();

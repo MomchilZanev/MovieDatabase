@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Services.Contracts;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Services
@@ -17,7 +17,7 @@ namespace MovieDatabase.Services
             this.dbContext = dbContext;
         }
 
-        public async Task ChangeUserAvatar(string userId, IFormFile avatar)
+        public async Task ChangeUserAvatarAsync(string userId, IFormFile avatar)
         {
             var user = await dbContext.Users.FindAsync(userId);
 
@@ -39,7 +39,7 @@ namespace MovieDatabase.Services
 
         public async Task<string> GetUserAvatarLink(string userId)
         {
-            if (dbContext.Users.Any(user => user.Id == userId))
+            if (await dbContext.Users.AnyAsync(user => user.Id == userId))
             {
                 var userFromDb = await dbContext.Users.FindAsync(userId);
                 return userFromDb.AvatarLink;

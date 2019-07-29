@@ -21,8 +21,10 @@ namespace MovieDatabase.Domain
 
         [Required]
         [StringLength(ValidationConstants.tvShowDescriptionMaximumLength, MinimumLength = ValidationConstants.tvShowDescriptionMinimumLength)]
-        public string Description { get; set; }        
+        public string Description { get; set; }
 
+        [Required]
+        public string GenreId { get; set; }
         public virtual Genre Genre { get; set; }
 
         [Required]

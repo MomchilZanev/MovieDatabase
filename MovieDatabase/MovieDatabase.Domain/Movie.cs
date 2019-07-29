@@ -31,6 +31,8 @@ namespace MovieDatabase.Domain
         [Range(ValidationConstants.movieMinimumLengthInMinutes, ValidationConstants.movieMaximumLengthInMinutes)]
         public int Length { get; set; }
 
+        [Required]
+        public string GenreId { get; set; }
         public virtual Genre Genre { get; set; }
 
         [Required]

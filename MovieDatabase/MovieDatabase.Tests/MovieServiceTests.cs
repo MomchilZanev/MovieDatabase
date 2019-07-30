@@ -126,7 +126,7 @@ namespace MovieDatabase.Tests
 
             var actualResult = await movieService.GetAllMoviesAsync();
 
-            Assert.True(actualResult.Count() == 2, "asasdad");
+            Assert.True(actualResult.Count() == 2);
             Assert.True(expectedResult[0].Name == actualResult[0].Name);
             Assert.True(expectedResult[0].ReleaseDate == actualResult[0].ReleaseDate);
             Assert.True(expectedResult[0].Genre == actualResult[0].Genre);
@@ -232,9 +232,10 @@ namespace MovieDatabase.Tests
                 }
             };
 
-            var actualResult = await movieService.GetAllMoviesAsync();
+            var actualResult = await movieService.GetAllMovieNamesAsync();
 
-            Assert.True(actualResult.Count() == 2, "asasdad");
+            Assert.True(actualResult.Count() == 2);
+            Assert.Equal(expectedResult[0].GetType(), actualResult[0].GetType());
             Assert.True(expectedResult[0].Name == actualResult[0].Name);
             Assert.True(expectedResult[1].Name == actualResult[1].Name);
         }
@@ -243,7 +244,7 @@ namespace MovieDatabase.Tests
         [InlineData("genre1", "movie1", 1)]
         [InlineData("genre2", "movie2", 1)]
         [InlineData("genre3", null, 0)]
-        public async Task FilterMoviesByGenreShouldFilterMoviesProperly(string genre, string expecteddMovie, int expectedCount)
+        public async Task FilterMoviesByGenreShouldFilterMoviesProperly(string genre, string expectedMovie, int expectedCount)
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "FilterMoviesByGenre_Db_1")
@@ -292,14 +293,12 @@ namespace MovieDatabase.Tests
             var mapper = config.CreateMapper();
             var movieService = new MovieService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
-            var expectedResult = new List<MovieNameViewModel>();
-
             var actualResult = await movieService.FilterMoviesByGenreAsync(input, genre);
 
             Assert.True(actualResult.Count() == expectedCount);
             if (actualResult.Count > 0)
             {
-                Assert.True(actualResult.First().Name == expecteddMovie);
+                Assert.True(actualResult.First().Name == expectedMovie);
             }
         }
 
@@ -619,7 +618,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task GetMovieAndDetailsByIdAsyncShouldThrowExceptionIfDbIsEmpty()
+        public async Task GetMovieAndDetailsByIdShouldThrowExceptionIfDbIsEmpty()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetMovieAndDetailsById_Db_1")
@@ -640,7 +639,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task GetMovieAndDetailsByIdAsyncShouldThrowExceptionIfIdIdInvalid()
+        public async Task GetMovieAndDetailsByIdShouldThrowExceptionIfIdIsInvalid()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "GetMovieAndDetailsById_Db_2")
@@ -695,10 +694,10 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task GetMovieAndDetailsByIdAsyncShouldReturnCorrectModel()
+        public async Task GetMovieAndDetailsByIdShouldReturnCorrectModel()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: " GetMovieAndDetailsById_Db_3")
+                    .UseInMemoryDatabase(databaseName: "GetMovieAndDetailsById_Db_3")
                     .Options;
             var dbContext = new MovieDatabaseDbContext(options);
 
@@ -811,14 +810,14 @@ namespace MovieDatabase.Tests
         }
 
         [Theory]
-        [InlineData("movie1", "genre1", "name1", false)]
-        [InlineData("movie2", "genre2", "name1", false)]
-        [InlineData("movie2", "genre1", "name2", false)]
-        [InlineData("movie2", "genre1", "name1", true)]
-        public async Task CreateMovieAsyncShouldReturnFalseIfProvidedGenreArtistOrMovieNameIsInvalid(string movieName, string genreName, string directorName, bool expectedResult)
+        [InlineData("movie1", "genre1", "name1", false, 1)]
+        [InlineData("movie2", "genre2", "name1", false, 2)]
+        [InlineData("movie2", "genre1", "name2", false, 3)]
+        [InlineData("movie2", "genre1", "name1", true, 4)]
+        public async Task CreateMovieShouldReturnFalseIfProvidedGenreArtistOrMovieNameIsInvalid(string movieName, string genreName, string directorName, bool expectedResult, int n)
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateMovie_Db_1")
+                    .UseInMemoryDatabase(databaseName: $"CreateMovie_Db_{n}")
                     .Options;
             var dbContext = new MovieDatabaseDbContext(options);
 
@@ -877,10 +876,10 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task CreateMovieAsyncShouldSetDefaultCoverAndTrailerIfNotProvided()
+        public async Task CreateMovieShouldSetDefaultCoverAndTrailerIfNotProvided()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateMovie_Db_2")
+                    .UseInMemoryDatabase(databaseName: "CreateMovie_Db_5")
                     .Options;
             var dbContext = new MovieDatabaseDbContext(options);
 
@@ -936,7 +935,7 @@ namespace MovieDatabase.Tests
         [InlineData("movie1", "name3", 2, false)]
         [InlineData("movie1", "name1", 3, true)]
         [InlineData("movie1", "name2", 4, false)]
-        public async Task AddRoleToMovieAsyncShouldReturnFalseIfProvidedArtistOrMovieNameIsInvalid(string movieName, string artistName, int n, bool expectedResult)
+        public async Task AddRoleToMovieShouldReturnFalseIfProvidedArtistOrMovieNameIsInvalid(string movieName, string artistName, int n, bool expectedResult)
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: $"AddRoletoMovie_Db_{n}")
@@ -1008,7 +1007,7 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task AddRoleToMovieAsyncShouldAddRoleProperly()
+        public async Task AddRoleToMovieShouldAddRoleProperly()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
                     .UseInMemoryDatabase(databaseName: "AddRoletoMovie_Db_5")
@@ -1072,10 +1071,10 @@ namespace MovieDatabase.Tests
         [InlineData("genre2", "name1", 1, false)]
         [InlineData("genre1", "name2", 2, false)]
         [InlineData("genre1", "name1", 3, true)]
-        public async Task UpdateMovieAsyncShouldReturnFalseIfProvidedArtistOrGenreIsInvalid(string genre, string artistName, int n, bool expectedResult)
+        public async Task UpdateMovieShouldReturnFalseIfProvidedArtistOrGenreIsInvalid(string genre, string artistName, int n, bool expectedResult)
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"updateMovie_Db_{n}")
+                    .UseInMemoryDatabase(databaseName: $"UpdateMovie_Db_{n}")
                     .Options;
             var dbContext = new MovieDatabaseDbContext(options);
 
@@ -1135,10 +1134,10 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task UpdateMovieAsyncShouldReturnFalseIfProvidedIdIsInvalid()
+        public async Task UpdateMovieShouldReturnFalseIfProvidedIdIsInvalid()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "updateMovie_Db_4")
+                    .UseInMemoryDatabase(databaseName: "UpdateMovie_Db_4")
                     .Options;
             var dbContext = new MovieDatabaseDbContext(options);
 
@@ -1198,10 +1197,10 @@ namespace MovieDatabase.Tests
         }
 
         [Fact]
-        public async Task UpdateMovieAsyncShouldUpdateProperly()
+        public async Task UpdateMovieShouldUpdateProperly()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "updateMovie_Db_5")
+                    .UseInMemoryDatabase(databaseName: "UpdateMovie_Db_5")
                     .Options;
             var dbContext = new MovieDatabaseDbContext(options);
 

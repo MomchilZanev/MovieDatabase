@@ -80,7 +80,7 @@ namespace MovieDatabase.Services
                 case GlobalConstants.moviesTvShowsOrderByRating:
                     return tvShowsAllViewModel.OrderByDescending(tvShow => tvShow.Rating).ToList();
                 case GlobalConstants.moviesTvShowsShowComingSoon:
-                    return tvShowsAllViewModel.Where(tvShow => tvShow.FirstAired > DateTime.UtcNow).OrderByDescending(tvShow => tvShow.FirstAired).ToList();
+                    return tvShowsAllViewModel.Where(tvShow => tvShow.FirstAired > DateTime.UtcNow).OrderBy(tvShow => tvShow.FirstAired).ToList();
                 default:
                     return tvShowsAllViewModel.ToList();
             }

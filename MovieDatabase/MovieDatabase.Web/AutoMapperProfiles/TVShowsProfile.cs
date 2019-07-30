@@ -41,8 +41,8 @@ namespace MovieDatabase.Web.AutoMapperProfiles
             CreateMap<CreateTVShowInputModel, TVShow>()
                 .ForMember(x => x.Creator, y => y.Ignore())
                 .ForMember(x => x.Genre, y => y.Ignore())
-                .ForMember(x => x.CoverImageLink, y => y.MapFrom(src => string.IsNullOrEmpty(src.CoverImageLink) ? GlobalConstants.noImageLink : src.CoverImageLink))
-                .ForMember(x => x.TrailerLink, y => y.MapFrom(src => string.IsNullOrEmpty(src.TrailerLink) ? GlobalConstants.noTrailerLink : src.TrailerLink));
+                .ForMember(x => x.CoverImageLink, y => y.MapFrom(src => (string.IsNullOrEmpty(src.CoverImageLink) || string.IsNullOrWhiteSpace(src.CoverImageLink)) ? GlobalConstants.noImageLink : src.CoverImageLink))
+                .ForMember(x => x.TrailerLink, y => y.MapFrom(src => (string.IsNullOrEmpty(src.TrailerLink) || string.IsNullOrWhiteSpace(src.TrailerLink)) ? GlobalConstants.noTrailerLink : src.TrailerLink));
 
             CreateMap<AddSeasonInputModel, Season>()
                 .ForMember(x => x.TVShow, y => y.Ignore())

@@ -15,9 +15,9 @@ namespace MovieDatabase.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var genresAllViewModel = await tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNamesAsync();
+            var seasonsAllViewModel = await tvShowService.GetAllSeasonIdsSeasonNumbersAndTVShowNamesAsync();
 
-            return View(genresAllViewModel);
+            return View(seasonsAllViewModel);
         }
     }
 }

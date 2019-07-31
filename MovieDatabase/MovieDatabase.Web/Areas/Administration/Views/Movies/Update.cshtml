@@ -29,8 +29,7 @@
         <div class="mt-3 mb-3 col-6">
             <label asp-for="Director"></label>
             <select asp-for="Director" class="form-control mb-2" placeholder="Director">
-                <option disabled selected>@Model.Director  (current)</option>
-                <vc:all-artist-names></vc:all-artist-names>
+                <vc:all-artist-names  selected-artist-name="@Model.Director"></vc:all-artist-names>
             </select>
             <span asp-validation-for="Director" class="text-danger"></span>
         </div>
@@ -38,8 +37,7 @@
         <div class="mt-3 mb-3 col-6">
             <label asp-for="Genre"></label>
             <select asp-for="Genre" class="form-control mb-2" placeholder="Artists biography">
-                <option disabled selected>@Model.Genre (current)</option>
-                <vc:all-genre-names></vc:all-genre-names>
+                <vc:all-genre-names selected-genre-name="@Model.Genre"></vc:all-genre-names>
             </select>
             <span asp-validation-for="Genre" class="text-danger"></span>
         </div>

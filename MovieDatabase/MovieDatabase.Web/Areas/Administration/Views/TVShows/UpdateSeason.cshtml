@@ -15,8 +15,7 @@
         <div class="mt-1 mb-3 col-8">
             <label asp-for="TVShow"></label>
             <select asp-for="TVShow" class="form-control mb-2" placeholder="TV Show Name">
-                <option selected disabled>@Model.TVShow (current)</option>
-                <vc:all-tv-show-names></vc:all-tv-show-names>
+                <vc:all-tv-show-names selected-tv-show-name="@Model.TVShow"></vc:all-tv-show-names>
             </select>
             <span asp-validation-for="TVShow" class="text-danger"></span>
         </div>

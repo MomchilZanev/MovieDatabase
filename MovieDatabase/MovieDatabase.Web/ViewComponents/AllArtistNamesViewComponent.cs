@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieDatabase.Services.Contracts;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.ViewComponents
@@ -13,11 +14,22 @@ namespace MovieDatabase.Web.ViewComponents
             this.artistService = artistService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(string selectedArtistName = null)
         {
-            var genresAllViewModel = await artistService.GetAllArtistNamesAsync();
+            var artistNamesAllViewModel = await artistService.GetAllArtistNamesAsync();
 
-            return View(genresAllViewModel);
+            if (!artistNamesAllViewModel.Any(artist => artist.FullName == selectedArtistName))
+            {
+                return View(artistNamesAllViewModel);
+            }
+            
+            var selected = artistNamesAllViewModel.Single(x => x.FullName == selectedArtistName);
+            var index = artistNamesAllViewModel.IndexOf(selected);
+            var first = artistNamesAllViewModel[0];
+            artistNamesAllViewModel[0] = selected;
+            artistNamesAllViewModel[index] = first;
+
+            return View(artistNamesAllViewModel);
         }
     }
 }

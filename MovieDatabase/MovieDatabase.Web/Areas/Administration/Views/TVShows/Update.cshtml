@@ -21,8 +21,7 @@
         <div class="mt-1 mb-3 col-4">
             <label asp-for="Genre"></label>
             <select asp-for="Genre" class="form-control mb-2" placeholder="Genre Name">
-                <option selected disabled>@Model.Genre (current)</option>
-                <vc:all-genre-names></vc:all-genre-names>
+                <vc:all-genre-names selected-genre-name="@Model.Genre"></vc:all-genre-names>
             </select>
             <span asp-validation-for="Genre" class="text-danger"></span>
         </div>
@@ -32,8 +31,7 @@
         <div class="mt-3 mb-3 col-4">
             <label asp-for="Creator"></label>
             <select asp-for="Creator" class="form-control mb-2" placeholder="Creator Name">
-                <option selected disabled>@Model.Creator (current)</option>
-                <vc:all-artist-names></vc:all-artist-names>
+                <vc:all-artist-names selected-artist-name="@Model.Creator"></vc:all-artist-names>
             </select>
             <span asp-validation-for="Creator" class="text-danger"></span>
         </div>

@@ -55,10 +55,10 @@
                                     Movies
                                 </button>
                                 <div class="dropdown-menu bg-dark">
-                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=release">Most Recent</a>
-                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=popularity">Most Popular</a>
-                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=rating">Highest Rated</a>
-                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=soon">Coming Soon</a>
+                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=@GlobalConstants.moviesTvShowsOrderByRelease">Most Recent</a>
+                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=@GlobalConstants.moviesTvShowsOrderByPopularity">Most Popular</a>
+                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=@GlobalConstants.moviesTvShowsOrderByRating">Highest Rated</a>
+                                    <a class="nav-link text-warning" href="/Movies/All?orderBy=@GlobalConstants.moviesTvShowsShowComingSoon">Coming Soon</a>
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
@@ -74,10 +74,10 @@
                                     TV Shows
                                 </button>
                                 <div class="dropdown-menu bg-dark">
-                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=release">Most Recent</a>
-                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=popularity">Most Popular</a>
-                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=rating">Highest Rated</a>
-                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=soon">Coming Soon</a>
+                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=@GlobalConstants.moviesTvShowsOrderByRelease">Most Recent</a>
+                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=@GlobalConstants.moviesTvShowsOrderByPopularity">Most Popular</a>
+                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=@GlobalConstants.moviesTvShowsOrderByRating">Highest Rated</a>
+                                    <a class="nav-link text-warning" href="/TVShows/All?orderBy=@GlobalConstants.moviesTvShowsShowComingSoon">Coming Soon</a>
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
@@ -94,9 +94,9 @@
                                     Artists
                                 </button>
                                 <div class="dropdown-menu bg-dark">
-                                    <a class="nav-link text-warning" href="/Artists/All?orderBy=youngest">Youngest</a>
-                                    <a class="nav-link text-warning" href="/Artists/All?orderBy=oldest">Oldest</a>
-                                    <a class="nav-link text-warning" href="/Artists/All?orderBy=popularity">Most Popular</a>
+                                    <a class="nav-link text-warning" href="/Artists/All?orderBy=@GlobalConstants.artistsOrderByYoungest">Youngest</a>
+                                    <a class="nav-link text-warning" href="/Artists/All?orderBy=@GlobalConstants.artistsOrderByOldest">Oldest</a>
+                                    <a class="nav-link text-warning" href="/Artists/All?orderBy=@GlobalConstants.artistsOrderByMostPopular">Most Popular</a>
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
@@ -111,8 +111,8 @@
                                     News
                                 </button>
                                 <div class="dropdown-menu bg-dark">
-                                    <a class="nav-link text-warning" href="/Announcements/All?orderBy=latest">Latest</a>
-                                    <a class="nav-link text-warning" href="/Announcements/All?orderBy=oldest">Oldest</a>
+                                    <a class="nav-link text-warning" href="/Announcements/All?orderBy=@GlobalConstants.announcementsOrderByLatest">Latest</a>
+                                    <a class="nav-link text-warning" href="/Announcements/All?orderBy=@GlobalConstants.announcementsOrderByOldest">Oldest</a>
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <div class="dropdown-divider border-warning"></div>

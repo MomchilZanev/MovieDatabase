@@ -30,7 +30,7 @@
             <label asp-for="Director"></label>
             <select asp-for="Director" class="form-control mb-2" placeholder="Director">
                 <option disabled selected>Director Name</option>
-                <vc:all-artist-names></vc:all-artist-names>
+                <vc:all-artist-names selected-artist-name=""></vc:all-artist-names>
             </select>
             <span asp-validation-for="Director" class="text-danger"></span>
         </div>
@@ -39,7 +39,7 @@
             <label asp-for="Genre"></label>
             <select asp-for="Genre" class="form-control mb-2" placeholder="Artists biography">
                 <option disabled selected>Genre Name</option>
-                <vc:all-genre-names></vc:all-genre-names>
+                <vc:all-genre-names selected-genre-name=""></vc:all-genre-names>
             </select>
             <span asp-validation-for="Genre" class="text-danger"></span>
         </div>

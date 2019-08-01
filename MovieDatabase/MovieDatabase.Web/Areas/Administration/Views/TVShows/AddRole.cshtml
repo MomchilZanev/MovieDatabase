@@ -32,7 +32,7 @@
                 <label asp-for="Artist"></label>
                 <select asp-for="Artist" class="form-control mb-2" placeholder="Actor Name">
                     <option selected disabled>Actor Name</option>
-                    <vc:all-artist-names></vc:all-artist-names>
+                    <vc:all-artist-names selected-artist-name=""></vc:all-artist-names>
                 </select>
                 <span asp-validation-for="Artist" class="text-danger"></span>
             </div>

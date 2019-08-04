@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="d-flex justify-content-between mt-5">
+    <div class="card bg-warning border-dark col-4">
+        <h5 class="card-title text-warning">Movies</h5>
+        <img class="card-img-top" src="~/icons/actor.svg" alt="Card image cap" height="130">
+        <div class="btn-group card-body">
+            <a href="/Administration/Artists/Create" class="btn btn-dark text-warning">Add Artist</a>
+        </div>
+    </div>
+
+    <div class="card bg-warning border-dark col-4 mx-2">
+        <h5 class="card-title text-warning">Movies</h5>
+        <img class="card-img-top" src="~/icons/film.svg" alt="Card image cap" height="130">
+        <div class="btn-group card-body">
+            <a href="/Administration/Movies/Create" class="btn btn-dark text-warning">Create Movie</a>
+            <a href="/Administration/Movies/AddRole" class="btn btn-dark text-warning">Add Movie Role</a>
+        </div>
+    </div>
+
+    <div class="card bg-warning border-dark col-4">
+        <h5 class="card-title text-warning">Movies</h5>
+        <img class="card-img-top" src="~/icons/tv.svg" alt="Card image cap" height="130">
+        <div class="btn-group card-body">
+            <a href="/Administration/TVShows/Create" class="btn btn-sm btn-dark text-warning">Create TV Show</a>
+            <a href="/Administration/TVShows/AddSeason" class="btn btn-sm btn-dark text-warning">Add Season</a>
+            <a href="/Administration/TVShows/AddRole" class="btn btn-sm btn-dark text-warning">Add Season Role</a>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between mt-4">
+    <div class="card bg-warning border-dark col-4">
+        <h5 class="card-title text-warning">Movies</h5>
+        <img class="card-img-top" src="~/icons/megaphone.svg" alt="Card image cap" height="130">
+        <div class="btn-group card-body">
+            <a href="/Administration/Announcements/Create" class="btn btn-dark text-warning">Create Announcement</a>
+        </div>
+    </div>
+
+    <div class="card bg-warning border-dark col-4 mx-2">
+        <h5 class="card-title text-warning">Movies</h5>
+        <img class="card-img-top" src="~/icons/cog.svg" alt="Card image cap" height="130">
+        <div class="btn-group card-body">
+            <a href="/Administration/Genres/Create" class="btn btn-dark text-warning">Add Genre</a>
+        </div>
+    </div>
+
+    <div class="card bg-warning border-dark col-4">
+        <h5 class="card-title text-warning">Movies</h5>
+        <img class="card-img-top" src="~/icons/user.svg" alt="Card image cap" height="130">
+        <div class="btn-group card-body">
+            <a href="/Administration/Users/Promote" class="btn btn-dark text-warning">Promote User</a>
+        </div>
+    </div>
+</div>

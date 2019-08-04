@@ -17,6 +17,12 @@
                     <img src="@fileName" alt="Avatar" class="rounded" height="50" />
                 </button>
                 <ul class="dropdown-menu bg-dark" role="menu" aria-labelledby="menu1">
+                    @if (User.IsInRole(GlobalConstants.adminRoleName))
+                    {
+                        <li role="presentation">
+                            <a class="nav-link text-warning" asp-area="Administration" asp-controller="Home" asp-action="Index">Admin panel</a>
+                        </li>
+                    }
                     <li role="presentation">
                         <a class="nav-link text-warning" asp-controller="Watchlist" asp-action="Index">Watchlist</a>
                     </li>
@@ -25,7 +31,7 @@
                     </li>
                     <li role="presentation">
                         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                            <button type="submit" class="nav-link btn btn-link text-warning">Logout</button>
+                            <button type="submit" class="nav-link btn btn-link text-danger">Logout</button>
                         </form>
                     </li>
                 </ul>

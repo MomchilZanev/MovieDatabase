@@ -106,7 +106,6 @@ namespace MovieDatabase.Web
             });
         }
 
-        //Ugly db seeding
         private void SeedDatabase(MovieDatabaseDbContext context)
         {
             context.Database.EnsureCreated();

@@ -8,8 +8,6 @@ namespace MovieDatabase.Web.Controllers
 {
     public class WatchlistController : Controller
     {
-        private const string redirectError = "/Home/Error";
-
         private readonly IWatchlistService watchlistService;
         private readonly IUserService userService;
 
@@ -35,7 +33,7 @@ namespace MovieDatabase.Web.Controllers
             var idIsValidMovieOrTVShowId = await watchlistService.IsValidMovieOrTVShowIdAsync(id);
             if (!idIsValidMovieOrTVShowId)
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             var userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
@@ -45,7 +43,7 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (await watchlistService.MovieIsInUserWatchlistAsync(userId, id))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
                 await watchlistService.AddMovieToUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
@@ -54,13 +52,13 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (await watchlistService.TVShowIsInUserWatchlistAsync(userId, id))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
                 await watchlistService.AddTVShowToUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
 
         [Authorize]
@@ -69,7 +67,7 @@ namespace MovieDatabase.Web.Controllers
             var idIsValidMovieOrTVShowId = await watchlistService.IsValidMovieOrTVShowIdAsync(id);
             if (!idIsValidMovieOrTVShowId)
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             var userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
@@ -79,7 +77,7 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await watchlistService.MovieIsInUserWatchlistAsync(userId, id))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
                 await watchlistService.RemoveMovieFromUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
@@ -88,13 +86,13 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await watchlistService.TVShowIsInUserWatchlistAsync(userId, id))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
                 await watchlistService.RemoveTVShowFromUserWatchlistAsync(userId, id);
                 return Redirect(returnAction + returnQuery);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
     }
 }

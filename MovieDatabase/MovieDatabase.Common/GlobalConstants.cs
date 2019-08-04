@@ -4,11 +4,15 @@
     {
         public const string adminRoleName = "Admin";
 
+        public const string userRoleName = "User";
+
         public const string noImageLink = "/images/no_image.jpg";
 
         public const string noTrailerLink = "https://www.youtube.com/embed/KAOdjqyG37A";
 
         public const string noArtistImage = "/images/no_artist_image.jpg";
+
+        public const string noUserAvatar = "/user_avatars/no_avatar.jpg";
 
         public const string userAvatarsDirectory = "wwwroot\\user_avatars";
 
@@ -49,6 +53,10 @@
         public const string tvShowsCategory = "TVShows";
 
         public const string _Season_ = " Season ";
+
+        public const string redirectError = "/Home/Error";
+
+        public const string redirectHome = "/Home/Index";
 
         public const int artistPreviewBiographyMaxCharLength = 800;
 

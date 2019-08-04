@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using MovieDatabase.Common;
 using MovieDatabase.Domain;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MovieDatabase.Web.Areas.Identity.Pages.Account
 {
@@ -21,18 +17,12 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
         private readonly SignInManager<MovieDatabaseUser> _signInManager;
         private readonly UserManager<MovieDatabaseUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        //private readonly IEmailSender _emailSender;
 
-        public RegisterModel(
-            UserManager<MovieDatabaseUser> userManager,
-            SignInManager<MovieDatabaseUser> signInManager,
-            ILogger<RegisterModel> logger)
-            //IEmailSender emailSender)
+        public RegisterModel(UserManager<MovieDatabaseUser> userManager, SignInManager<MovieDatabaseUser> signInManager, ILogger<RegisterModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            //_emailSender = emailSender;
         }
 
         [BindProperty]
@@ -74,7 +64,7 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new MovieDatabaseUser { UserName = Input.UserName, Email = Input.Email, AvatarLink = "/user_avatars/no_avatar.jpg" };
+                var user = new MovieDatabaseUser { UserName = Input.UserName, Email = Input.Email, AvatarLink = GlobalConstants.noUserAvatar };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -84,25 +74,12 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(user, "User");
+                    await _userManager.AddToRoleAsync(user, GlobalConstants.userRoleName);
                 }
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
-                    /*
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { userId = user.Id, code = code },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    */
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);

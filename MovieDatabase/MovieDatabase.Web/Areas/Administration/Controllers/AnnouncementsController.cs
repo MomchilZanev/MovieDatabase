@@ -8,7 +8,6 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
 {
     public class AnnouncementsController : AdministrationController
     {
-        private const string redirectError = "/Home/Error";
         private const string redirectAnnuncementsAllAndOrder = "/Announcements/All/?orderBy=" + GlobalConstants.announcementsOrderByLatest;
 
         private readonly IAnnouncementService announcementService;
@@ -43,7 +42,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
         {
             if (!await announcementService.DeleteAnnouncementAsync(id))
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             return Redirect(redirectAnnuncementsAllAndOrder);

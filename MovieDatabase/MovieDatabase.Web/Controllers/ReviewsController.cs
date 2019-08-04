@@ -9,7 +9,6 @@ namespace MovieDatabase.Web.Controllers
 {
     public class ReviewsController : Controller
     {
-        private const string redirectError = "/Home/Error";
         private const string redirectMovieDetails = "/Movies/Details/";
         private const string redirectSeasonDetails = "/TVShows/SeasonDetails/";
 
@@ -27,7 +26,7 @@ namespace MovieDatabase.Web.Controllers
             bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(id);
             if (!idIsValidMovieOrSeasonId)
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(id);
@@ -44,7 +43,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(seasonReviews);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
 
         [Authorize]
@@ -53,7 +52,7 @@ namespace MovieDatabase.Web.Controllers
             bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(id);
             if (!idIsValidMovieOrSeasonId)
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             return View();
@@ -71,7 +70,7 @@ namespace MovieDatabase.Web.Controllers
             bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(input.Id);
             if (!idIsValidMovieOrSeasonId)
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             string userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
@@ -81,7 +80,7 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await reviewService.CreateMovieReviewAsync(userId, input))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectMovieDetails + input.Id);
@@ -90,13 +89,13 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await reviewService.CreateSeasonReviewAsync(userId, input))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectSeasonDetails + input.Id);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
 
         [Authorize]
@@ -108,7 +107,7 @@ namespace MovieDatabase.Web.Controllers
             bool reviewExists = await reviewService.ReviewExistsAsync(userId, id);
             if (!(idIsValidMovieOrSeasonId && reviewExists))
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(id);
@@ -125,7 +124,7 @@ namespace MovieDatabase.Web.Controllers
                 return View(seasonReview);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
 
         [Authorize]
@@ -143,7 +142,7 @@ namespace MovieDatabase.Web.Controllers
             bool reviewExists = await reviewService.ReviewExistsAsync(userId, input.Id);
             if (!(idIsValidMovieOrSeasonId && reviewExists))
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             var itemType = await reviewService.IsIdMovieOrSeasonIdAsync(input.Id);
@@ -151,7 +150,7 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await reviewService.UpdateMovieReviewAsync(userId, input))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectMovieDetails + input.Id);
@@ -160,13 +159,13 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await reviewService.UpdateSeasonReviewAsync(userId, input))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectSeasonDetails +  input.Id);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
 
         [Authorize]
@@ -175,7 +174,7 @@ namespace MovieDatabase.Web.Controllers
             bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(id);
             if (!idIsValidMovieOrSeasonId)
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             string userId = await userService.GetUserIdFromUserNameAsync(User.Identity.Name);
@@ -185,7 +184,7 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await reviewService.DeleteMovieReviewAsync(userId, id))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectMovieDetails + id);
@@ -194,13 +193,13 @@ namespace MovieDatabase.Web.Controllers
             {
                 if (!await reviewService.DeleteSeasonReviewAsync(userId, id))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectSeasonDetails + id);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
     }
 }

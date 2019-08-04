@@ -1,7 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Services;
+using MovieDatabase.Web.AutoMapperProfiles;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +34,23 @@ namespace MovieDatabase.Tests
             await dbContext.Users.AddAsync(user);
             await dbContext.SaveChangesAsync();
 
-            var userService = new UserService(dbContext);
+            var mockUserManager = new Mock<UserManager<MovieDatabaseUser>>(
+                    new Mock<IUserStore<MovieDatabaseUser>>().Object,
+                    new Mock<IOptions<IdentityOptions>>().Object,
+                    new Mock<IPasswordHasher<MovieDatabaseUser>>().Object,
+                    new IUserValidator<MovieDatabaseUser>[0],
+                    new IPasswordValidator<MovieDatabaseUser>[0],
+                    new Mock<ILookupNormalizer>().Object,
+                    new Mock<IdentityErrorDescriber>().Object,
+                    new Mock<IServiceProvider>().Object,
+                    new Mock<ILogger<UserManager<MovieDatabaseUser>>>().Object);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new UsersProfile());
+            });
+            var mapper = config.CreateMapper();
+            var userService = new UserService(dbContext, mockUserManager.Object, mapper);
 
             var actualResult = await userService.GetUserIdFromUserNameAsync("invalid");
 
@@ -54,7 +76,23 @@ namespace MovieDatabase.Tests
 
             var expectedId = dbContext.Users.First().Id;
 
-            var userService = new UserService(dbContext);
+            var mockUserManager = new Mock<UserManager<MovieDatabaseUser>>(
+                    new Mock<IUserStore<MovieDatabaseUser>>().Object,
+                    new Mock<IOptions<IdentityOptions>>().Object,
+                    new Mock<IPasswordHasher<MovieDatabaseUser>>().Object,
+                    new IUserValidator<MovieDatabaseUser>[0],
+                    new IPasswordValidator<MovieDatabaseUser>[0],
+                    new Mock<ILookupNormalizer>().Object,
+                    new Mock<IdentityErrorDescriber>().Object,
+                    new Mock<IServiceProvider>().Object,
+                    new Mock<ILogger<UserManager<MovieDatabaseUser>>>().Object);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new UsersProfile());
+            });
+            var mapper = config.CreateMapper();
+            var userService = new UserService(dbContext, mockUserManager.Object, mapper);
 
             var actualId = await userService.GetUserIdFromUserNameAsync("user1");
 

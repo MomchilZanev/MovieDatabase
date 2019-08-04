@@ -28,7 +28,7 @@
     <div class="row col-8 d-flex justify-content-between">
         <div class="mt-3 mb-3 col-6">
             <label asp-for="Director"></label>
-            <select asp-for="Director" class="form-control mb-2" placeholder="Director">
+            <select asp-for="Director" class="form-control mb-2">
                 <option disabled selected>Director Name</option>
                 <vc:all-artist-names selected-artist-name=""></vc:all-artist-names>
             </select>
@@ -37,7 +37,7 @@
 
         <div class="mt-3 mb-3 col-6">
             <label asp-for="Genre"></label>
-            <select asp-for="Genre" class="form-control mb-2" placeholder="Artists biography">
+            <select asp-for="Genre" class="form-control mb-2">
                 <option disabled selected>Genre Name</option>
                 <vc:all-genre-names selected-genre-name=""></vc:all-genre-names>
             </select>

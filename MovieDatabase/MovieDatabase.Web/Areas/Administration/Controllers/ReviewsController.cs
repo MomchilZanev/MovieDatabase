@@ -7,7 +7,6 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
 {
     public class ReviewsController : AdministrationController
     {
-        private const string redirectError = "/Home/Error";
         private const string redirectMovieDetails = "/Movies/Details/";
         private const string redirectSeasonDetails = "/TVShows/SeasonDetails/";
 
@@ -25,7 +24,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
             bool idIsValidMovieOrSeasonId = await reviewService.IsValidMovieOrSeasonIdAsync(itemId);
             if (!idIsValidMovieOrSeasonId)
             {
-                return Redirect(redirectError);
+                return Redirect(GlobalConstants.redirectError);
             }
 
             var userId = await userService.GetUserIdFromUserNameAsync(userName);
@@ -35,7 +34,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
             {
                 if (!await reviewService.DeleteMovieReviewAsync(userId, itemId))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectMovieDetails + itemId);
@@ -44,13 +43,13 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
             {
                 if (!await reviewService.DeleteSeasonReviewAsync(userId, itemId))
                 {
-                    return Redirect(redirectError);
+                    return Redirect(GlobalConstants.redirectError);
                 }
 
                 return Redirect(redirectSeasonDetails + itemId);
             }
             else
-            { return Redirect(redirectError); }
+            { return Redirect(GlobalConstants.redirectError); }
         }
     }
 }

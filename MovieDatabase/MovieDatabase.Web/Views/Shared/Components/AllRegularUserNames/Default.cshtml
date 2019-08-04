@@ -1,0 +1,6 @@
+﻿@model List<MovieDatabase.Models.ViewModels.User.UserNameViewModel>
+
+@foreach (var user in Model)
+{
+    <option value="@user.Name">@user.Name</option>
+}

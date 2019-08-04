@@ -11,7 +11,7 @@
         <h6 class="text-warning font-italic mt-2 mb-3">
             | @announcement.Date.ToString("dddd, dd MMMM yyyy") | by @announcement.Creator |
         </h6>
-        @if (User.IsInRole("Admin"))
+        @if (User.IsInRole(GlobalConstants.adminRoleName))
         {
             <a class="text-danger mr-2" href="/Administration/Announcements/Delete/@announcement.Id">[DELETE ANNOUNCEMENT]</a>
         }

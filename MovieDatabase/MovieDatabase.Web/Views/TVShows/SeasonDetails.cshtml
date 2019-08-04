@@ -75,7 +75,7 @@
     <hr class="mb-2" style="height:3px;border:none;background-color:orangered;" />
 }
 
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole(GlobalConstants.adminRoleName))
 {
     <div class="text-center">
         <a class="text-info text-center" style="font-size:x-large" href="/Administration/TVShows/UpdateSeason/@Model.Id">[UPDATE ENTRY]</a>

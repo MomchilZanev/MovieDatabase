@@ -15,7 +15,7 @@
 
     <div style="white-space: pre-wrap; font-size:large;" class="font-weight-light text-warning text-left mt-2 mb-1">@review.Content</div>
 
-    @if (User.IsInRole("Admin"))
+    @if (User.IsInRole(GlobalConstants.adminRoleName))
     {
         <a class="text-danger text-right" href="/Administration/Reviews/Delete?userName=@review.User&itemId=@review.ItemId">[DELETE REVIEW]</a>
     }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Services;
@@ -114,7 +115,7 @@ namespace MovieDatabase.Web
             {
                 var adminRole = new IdentityRole
                 {
-                    Name = "Admin",
+                    Name = GlobalConstants.adminRoleName,
                     NormalizedName = "ADMIN",
                 };
 

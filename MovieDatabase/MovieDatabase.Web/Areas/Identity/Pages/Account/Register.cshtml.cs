@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using MovieDatabase.Common;
 using MovieDatabase.Domain;
 
 namespace MovieDatabase.Web.Areas.Identity.Pages.Account
@@ -79,7 +80,7 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
 
                 if (_userManager.Users.Count() == 1)
                 {
-                    await _userManager.AddToRoleAsync(user, "Admin");
+                    await _userManager.AddToRoleAsync(user, GlobalConstants.adminRoleName);
                 }
                 else
                 {

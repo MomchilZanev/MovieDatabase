@@ -59,7 +59,7 @@
                                     <a class="nav-link text-warning" href="/Movies/All?orderBy=@GlobalConstants.moviesTvShowsOrderByPopularity">Most Popular</a>
                                     <a class="nav-link text-warning" href="/Movies/All?orderBy=@GlobalConstants.moviesTvShowsOrderByRating">Highest Rated</a>
                                     <a class="nav-link text-warning" href="/Movies/All?orderBy=@GlobalConstants.moviesTvShowsShowComingSoon">Coming Soon</a>
-                                    @if (User.IsInRole("Admin"))
+                                    @if (User.IsInRole(GlobalConstants.adminRoleName))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
                                         <a class="nav-link text-warning" href="/Administration/Movies/Create">Add Movie entry</a>
@@ -78,7 +78,7 @@
                                     <a class="nav-link text-warning" href="/TVShows/All?orderBy=@GlobalConstants.moviesTvShowsOrderByPopularity">Most Popular</a>
                                     <a class="nav-link text-warning" href="/TVShows/All?orderBy=@GlobalConstants.moviesTvShowsOrderByRating">Highest Rated</a>
                                     <a class="nav-link text-warning" href="/TVShows/All?orderBy=@GlobalConstants.moviesTvShowsShowComingSoon">Coming Soon</a>
-                                    @if (User.IsInRole("Admin"))
+                                    @if (User.IsInRole(GlobalConstants.adminRoleName))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
                                         <a class="nav-link text-warning" href="/Administration/TVShows/Create">Add TV Show Entry</a>
@@ -97,7 +97,7 @@
                                     <a class="nav-link text-warning" href="/Artists/All?orderBy=@GlobalConstants.artistsOrderByYoungest">Youngest</a>
                                     <a class="nav-link text-warning" href="/Artists/All?orderBy=@GlobalConstants.artistsOrderByOldest">Oldest</a>
                                     <a class="nav-link text-warning" href="/Artists/All?orderBy=@GlobalConstants.artistsOrderByMostPopular">Most Popular</a>
-                                    @if (User.IsInRole("Admin"))
+                                    @if (User.IsInRole(GlobalConstants.adminRoleName))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
                                         <a class="nav-link text-warning" href="/Administration/Artists/Create">Create Entry</a>
@@ -113,7 +113,7 @@
                                 <div class="dropdown-menu bg-dark">
                                     <a class="nav-link text-warning" href="/Announcements/All?orderBy=@GlobalConstants.announcementsOrderByLatest">Latest</a>
                                     <a class="nav-link text-warning" href="/Announcements/All?orderBy=@GlobalConstants.announcementsOrderByOldest">Oldest</a>
-                                    @if (User.IsInRole("Admin"))
+                                    @if (User.IsInRole(GlobalConstants.adminRoleName))
                                     {
                                         <div class="dropdown-divider border-warning"></div>
                                         <a class="nav-link text-warning" href="/Administration/Announcements/Create">Create Entry</a>
@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                         </li>
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole(GlobalConstants.adminRoleName))
                         {
                             <li class="nav-item">
                                 <a href="/Administration/Genres/Create" class="btn btn-outline-warning mx-1" role="button" aria-pressed="true">Add new genre</a>

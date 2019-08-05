@@ -19,22 +19,32 @@ namespace MovieDatabase.Tests
 {
     public class TVShowServiceTests
     {
-        [Fact]
-        public async Task GetAllTVShowNamesShouldReturnEmptyListIfDbIsEmpty()
+        private readonly MovieDatabaseDbContext dbContext;
+        private readonly Mock<IReviewService> reviewService;
+        private readonly Mock<IWatchlistService> watchlistService;
+        private readonly IMapper mapper;
+
+        public TVShowServiceTests()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllTVShowNames_Db_1")
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                     .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
+            this.dbContext = new MovieDatabaseDbContext(options);
+
+            this.reviewService = new Mock<IReviewService>();
+            this.watchlistService = new Mock<IWatchlistService>();
 
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new TVShowsProfile());
             });
-            var mapper = config.CreateMapper();
+            this.mapper = config.CreateMapper();
+        }
+
+        [Fact]
+        public async Task GetAllTVShowNamesShouldReturnEmptyListIfDbIsEmpty()
+        {
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new List<TVShowNameViewModel>();
@@ -47,11 +57,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllTVShowNamesShouldReturnAllTVShowNamesProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllTVShowNames_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -82,14 +87,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvSHow2);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new List<TVShowNameViewModel>
@@ -117,19 +114,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllSeasonIdsSeasonNumbersAndTVShowNamesShouldReturnEmptyListIfDbIsEmpty()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllSeasonIdsSeasonNumbersAndTVShowNames_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new List<SeasonsAndTVShowNameViewModel>();
@@ -142,11 +126,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllSeasonIdsSeasonNumbersAndTVShowNamesShouldReturnCorrectValues()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllSeasonIdsSeasonNumbersAndTVShowNames_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -194,14 +173,6 @@ namespace MovieDatabase.Tests
             var season1Id = season1.Id;
             var season2Id = season2.Id;
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new List<SeasonsAndTVShowNameViewModel>
@@ -234,21 +205,9 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllTVShowsShouldReturnEmptyListIfDbIsEmpty()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllTVShows_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
             watchlistService.Setup(w => w.TVShowIsInUserWatchlistAsync("", ""))
                         .ReturnsAsync(false);
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new List<TVShowAllViewModel>();
@@ -261,11 +220,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllTVShowsShouldReturnAllTVShowsProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllTVShows_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -310,16 +264,9 @@ namespace MovieDatabase.Tests
             await dbContext.Seasons.AddAsync(season2);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
             watchlistService.Setup(w => w.TVShowIsInUserWatchlistAsync("", ""))
                         .ReturnsAsync(false);
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new List<TVShowAllViewModel>
@@ -374,11 +321,6 @@ namespace MovieDatabase.Tests
         [InlineData("genre3", null, 0)]
         public async Task FilterTVShowsByGenreShouldFilterTVShowsProperly(string genre, string expectedTVShow, int expectedCount)
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "FilterTVShowsByGenre_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             await dbContext.Genres.AddRangeAsync(new[]
             {
                 new Genre{ Name = "genre1" },
@@ -408,15 +350,6 @@ namespace MovieDatabase.Tests
                     Watchlisted = false,
                 },
             };
-
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var actualResult = await tvShowService.FilterTVShowsByGenreAsync(input, genre);
@@ -431,11 +364,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task FilterTVShowsByGenreShouldReturnInputIfGenreGivenIsNotInDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "FilterTVShowsByGenre_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<TVShowAllViewModel>
             {
                 new TVShowAllViewModel
@@ -457,18 +385,7 @@ namespace MovieDatabase.Tests
                     Watchlisted = false,
                 },
             };
-
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
-
-            var expectedResult = new List<TVShowAllViewModel>();
 
             var actualResult = await tvShowService.FilterTVShowsByGenreAsync(input, "genre");
 
@@ -478,11 +395,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderTVShowsShouldReturnTVShowsOrderedByNewest()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderTVShows_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<TVShowAllViewModel>
             {
                 new TVShowAllViewModel
@@ -507,14 +419,6 @@ namespace MovieDatabase.Tests
                 },
             };
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var actualResult = tvShowService.OrderTVShows(input, GlobalConstants.moviesTvShowsOrderByRelease);
@@ -527,11 +431,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderTVShowsShouldReturnTVShowsOrderedByRating()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderTVShows_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<TVShowAllViewModel>
             {
                 new TVShowAllViewModel
@@ -556,14 +455,6 @@ namespace MovieDatabase.Tests
                 },
             };
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var actualResult = tvShowService.OrderTVShows(input, GlobalConstants.moviesTvShowsOrderByRating);
@@ -576,11 +467,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderTVShowsShouldReturnTVShowsOrderedByPopularity()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderTVShows_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<TVShowAllViewModel>
             {
                 new TVShowAllViewModel
@@ -605,14 +491,6 @@ namespace MovieDatabase.Tests
                 },
             };
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var actualResult = tvShowService.OrderTVShows(input, GlobalConstants.moviesTvShowsOrderByPopularity);
@@ -625,11 +503,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderTVShowsShouldReturnUnreleasedTVShowsOrderedByOldest()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderTVShows_Db_4")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<TVShowAllViewModel>
             {
                 new TVShowAllViewModel
@@ -664,14 +537,6 @@ namespace MovieDatabase.Tests
                 },
             };
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var actualResult = tvShowService.OrderTVShows(input, GlobalConstants.moviesTvShowsShowComingSoon);
@@ -684,11 +549,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderTVShowsShouldReturnInputIfOrderByIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderTVShows_Db_5")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<TVShowAllViewModel>
             {
                 new TVShowAllViewModel
@@ -713,14 +573,6 @@ namespace MovieDatabase.Tests
                 },
             };
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var actualResult = tvShowService.OrderTVShows(input, "invalid order by");
@@ -733,19 +585,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetTVShowAndDetailsByIdAsyncShouldThrowExceptionIfDbIsEmpty()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetTVShowAndDetailsById_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             await Assert.ThrowsAsync<NullReferenceException>(() => tvShowService.GetTVShowAndDetailsByIdAsync("id"));
@@ -754,11 +593,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetTVShowAndDetailsByIdAsyncShouldThrowExceptionIfIdIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetTVShowAndDetailsById_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -789,14 +623,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvShow2);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             await Assert.ThrowsAsync<NullReferenceException>(() => tvShowService.GetTVShowAndDetailsByIdAsync("invalid Id"));
@@ -805,11 +631,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetTVShowAndDetailsByIdShouldReturnCorrectModel()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetTVShowAndDetailsById_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "user1",
@@ -860,16 +681,9 @@ namespace MovieDatabase.Tests
             var tvShowId = tvShow1.Id;
             var seasonId = season1.Id;
 
-            var reviewService = new Mock<IReviewService>();
             reviewService.Setup(r => r.ReviewExistsAsync("", ""))
                         .ReturnsAsync(false);
-            var watchlistService = new Mock<IWatchlistService>();
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new TVShowDetailsViewModel
@@ -906,21 +720,9 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetSeasonAndDetailsByIdShouldThrowExceptionIfDbIsempty()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetSeasonAndDetails_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var reviewService = new Mock<IReviewService>();
             reviewService.Setup(r => r.ReviewExistsAsync("", ""))
                         .ReturnsAsync(false);
-            var watchlistService = new Mock<IWatchlistService>();
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             await Assert.ThrowsAsync<NullReferenceException>(() => tvShowService.GetSeasonAndDetailsByIdAsync("Id"));
@@ -929,11 +731,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetSeasonAndDetailsByIdShouldThrowExceptionIfIdIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetSeasonAndDetails_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "user1",
@@ -987,16 +784,9 @@ namespace MovieDatabase.Tests
             await dbContext.SeasonReviews.AddAsync(seasonReview);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
             reviewService.Setup(r => r.ReviewExistsAsync("", ""))
                         .ReturnsAsync(false);
-            var watchlistService = new Mock<IWatchlistService>();
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             await Assert.ThrowsAsync<NullReferenceException>(() => tvShowService.GetSeasonAndDetailsByIdAsync("invalid Id"));
@@ -1005,11 +795,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetSeasonAndDetailsByIdShouldReturnCorrectModel()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetSeasonAndDetails_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "user1",
@@ -1065,16 +850,9 @@ namespace MovieDatabase.Tests
 
             var seasonId = season1.Id;
 
-            var reviewService = new Mock<IReviewService>();
             reviewService.Setup(r => r.ReviewExistsAsync("", ""))
                         .ReturnsAsync(false);
-            var watchlistService = new Mock<IWatchlistService>();
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var expectedResult = new SeasonDetailsViewModel
@@ -1122,17 +900,12 @@ namespace MovieDatabase.Tests
         }
 
         [Theory]
-        [InlineData("tvShow1", "genre1", "name1", false, 1)]
-        [InlineData("tvShow2", "genre2", "name1", false, 2)]
-        [InlineData("tvShow2", "genre1", "name2", false, 3)]
-        [InlineData("tvShow2", "genre1", "name1", true, 4)]
-        public async Task CreateTVShowShouldReturnFalseIfProvidedGenreArtistOrTVShowNameIsInvalid(string tvShowName, string genreName, string creatorName, bool expectedResult, int n)
+        [InlineData("tvShow1", "genre1", "name1", false)]
+        [InlineData("tvShow2", "genre2", "name1", false)]
+        [InlineData("tvShow2", "genre1", "name2", false)]
+        [InlineData("tvShow2", "genre1", "name1", true)]
+        public async Task CreateTVShowShouldReturnFalseIfProvidedGenreArtistOrTVShowNameIsInvalid(string tvShowName, string genreName, string creatorName, bool expectedResult)
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"CreateTVShow_Db_{n}")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1158,14 +931,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvShow1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new CreateTVShowInputModel
@@ -1186,11 +951,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateTVShowShouldSetDefaultCoverAndTrailerIfNotProvided()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateTVShow_Db_5")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1206,14 +966,6 @@ namespace MovieDatabase.Tests
             await dbContext.Artists.AddAsync(artist1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new CreateTVShowInputModel
@@ -1239,19 +991,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task AddSeasonToTVShowShouldReturnFalseIfTVShowDoesntExist()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "AddSeasonToTVShow_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new AddSeasonInputModel
@@ -1272,11 +1011,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task AddSeasonToTVShowShouldReturnFalseIfTVShowNameIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "AddSeasonToTVShow_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1302,14 +1036,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvShow1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new AddSeasonInputModel
@@ -1330,11 +1056,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task AddSeasonToTVShowShouldReturnTrueAndAddSeasonProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "AddSeasonToTVShow_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1360,14 +1081,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvShow1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new AddSeasonInputModel
@@ -1394,11 +1107,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task AddRoleToTVShowSeasonShouldReturnFalseIfProvidedSeasonIdIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"AddRoleToTVShowSeason_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1433,14 +1141,6 @@ namespace MovieDatabase.Tests
             await dbContext.Seasons.AddAsync(season1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new AddSeasonRoleInputModel
@@ -1456,16 +1156,11 @@ namespace MovieDatabase.Tests
         }
 
         [Theory]
-        [InlineData("name3", 2, false)]
-        [InlineData("name1", 3, true)]
-        [InlineData("name2", 4, false)]
-        public async Task AddRoleToTVShowSeasonShouldReturnFalseIfProvidedArtistIsInvalid(string artistName, int n, bool expectedResult)
+        [InlineData("name3", false)]
+        [InlineData("name1", true)]
+        [InlineData("name2", false)]
+        public async Task AddRoleToTVShowSeasonShouldReturnFalseIfProvidedArtistIsInvalid(string artistName, bool expectedResult)
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"AddRoleToTVShowSeason_Db_{n}")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1517,14 +1212,6 @@ namespace MovieDatabase.Tests
 
             var season1Id = season1.Id;
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new AddSeasonRoleInputModel
@@ -1542,11 +1229,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task AddRoleToTVShowSeasonShouldAddRoleProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "AddRoleToTVShowSeason_Db_5")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1583,14 +1265,6 @@ namespace MovieDatabase.Tests
 
             var season1Id = season1.Id;
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new AddSeasonRoleInputModel
@@ -1610,16 +1284,11 @@ namespace MovieDatabase.Tests
         }
 
         [Theory]
-        [InlineData("genre2", "name1", false, 1)]
-        [InlineData("genre1", "name2", false, 2)]
-        [InlineData("genre1", "name1", true, 3)]
-        public async Task UpdateTVShowShouldReturnFalseIfProvidedGenreOrArtistIsInvalid(string genreName, string creatorName, bool expectedResult, int n)
+        [InlineData("genre2", "name1", false)]
+        [InlineData("genre1", "name2", false)]
+        [InlineData("genre1", "name1", true)]
+        public async Task UpdateTVShowShouldReturnFalseIfProvidedGenreOrArtistIsInvalid(string genreName, string creatorName, bool expectedResult)
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"UpdateTVShow_Db_{n}")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1647,14 +1316,6 @@ namespace MovieDatabase.Tests
 
             var id = tvShow1.Id;
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new UpdateTVShowInputModel
@@ -1676,11 +1337,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateTVShowShouldReturnFalseIfProvidedIdIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateTVShow_Db_4")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1706,14 +1362,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvShow1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new UpdateTVShowInputModel
@@ -1735,11 +1383,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateTVShowShouldUpdateProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateTVShow_Db_5")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var genre1 = new Genre
             {
                 Name = "genre1"
@@ -1778,14 +1421,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvShow1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new UpdateTVShowInputModel
@@ -1815,19 +1450,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateSeasonShouldReturnFalseIfTVShowDoesntExist()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateSeason_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new UpdateSeasonInputModel
@@ -1847,11 +1469,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateSeasonShouldReturnFalseIfSeasonDoesntExist()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateSeason_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -1872,14 +1489,6 @@ namespace MovieDatabase.Tests
             await dbContext.TVShows.AddAsync(tvShow1);
             await dbContext.SaveChangesAsync();
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new UpdateSeasonInputModel
@@ -1898,11 +1507,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateSeasonShouldReturnTrueAndUpdateSeasonProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateSeason_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -1953,14 +1557,6 @@ namespace MovieDatabase.Tests
 
             var season1Id = season1.Id;
 
-            var reviewService = new Mock<IReviewService>();
-            var watchlistService = new Mock<IWatchlistService>();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new TVShowsProfile());
-            });
-            var mapper = config.CreateMapper();
             var tvShowService = new TVShowService(dbContext, reviewService.Object, watchlistService.Object, mapper);
 
             var input = new UpdateSeasonInputModel

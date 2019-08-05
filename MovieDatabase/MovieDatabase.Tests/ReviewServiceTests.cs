@@ -16,14 +16,27 @@ namespace MovieDatabase.Tests
 {
     public class ReviewServiceTests
     {
+        private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
+
+        public ReviewServiceTests()
+        {
+            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                    .Options;
+
+            this.dbContext = new MovieDatabaseDbContext(options);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new ReviewsProfile());
+            });
+            this.mapper = config.CreateMapper();
+        }
+
         [Fact]
         public async Task IsValidMovieOrSeasonIdShouldReturnCorrectResult()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "IsValidMovieOrSeasonId_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -56,11 +69,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var seasonId = season1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var movieResult = await reviewService.IsValidMovieOrSeasonIdAsync(movieId);
@@ -75,11 +83,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task IsIdMovieOrSeasonIdShouldReturnCorrectResult()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "IsIdMovieOrSeasonId_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -112,11 +115,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var seasonId = season1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var movieResult = await reviewService.IsIdMovieOrSeasonIdAsync(movieId);
@@ -131,11 +129,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task ReviewExistsShouldReturnCorrectResult()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "ReviewExists_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -193,11 +186,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var seasonId = season1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var movieResult = await reviewService.ReviewExistsAsync(userId, movieId);
@@ -212,16 +200,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllMovieReviewsShouldReturnEmptyListWithEmptyDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllMovieReviews_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var expectedResult = new List<ReviewAllViewModel>();
@@ -234,11 +212,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllMovieReviewsShouldReturnAllReviewsProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllMovieReviews_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -292,11 +265,6 @@ namespace MovieDatabase.Tests
 
             var movieId = movie1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var expectedResult = new List<ReviewAllViewModel>
@@ -339,16 +307,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllSeasoReviewsShouldReturnEmptyListWithEmptyDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllSeasonReviews_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var expectedResult = new List<ReviewAllViewModel>();
@@ -361,11 +319,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllSeasonReviewsShouldReturnAllReviewsProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllSeasonReviews_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -415,11 +368,6 @@ namespace MovieDatabase.Tests
 
             var seasonId = season1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var expectedResult = new List<ReviewAllViewModel>
@@ -462,16 +410,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetMovieReviewShouldReturnNullWithEmptyDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetMovieReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var actualResult = await reviewService.GetMovieReviewAsync("userId", "movieId");
@@ -482,11 +420,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetMovieReviewShouldReturnCorrectModel()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetMovieReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -526,11 +459,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var expectedResult = new CreateReviewInputModel
@@ -551,16 +479,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetSeasonReviewShouldReturnNullWithEmptyDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetSeasonReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var actualResult = await reviewService.GetSeasonReviewAsync("userId", "seasonId");
@@ -571,11 +489,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetSeasonReviewShouldReturnCorrectModel()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetSeasonReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -604,11 +517,6 @@ namespace MovieDatabase.Tests
             var seasonId = season1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var expectedResult = new CreateReviewInputModel
@@ -629,11 +537,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateMovieReviewShouldReturnFalseIfReviewAlreadyExists()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateMovieReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -673,11 +576,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -696,11 +594,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateMovieReviewShouldCreateReviewProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateMovieReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -731,11 +624,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -759,11 +647,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateSeasonReviewShouldReturnFalseIfReviewAlreadyExists()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateSeasonReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -792,11 +675,6 @@ namespace MovieDatabase.Tests
             var seasonId = season1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -815,11 +693,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateSeasonReviewShouldCreateReviewProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateSeasonReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -839,11 +712,6 @@ namespace MovieDatabase.Tests
             var seasonId = season1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -867,11 +735,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateMovieReviewShouldReturnFalseIfReviewDoesntExist()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateMovieReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -903,11 +766,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -926,11 +784,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateMovieReviewShouldUpdateReviewProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateMovieReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -970,11 +823,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -998,11 +846,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateSeasonReviewShouldReturnFalseIfReviewDoesntExist()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateSeasonReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -1023,11 +866,6 @@ namespace MovieDatabase.Tests
             var seasonId = season1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -1046,11 +884,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateSeasonReviewShouldUpdateReviewProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "UpdateSeasonReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -1079,11 +912,6 @@ namespace MovieDatabase.Tests
             var seasonId = season1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var input = new CreateReviewInputModel
@@ -1107,11 +935,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task DeleteMovieReviewShouldReturnFalseIfReviewDoesntExist()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "DeleteMovieReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -1143,11 +966,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var actualResult = await reviewService.DeleteMovieReviewAsync(userId, movieId);
@@ -1159,11 +977,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task DeleteMovieReviewShouldUpdateReviewProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "DeleteMovieReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -1203,11 +1016,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             Assert.True(dbContext.MovieReviews.Count() == 1);
@@ -1221,11 +1029,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task DeleteSeasonReviewShouldReturnFalseIfReviewDoesntExist()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "DeleteSeasonReview_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -1246,11 +1049,6 @@ namespace MovieDatabase.Tests
             var seasonId = season1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             var actualResult = await reviewService.DeleteSeasonReviewAsync(userId, seasonId);
@@ -1262,11 +1060,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task DeleteSeasonReviewShouldUpdateReviewProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "DeleteSeasonReview_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -1295,11 +1088,6 @@ namespace MovieDatabase.Tests
             var seasonId = season1.Id;
             var userId = user1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ReviewsProfile());
-            });
-            var mapper = config.CreateMapper();
             var reviewService = new ReviewService(dbContext, mapper);
 
             Assert.True(dbContext.SeasonReviews.Count() == 1);

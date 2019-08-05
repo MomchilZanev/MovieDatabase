@@ -6,6 +6,7 @@ using MovieDatabase.Models.InputModels.Genre;
 using MovieDatabase.Models.ViewModels.Genre;
 using MovieDatabase.Services;
 using MovieDatabase.Web.AutoMapperProfiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,20 +16,27 @@ namespace MovieDatabase.Tests
 {
     public class GenreServiceTests
     {
-        [Fact]
-        public async Task GetAllGenreNamesShouldReturnEmptyListIfDbIsEmpty()
+        private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
+
+        public GenreServiceTests()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllGenreNames_Db_1")
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                     .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
+
+            this.dbContext = new MovieDatabaseDbContext(options);
 
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new GenresProfile());
             });
-            var mapper = config.CreateMapper();
+            this.mapper = config.CreateMapper();
+        }
 
+        [Fact]
+        public async Task GetAllGenreNamesShouldReturnEmptyListIfDbIsEmpty()
+        {
             var expectedResult = new List<GenreAllViewModel>();
 
             var genreService = new GenreService(dbContext, mapper);
@@ -41,11 +49,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllGenreNamesShouldReturnGenresProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllGenreNames_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             await dbContext.Genres.AddRangeAsync(new List<Genre>
             {
                 new Genre{ Name = "genre1" },
@@ -53,12 +56,6 @@ namespace MovieDatabase.Tests
                 new Genre{ Name = "genre3" },
             });
             await dbContext.SaveChangesAsync();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new GenresProfile());
-            });
-            var mapper = config.CreateMapper();
 
             var expectedResult = new List<GenreAllViewModel>
             {
@@ -80,21 +77,10 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateGenreAsyncShouldAddGenreToDbIfInputIsValid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateGenre_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new CreateGenreInputModel
             {
                 Name = "genre1"
             };
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new GenresProfile());
-            });
-            var mapper = config.CreateMapper();
 
             var genreService = new GenreService(dbContext, mapper);
 
@@ -108,10 +94,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateGenreAsyncShouldReturnFalseIfGenreWithSameNameExists()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateGenre_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
             await dbContext.Genres.AddAsync(new Genre { Name = "genre1" });
             await dbContext.SaveChangesAsync();
 
@@ -119,12 +101,6 @@ namespace MovieDatabase.Tests
             {
                 Name = "genre1"
             };
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new GenresProfile());
-            });
-            var mapper = config.CreateMapper();
 
             var genreService = new GenreService(dbContext, mapper);
 

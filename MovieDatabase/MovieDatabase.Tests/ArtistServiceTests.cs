@@ -17,20 +17,27 @@ namespace MovieDatabase.Tests
 {
     public class ArtistServiceTests
     {
-        [Fact]
-        public async Task GetAllArtistsShouldReturnEmptyListWithEmptyDb()
+        private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
+
+        public ArtistServiceTests()
         {
             var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllArtists_Db_1")
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                     .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
+
+            this.dbContext = new MovieDatabaseDbContext(options);
 
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new ArtistsProfile());
             });
-            var mapper = config.CreateMapper();
+            this.mapper = config.CreateMapper();
+        }
 
+        [Fact]
+        public async Task GetAllArtistsShouldReturnEmptyListWithEmptyDb()
+        {
             var expectedResult = new List<ArtistAllViewModel>();
 
             var artistService = new ArtistService(dbContext, mapper);
@@ -43,11 +50,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllArtistsShouldReturnAllArtistsProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllArtists_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -98,11 +100,6 @@ namespace MovieDatabase.Tests
                 }
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.GetAllArtistsAsync();
@@ -120,17 +117,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllArtistNamesShouldReturnEmptyListWithEmptyDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllArtistNames_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
-
             var expectedResult = new List<ArtistNameViewModel>();
 
             var artistService = new ArtistService(dbContext, mapper);
@@ -143,11 +129,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetAllArtistNamesShoulReturnNamesProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetAllArtistNames_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -178,11 +159,6 @@ namespace MovieDatabase.Tests
                 }
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.GetAllArtistsAsync();
@@ -197,17 +173,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetArtistFullBioByIdAsyncShouldReturnEmptyModelWithEmptyDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetArtistFullBioById_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
-
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.GetArtistFullBioByIdAsync("id");
@@ -218,11 +183,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetArtistFullBioByIdAsyncShouldReturnEmptyIfIdIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetArtistFullBioById_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -232,12 +192,6 @@ namespace MovieDatabase.Tests
             };
             await dbContext.Artists.AddAsync(artist1);
             await dbContext.SaveChangesAsync();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
 
             var artistService = new ArtistService(dbContext, mapper);
 
@@ -249,11 +203,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetArtistFullBioByIdAsyncShouldReturnCorrectModelIfDataIsValid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetArtistFullBioById_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -265,12 +214,6 @@ namespace MovieDatabase.Tests
             await dbContext.SaveChangesAsync();
 
             var id = dbContext.Artists.First().Id;
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
 
             var artistService = new ArtistService(dbContext, mapper);
 
@@ -285,17 +228,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetArtistAndDetailsByIdAsyncShouldReturnEmptyModelIfDbIsEmpty()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetArtistAndDetailsById_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
-
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.GetArtistAndDetailsByIdAsync("id");
@@ -306,11 +238,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetArtistAndDetailsByIdAsyncShouldReturnEmptyModelIfIdIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetArtistAndDetailsById_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -320,12 +247,6 @@ namespace MovieDatabase.Tests
             };
             await dbContext.Artists.AddAsync(artist1);
             await dbContext.SaveChangesAsync();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
 
             var artistService = new ArtistService(dbContext, mapper);
 
@@ -337,11 +258,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetArtistAndDetailsByIdAsyncShouldReturnCorrectModelIfDataIsValid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetArtistAndDetailsById_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -373,12 +289,6 @@ namespace MovieDatabase.Tests
 
             var id = dbContext.Artists.First().Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
-
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.GetArtistAndDetailsByIdAsync(id);
@@ -398,11 +308,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderArtistsShouldReturnArtistsOrderedByYoungest()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderArtists_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<ArtistAllViewModel>()
             {
                 new ArtistAllViewModel
@@ -423,11 +328,6 @@ namespace MovieDatabase.Tests
                 },                
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = artistService.OrderArtists(input, GlobalConstants.artistsOrderByYoungest);
@@ -439,11 +339,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderArtistsShouldReturnArtistsOrderedByOldest()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderArtists_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<ArtistAllViewModel>()
             {
                 new ArtistAllViewModel
@@ -464,11 +359,6 @@ namespace MovieDatabase.Tests
                 },                
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = artistService.OrderArtists(input, GlobalConstants.artistsOrderByOldest);
@@ -480,11 +370,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderArtistsShouldReturnArtistsOrderedByMostPopular()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderArtists_Db_3")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<ArtistAllViewModel>()
             {
                 new ArtistAllViewModel
@@ -505,11 +390,6 @@ namespace MovieDatabase.Tests
                 },                
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = artistService.OrderArtists(input, GlobalConstants.artistsOrderByMostPopular);
@@ -521,11 +401,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public void OrderArtistsShouldReturnInputIfOrderByIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "OrderArtists_Db_4")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new List<ArtistAllViewModel>()
             {
                 new ArtistAllViewModel
@@ -546,11 +421,6 @@ namespace MovieDatabase.Tests
                 },
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = artistService.OrderArtists(input, "something invalid");
@@ -562,11 +432,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateArtistAsyncShouldAddArtistToDbIfInputIsValid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateArtist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new CreateArtistInputModel
             {
                 FullName = "artist1",
@@ -575,11 +440,6 @@ namespace MovieDatabase.Tests
                 PhotoLink = "photo1",
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.CreateArtistAsync(input);
@@ -595,11 +455,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task CreateArtistAsyncShouldReturnFalseIfArtistWithSameNameBiographyAndBDateAlreadyExists()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "CreateArtist_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new CreateArtistInputModel
             {
                 FullName = "artist1",
@@ -617,11 +472,6 @@ namespace MovieDatabase.Tests
             });
             await dbContext.SaveChangesAsync();
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.CreateArtistAsync(input);
@@ -636,11 +486,6 @@ namespace MovieDatabase.Tests
         [InlineData("     ", 5)]
         public async Task CreateArtistAsyncShouldSetPhotoLinkIfNoneIsProvided(string photoLink, int n)
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"CreateArtist_Db_{n}")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var input = new CreateArtistInputModel
             {
                 FullName = "artist1",
@@ -649,11 +494,6 @@ namespace MovieDatabase.Tests
                 PhotoLink = photoLink,
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.CreateArtistAsync(input);
@@ -666,11 +506,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateArtistAsyncShouldUpdateArtistProperlyIfValidDataIsEntered()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"UpdateArtist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist = new Artist
             {
                 FullName = "artist1",
@@ -690,11 +525,6 @@ namespace MovieDatabase.Tests
                 PhotoLink = "photo2",
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.UpdateArtistAsync(input);
@@ -710,11 +540,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task UpdateArtistAsyncShouldReturnFalseIfIdIsInvalidOrDbIsEmpty()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"UpdateArtist_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist = new Artist
             {
                 FullName = "artist1",
@@ -734,11 +559,6 @@ namespace MovieDatabase.Tests
                 PhotoLink = "photo2",
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.UpdateArtistAsync(input);
@@ -747,16 +567,11 @@ namespace MovieDatabase.Tests
         }
 
         [Theory]
-        [InlineData(null, 3)]
-        [InlineData("", 4)]
-        [InlineData("     ", 5)]
-        public async Task UpdateArtistAsyncShouldSwitchPhotoLinkToDefaultImgaeIfPreviousIsRemoved(string photoLink, int n)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("     ")]
+        public async Task UpdateArtistAsyncShouldSwitchPhotoLinkToDefaultImgaeIfPreviousIsRemoved(string photoLink)
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: $"UpdateArtist_Db_{n}")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist = new Artist
             {
                 FullName = "artist1",
@@ -776,11 +591,6 @@ namespace MovieDatabase.Tests
                 PhotoLink = photoLink,
             };
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new ArtistsProfile());
-            });
-            var mapper = config.CreateMapper();
             var artistService = new ArtistService(dbContext, mapper);
 
             var actualResult = await artistService.UpdateArtistAsync(input);

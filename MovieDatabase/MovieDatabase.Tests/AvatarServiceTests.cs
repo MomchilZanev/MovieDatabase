@@ -3,6 +3,7 @@ using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Services;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,14 +12,20 @@ namespace MovieDatabase.Tests
 {
     public class AvatarServiceTests
     {
+        private readonly MovieDatabaseDbContext dbContext;
+
+        public AvatarServiceTests()
+        {
+            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                    .Options;
+
+            this.dbContext = new MovieDatabaseDbContext(options);
+        }
+
         [Fact]
         public async Task GetUserAvatarLinkShouldReturnDefaultImageIfIdIsInvalid()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetUserAvatarLink_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user = new MovieDatabaseUser
             {
                 AvatarLink = "avatar",
@@ -38,11 +45,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetUserAvatarLinkShouldReturnImageProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetUserAvatarLink_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user = new MovieDatabaseUser
             {
                 AvatarLink = "avatar",

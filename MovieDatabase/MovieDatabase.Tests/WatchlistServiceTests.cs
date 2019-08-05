@@ -15,14 +15,27 @@ namespace MovieDatabase.Tests
 {
     public class WatchlistServiceTests
     {
+        private readonly MovieDatabaseDbContext dbContext;
+        private readonly IMapper mapper;
+
+        public WatchlistServiceTests()
+        {
+            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                    .Options;
+
+            this.dbContext = new MovieDatabaseDbContext(options);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new WatchlistProfile());
+            });
+            this.mapper = config.CreateMapper();            
+        }
+
         [Fact]
         public async Task IsValidMovieOrTVShowIdShouldReturnCorrectResult()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "IsValidMovieOrTvShowId_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -57,11 +70,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var tvShowId = tvShow1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             var movieResult = await watchlistService.IsValidMovieOrTVShowIdAsync(movieId);
@@ -76,11 +84,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task IsIdMovieOrTVShowIdShouldReturnCorrectResult()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "IsIdMovieOrTVShowId_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var artist1 = new Artist
             {
                 FullName = "name1",
@@ -115,11 +118,6 @@ namespace MovieDatabase.Tests
             var movieId = movie1.Id;
             var tvShowId = tvShow1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             var movieResult = await watchlistService.IsIdMovieOrTVShowIdAsync(movieId);
@@ -134,11 +132,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task MovieIsInUserWatchlistShouldReturnCorrectResult()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "MovieIsInUserWatchlist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -176,11 +169,6 @@ namespace MovieDatabase.Tests
             var userId = user1.Id;
             var movieId = movie1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             var movieResult = await watchlistService.MovieIsInUserWatchlistAsync(userId, movieId);
@@ -195,11 +183,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task TVShowIsInUserWatchlistShouldReturnCorrectResult()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "TVShowIsInUserWatchlist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -235,11 +218,6 @@ namespace MovieDatabase.Tests
             var userId = user1.Id;
             var tvShowId = tvShow1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             var tvShowResult = await watchlistService.TVShowIsInUserWatchlistAsync(userId, tvShowId);
@@ -254,16 +232,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetItemsInUserWatchlistShouldReturnEmptyListWithEmptyDb()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetItemsInUserWatchlist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             var expectedResult = new List<WatchlistAllViewModel>();
@@ -276,11 +244,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task GetItemsInUserWatchlistShouldReturnWatchlistProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "GetItemsInUserWatchlist_Db_2")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -374,11 +337,6 @@ namespace MovieDatabase.Tests
             var movie1Id = movie1.Id;
             var tvShow1Id = tvShow1.Id;            
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             var expectedResult = new List<WatchlistAllViewModel>
@@ -429,11 +387,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task AddMovieToUserWatchlistShouldShouldAddMovieTouserWatchlistProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "AddMovieToUserWatchlist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -465,11 +418,6 @@ namespace MovieDatabase.Tests
             var userId = user1.Id;
             var movieId = movie1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             Assert.True(dbContext.MovieUsers.Count() == 0);
@@ -485,11 +433,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task AddTVShowToUserWatchlistShouldShouldAddMovieTouserWatchlistProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "AddTVShowToUserWatchlist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -519,11 +462,6 @@ namespace MovieDatabase.Tests
             var userId = user1.Id;
             var tvShowId = tvShow1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             Assert.True(dbContext.TVShowUsers.Count() == 0);
@@ -539,11 +477,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task RemoveMovieFromUserWatchlistShouldShouldRemoveMovieFromWatchlistProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "RemoveMovieFromUserWatchlist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -581,11 +514,6 @@ namespace MovieDatabase.Tests
             var userId = user1.Id;
             var movieId = movie1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             Assert.True(dbContext.MovieUsers.Count() == 1);
@@ -598,11 +526,6 @@ namespace MovieDatabase.Tests
         [Fact]
         public async Task RemoveTVShowFromUserWatchlistShouldShouldRemoveMovieFromWatchlistProperly()
         {
-            var options = new DbContextOptionsBuilder<MovieDatabaseDbContext>()
-                    .UseInMemoryDatabase(databaseName: "RemoveTVShowFromUserWatchlist_Db_1")
-                    .Options;
-            var dbContext = new MovieDatabaseDbContext(options);
-
             var user1 = new MovieDatabaseUser
             {
                 UserName = "username",
@@ -638,11 +561,6 @@ namespace MovieDatabase.Tests
             var userId = user1.Id;
             var tvShowId = tvShow1.Id;
 
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new WatchlistProfile());
-            });
-            var mapper = config.CreateMapper();
             var watchlistService = new WatchlistService(dbContext, mapper);
 
             Assert.True(dbContext.TVShowUsers.Count() == 1);

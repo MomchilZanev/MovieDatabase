@@ -10,7 +10,7 @@ using MovieDatabase.Data;
 namespace MovieDatabase.Data.Migrations
 {
     [DbContext(typeof(MovieDatabaseDbContext))]
-    [Migration("20190717150121_InitialCreate")]
+    [Migration("20190806100204_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,7 +216,8 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("DirectorId")
                         .IsRequired();
 
-                    b.Property<string>("GenreId");
+                    b.Property<string>("GenreId")
+                        .IsRequired();
 
                     b.Property<int>("Length");
 
@@ -419,7 +420,8 @@ namespace MovieDatabase.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(1000);
 
-                    b.Property<string>("GenreId");
+                    b.Property<string>("GenreId")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -504,7 +506,8 @@ namespace MovieDatabase.Data.Migrations
 
                     b.HasOne("MovieDatabase.Domain.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("GenreId");
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MovieDatabase.Domain.MovieReview", b =>
@@ -589,7 +592,8 @@ namespace MovieDatabase.Data.Migrations
 
                     b.HasOne("MovieDatabase.Domain.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("GenreId");
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MovieDatabase.Domain.TVShowUser", b =>

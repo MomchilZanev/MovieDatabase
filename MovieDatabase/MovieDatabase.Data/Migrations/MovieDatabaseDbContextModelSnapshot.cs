@@ -214,7 +214,8 @@ namespace MovieDatabase.Data.Migrations
                     b.Property<string>("DirectorId")
                         .IsRequired();
 
-                    b.Property<string>("GenreId");
+                    b.Property<string>("GenreId")
+                        .IsRequired();
 
                     b.Property<int>("Length");
 
@@ -417,7 +418,8 @@ namespace MovieDatabase.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(1000);
 
-                    b.Property<string>("GenreId");
+                    b.Property<string>("GenreId")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -502,7 +504,8 @@ namespace MovieDatabase.Data.Migrations
 
                     b.HasOne("MovieDatabase.Domain.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("GenreId");
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MovieDatabase.Domain.MovieReview", b =>
@@ -587,7 +590,8 @@ namespace MovieDatabase.Data.Migrations
 
                     b.HasOne("MovieDatabase.Domain.Genre", "Genre")
                         .WithMany()
-                        .HasForeignKey("GenreId");
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MovieDatabase.Domain.TVShowUser", b =>

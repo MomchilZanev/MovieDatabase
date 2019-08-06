@@ -207,7 +207,7 @@ namespace MovieDatabase.Data.Migrations
                     ReleaseDate = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(maxLength: 1000, nullable: false),
                     Length = table.Column<int>(nullable: false),
-                    GenreId = table.Column<string>(nullable: true),
+                    GenreId = table.Column<string>(nullable: false),
                     CoverImageLink = table.Column<string>(nullable: false),
                     TrailerLink = table.Column<string>(nullable: false),
                     DirectorId = table.Column<string>(nullable: false)
@@ -226,7 +226,7 @@ namespace MovieDatabase.Data.Migrations
                         column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -236,7 +236,7 @@ namespace MovieDatabase.Data.Migrations
                     Id = table.Column<string>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Description = table.Column<string>(maxLength: 1000, nullable: false),
-                    GenreId = table.Column<string>(nullable: true),
+                    GenreId = table.Column<string>(nullable: false),
                     CoverImageLink = table.Column<string>(nullable: false),
                     TrailerLink = table.Column<string>(nullable: false),
                     CreatorId = table.Column<string>(nullable: false)
@@ -255,7 +255,7 @@ namespace MovieDatabase.Data.Migrations
                         column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

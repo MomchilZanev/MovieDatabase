@@ -58,11 +58,11 @@ namespace MovieDatabase.Services
 
             if (artistFromDb != null)
             {
-                foreach (var movieRole in artistFromDb.MovieRoles)
+                foreach (var movieRole in artistFromDb.MovieRoles.OrderBy(movie => movie.Movie.Name))
                 {
                     artistDetailsViewModel.MovieRoles.Add(movieRole.Movie.Name, movieRole.CharacterPlayed);
                 }
-                foreach (var seasonRole in artistFromDb.SeasonRoles)
+                foreach (var seasonRole in artistFromDb.SeasonRoles.OrderBy(season => season.Season.TVShow.Name).ThenBy(season => season.Season.SeasonNumber))
                 {
                     artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + GlobalConstants._Season_ + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
                 }

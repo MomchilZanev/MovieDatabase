@@ -22,8 +22,8 @@ namespace MovieDatabase.Web.AutoMapperProfiles
             CreateMap<Artist, ArtistFullBioViewModel>();
 
             CreateMap<Artist, ArtistDetailsViewModel>()
-                .ForMember(x => x.MoviesDirected, y => y.MapFrom(src => src.MoviesDirected.Select(m => m.Name).ToList()))
-                .ForMember(x => x.TVShowsCreated, y => y.MapFrom(src => src.TVShowsCreated.Select(t => t.Name).ToList()))
+                .ForMember(x => x.MoviesDirected, y => y.MapFrom(src => src.MoviesDirected.OrderBy(movie => movie.Name).Select(movie => movie.Name).ToList()))
+                .ForMember(x => x.TVShowsCreated, y => y.MapFrom(src => src.TVShowsCreated.OrderBy(tvShow => tvShow.Name).Select(tvShow => tvShow.Name).ToList()))
                 .ForMember(x => x.MovieRoles, y => y.MapFrom(src => new Dictionary<string, string>()))
                 .ForMember(x => x.SeasonRoles, y => y.MapFrom(src => new Dictionary<string, string>()));
 

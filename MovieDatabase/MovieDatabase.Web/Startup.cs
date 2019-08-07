@@ -7,16 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Services;
 using MovieDatabase.Services.Contracts;
-using MovieDatabase.Web.AutoMapperProfiles;
 using MovieDatabase.Web.Middleware;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MovieDatabase.Web
 {

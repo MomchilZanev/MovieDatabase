@@ -14,15 +14,15 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<MovieDatabaseUser> _signInManager;
-        private readonly UserManager<MovieDatabaseUser> _userManager;
-        private readonly ILogger<RegisterModel> _logger;
+        private readonly SignInManager<MovieDatabaseUser> signInManager;
+        private readonly UserManager<MovieDatabaseUser> userManager;
+        private readonly ILogger<RegisterModel> logger;
 
         public RegisterModel(UserManager<MovieDatabaseUser> userManager, SignInManager<MovieDatabaseUser> signInManager, ILogger<RegisterModel> logger)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.logger = logger;
         }
 
         [BindProperty]
@@ -33,19 +33,17 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [StringLength(25, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [StringLength(ValidationConstants.userNameMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.userNameMinimumLength)]
             [Display(Name = "User Name")]
             public string UserName { get; set; }
 
             [Required]
             [EmailAddress]
-            [Display(Name = "Email")]
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [StringLength(ValidationConstants.userPasswordMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.userPasswordMinimumLength)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
@@ -66,22 +64,22 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account
             {
                 var user = new MovieDatabaseUser { UserName = Input.UserName, Email = Input.Email, AvatarLink = GlobalConstants.noUserAvatar };
 
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await userManager.CreateAsync(user, Input.Password);
 
-                if (_userManager.Users.Count() == 1)
+                if (userManager.Users.Count() == 1)
                 {
-                    await _userManager.AddToRoleAsync(user, GlobalConstants.adminRoleName);
+                    await userManager.AddToRoleAsync(user, GlobalConstants.adminRoleName);
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(user, GlobalConstants.userRoleName);
+                    await userManager.AddToRoleAsync(user, GlobalConstants.userRoleName);
                 }
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    logger.LogInformation("User created a new account with password.");
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    await signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)

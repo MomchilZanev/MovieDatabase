@@ -31,10 +31,7 @@ namespace MovieDatabase.Web.Controllers
         {
             var artistsAllViewModel = await artistService.GetAllArtistsAsync();
 
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                artistsAllViewModel = artistService.OrderArtists(artistsAllViewModel, orderBy);
-            }
+            artistsAllViewModel = artistService.OrderArtists(artistsAllViewModel, orderBy);
 
             return View(artistsAllViewModel);
         }

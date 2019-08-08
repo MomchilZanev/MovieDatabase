@@ -2,6 +2,14 @@
 {
     public class ValidationConstants
     {
+        #region User
+        public const int userNameMinimumLength = 3;
+        public const int userNameMaximumLength = 25;
+
+        public const int userPasswordMinimumLength = 3;
+        public const int userPasswordMaximumLength = 100;
+        #endregion
+
         #region Announcement
         public const int announcementTitleMinimumLength = 5;
         public const int announcementTitleMaximumLength = 200;

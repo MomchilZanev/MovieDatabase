@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="jumbotron mt-5 text-center bg-dark border border-warning" >
+<div class="jumbotron mt-5 text-center bg-dark border border-warning">
     @if (User.Identity.IsAuthenticated)
     {
         <h1 class="display-3" style="color:orangered">Welcome @User.Identity.Name</h1>

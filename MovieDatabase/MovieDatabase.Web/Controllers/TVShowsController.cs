@@ -25,14 +25,9 @@ namespace MovieDatabase.Web.Controllers
 
             var tvShowsAllViewModel = await tvShowService.GetAllTVShowsAsync(userId);
 
-            if (!string.IsNullOrEmpty(genreFilter))
-            {
-                tvShowsAllViewModel = await tvShowService.FilterTVShowsByGenreAsync(tvShowsAllViewModel, genreFilter);
-            }
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                tvShowsAllViewModel = tvShowService.OrderTVShows(tvShowsAllViewModel, orderBy);
-            }
+            tvShowsAllViewModel = await tvShowService.FilterTVShowsByGenreAsync(tvShowsAllViewModel, genreFilter);
+
+            tvShowsAllViewModel = tvShowService.OrderTVShows(tvShowsAllViewModel, orderBy);
 
             return View(tvShowsAllViewModel);
         }

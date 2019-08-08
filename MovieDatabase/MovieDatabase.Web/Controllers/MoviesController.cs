@@ -38,14 +38,9 @@ namespace MovieDatabase.Web.Controllers
 
             var moviesAllViewModel = await movieService.GetAllMoviesAsync(userId);
 
-            if (!string.IsNullOrEmpty(genreFilter))
-            {
-                moviesAllViewModel = await movieService.FilterMoviesByGenreAsync(moviesAllViewModel, genreFilter);
-            }
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                moviesAllViewModel = movieService.OrderMovies(moviesAllViewModel, orderBy);
-            }
+            moviesAllViewModel = await movieService.FilterMoviesByGenreAsync(moviesAllViewModel, genreFilter);
+
+            moviesAllViewModel = movieService.OrderMovies(moviesAllViewModel, orderBy);
 
             return View(moviesAllViewModel);
         }

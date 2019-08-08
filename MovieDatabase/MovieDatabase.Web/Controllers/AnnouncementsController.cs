@@ -17,10 +17,7 @@ namespace MovieDatabase.Web.Controllers
         {
             var allAnnouncementsViewModel = await announcementService.GetAllAnnouncementsAsync();
 
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                allAnnouncementsViewModel = announcementService.OrderAnnouncements(allAnnouncementsViewModel, orderBy);
-            }
+            allAnnouncementsViewModel = announcementService.OrderAnnouncements(allAnnouncementsViewModel, orderBy);
 
             return View(allAnnouncementsViewModel);
         }

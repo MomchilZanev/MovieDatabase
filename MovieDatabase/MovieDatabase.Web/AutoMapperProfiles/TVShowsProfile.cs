@@ -30,6 +30,7 @@ namespace MovieDatabase.Web.AutoMapperProfiles
                 .ForMember(x => x.Episodes, y => y.MapFrom(src => src.Seasons.Sum(s => s.Episodes)));
 
             CreateMap<Season, SeasonDetailsViewModel>()
+                .ForMember(x => x.TVShowId, y => y.MapFrom(src => src.TVShow.Id))
                 .ForMember(x => x.TVShow, y => y.MapFrom(src => src.TVShow.Name))
                 .ForMember(x => x.ReviewsCount, y => y.MapFrom(src => src.TotalReviews))
                 .ForMember(x => x.Cast, y => y.Ignore());

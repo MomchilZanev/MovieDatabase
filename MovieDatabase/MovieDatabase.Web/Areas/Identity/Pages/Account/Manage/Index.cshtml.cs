@@ -49,10 +49,6 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
             [EmailAddress]
             public string Email { get; set; }
 
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
-
             [MaxFileSize(ValidationConstants.userAvatarMaximumFileSizeInBytes, ErrorMessage = "Maximum allowed file size is {0} bytes")]
             public IFormFile Avatar { get; set; }
         }
@@ -67,14 +63,12 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
 
             var userName = await userManager.GetUserNameAsync(user);
             var email = await userManager.GetEmailAsync(user);
-            var phoneNumber = await userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
 
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
             };
 
             IsEmailConfirmed = await userManager.IsEmailConfirmedAsync(user);
@@ -110,17 +104,6 @@ namespace MovieDatabase.Web.Areas.Identity.Pages.Account.Manage
             if (avatar != null)
             {
                 await avatarService.ChangeUserAvatarAsync(user.Id, avatar);
-            }            
-
-            var phoneNumber = await userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    var userId = await userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
-                }
             }
 
             await signInManager.RefreshSignInAsync(user);

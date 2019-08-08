@@ -6,7 +6,7 @@
     ViewData["Title"] = "Season Details";
 }
 
-<h2 class="text-warning">@Model.TVShow Season @Model.SeasonNumber</h2>
+<h2 class="text-warning"><a class="text-warning" href="/TVShows/Details/@Model.TVShowId">@Model.TVShow</a> Season @Model.SeasonNumber</h2>
 
 <div class="d-flex justify-content-between text-warning ">
     <h5 class="font-weight-light mb-1"><b class="font-weight-bold" style="color:orangered">|</b> <i>@Model.ReleaseDate.ToString("dd MMMM yyyy")</i></h5>
@@ -20,7 +20,7 @@
         Episodes: <i class="font-weight-light">@Model.Episodes</i>
     </h4>
     <h4 class="text-left font-weight-bold" style="font-size:large">
-        Episode Length: <i class="font-weight-light">@Model.LengthPerEpisode</i>
+        Episode Length: <i class="font-weight-light">@Model.LengthPerEpisode minutes</i>
     </h4>
 </div>
 

@@ -17,6 +17,7 @@ namespace MovieDatabase.Models.ViewModels.TVShow
 
         public double Rating { get; set; }
 
+        public string TVShowId { get; set; }
         public string TVShow { get; set; }
 
         public List<SeasonCastViewModel> Cast { get; set; }

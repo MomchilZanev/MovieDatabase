@@ -28,7 +28,7 @@ namespace MovieDatabase.Web.AutoMapperProfiles
                 .ForMember(x => x.Director, y => y.Ignore())
                 .ForMember(x => x.Genre, y => y.Ignore())
                 .ForMember(x => x.CoverImageLink, y => y.MapFrom(src => (string.IsNullOrEmpty(src.CoverImageLink) || string.IsNullOrWhiteSpace(src.CoverImageLink) )? GlobalConstants.noImageLink : src.CoverImageLink))
-                .ForMember(x => x.TrailerLink, y => y.MapFrom(src => (string.IsNullOrEmpty(src.TrailerLink) || string.IsNullOrWhiteSpace(src.TrailerLink))? GlobalConstants.noTrailerLink : src.TrailerLink));
+                .ForMember(x => x.TrailerLink, y => y.MapFrom(src => (string.IsNullOrEmpty(src.TrailerLink) || string.IsNullOrWhiteSpace(src.TrailerLink))? GlobalConstants.noTrailerLink : src.TrailerLink.Replace("watch?v=", "embed/")));
 
             CreateMap<AddMovieRoleInputModel, MovieRole>()
                 .ForMember(x => x.Artist, y => y.Ignore())

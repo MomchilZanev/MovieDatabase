@@ -1,0 +1,14 @@
+﻿@if (!string.IsNullOrEmpty(Model.RandomReview.User))
+{
+    <div class="text-justify text-warning mt-2">
+        <h5 class="mb-0">User Review</h5>
+        <h5 style="color: #ffc700; font-size:x-large">★ <span style="font-size:large">@Model.RandomReview.Rating</span><span style="font-size:small">/10</span></h5>
+        <h5 style="font-size:medium">@Model.RandomReview.Date.ToString("dd MMMM yyyy") | by @Model.RandomReview.User</h5>
+
+        <div style="white-space: pre-wrap; font-size:large;" class="font-weight-light text-warning text-left mt-2 mb-1">@Model.RandomReview.Content</div>
+
+        <a href="/Reviews/All/@Model.Id" class="text-warning font-weight-bold">See all @Model.ReviewsCount user reviews >></a>
+    </div>
+
+    <hr class="mb-2" style="height:3px;border:none;background-color:orangered;" />
+}

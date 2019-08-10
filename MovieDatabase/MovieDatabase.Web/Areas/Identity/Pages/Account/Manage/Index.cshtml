@@ -36,6 +36,7 @@
             <div class="custom-file mb-3">
                 <input type="file" asp-for="Input.Avatar" accept="image/png, image/jpeg" class="custom-file-input" id="customFile">
                 <label class="custom-file-label" for="customFile">Change your avatar</label>
+                <span asp-validation-for="Input.Avatar" class="text-danger mb-5"></span>
             </div>
             <script>
                 $(".custom-file-input").on("change", function () {
@@ -43,9 +44,8 @@
                     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
                 });
             </script>
-            <span asp-validation-for="Input.Avatar" class="text-danger"></span>
 
-            <button id="update-profile-button" type="submit" class="btn btn-dark btn-outline-warning btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-dark btn-outline-warning btn-primary mt-2">Save</button>
         </form>
     </div>
 </div>

@@ -1,0 +1,93 @@
+﻿<div class="row">
+    <div class="col-6">
+        <div class="accordion text-warning" id="accordion1">
+            <div class="card bg-warning">
+                <div class="card-header bg-dark" id="headingOne">
+                    <h2 class="mb-0 text-center">
+                        <button class="btn btn-link text-warning font-weight-bold" style="font-size:x-large" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Movie Director:
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion1">
+                    <div class="card-body bg-dark">
+                        @foreach (var movie in Model.MoviesDirected)
+                        {
+                            <h4 class="text-center font-weight-light font-italic mb-3">@movie</h4>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-warning">
+                <div class="card-header bg-dark" id="headingTwo">
+                    <h2 class="mb-0 text-center">
+                        <button class="btn btn-link collapsed text-warning font-weight-bold" style="font-size:x-large" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            TV Show Creator:
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion1">
+                    <div class="card-body bg-dark">
+                        @foreach (var tvShow in Model.TVShowsCreated)
+                        {
+                            <h4 class="text-center font-weight-light font-italic mb-3">@tvShow</h4>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="accordion text-warning" id="accordion2">
+            <div class="card bg-warning">
+                <div class="card-header bg-dark" id="headingThree">
+                    <h2 class="mb-0 text-center">
+                        <button class="btn btn-link text-warning font-weight-bold" style="font-size:x-large" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Movie Roles:
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion2">
+                    <div class="card-body bg-dark">
+                        @foreach (var movieRole in Model.MovieRoles)
+                        {
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <h4 class="font-weight-light">@movieRole.Key</h4>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="font-weight-light">@movieRole.Value</h4>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-warning">
+                <div class="card-header bg-dark" id="headingFour">
+                    <h2 class="mb-0 text-center">
+                        <button class="btn btn-link collapsed text-warning font-weight-bold" style="font-size:x-large" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            TV Show Roles:
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion2">
+                    <div class="card-body bg-dark">
+                        @foreach (var seasonRole in Model.SeasonRoles)
+                        {
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <h4 class="font-weight-light">@seasonRole.Key</h4>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="font-weight-light">@seasonRole.Value</h4>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+﻿<div class="col-9">
+    <span class="text-justify ml-4" style="font-size:larger"><b>Born:</b> <i>@Model.BirthDate.ToString("MMMM dd, yyyy")</i></span>
+    @if (Model.Biography.Length <= GlobalConstants.artistDetailsMiniBiographyMaxCharLength)
+    {
+        <p class="font-weight-light text-left ml-4 mt-3" style="font-size:large">
+            @Model.Biography
+        </p>
+    }
+    else
+    {
+        <p class="font-weight-light text-left ml-4 mt-3" style="font-size:large">
+            @Model.Biography.Substring(0, GlobalConstants.artistDetailsMiniBiographyMaxCharLength)@GlobalConstants.fourDots <a class="font-weight-bold text-warning ml-2" href="/Artists/FullBio/@Model.Id">See full bio >></a>
+        </p>
+    }
+</div>

@@ -6,7 +6,7 @@
 
         public int SeasonNumber { get; set; }
 
-        public string TVShowName { get; set; }        
+        public string TVShowName { get; set; }
     }
 
 }

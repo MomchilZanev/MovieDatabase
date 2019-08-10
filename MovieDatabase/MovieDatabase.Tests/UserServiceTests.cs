@@ -101,7 +101,7 @@ namespace MovieDatabase.Tests
             };
 
             var adminRole = new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" };
-            
+
             await dbContext.Users.AddAsync(user);
             await dbContext.Roles.AddAsync(adminRole);
             await dbContext.SaveChangesAsync();

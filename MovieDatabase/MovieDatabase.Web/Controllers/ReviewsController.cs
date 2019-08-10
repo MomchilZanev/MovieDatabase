@@ -162,7 +162,7 @@ namespace MovieDatabase.Web.Controllers
                     return Redirect(GlobalConstants.redirectError);
                 }
 
-                return Redirect(redirectSeasonDetails +  input.Id);
+                return Redirect(redirectSeasonDetails + input.Id);
             }
             else
             { return Redirect(GlobalConstants.redirectError); }

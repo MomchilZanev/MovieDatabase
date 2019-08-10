@@ -19,7 +19,7 @@ namespace MovieDatabase.Models.InputModels.Announcement
 
         [Display(Name = "Image Link")]
         public string ImageLink { get; set; }
-        
+
         [Required]
         [Display(Name = "Official Article Link")]
         public string OfficialArticleLink { get; set; }

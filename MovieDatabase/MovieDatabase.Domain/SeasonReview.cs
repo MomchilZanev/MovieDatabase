@@ -12,7 +12,7 @@ namespace MovieDatabase.Domain
 
         [Required]
         public string UserId { get; set; }
-        public virtual MovieDatabaseUser User { get; set; }        
+        public virtual MovieDatabaseUser User { get; set; }
 
         [Required]
         [StringLength(ValidationConstants.reviewContentMaximumLength, MinimumLength = ValidationConstants.reviewContentMinimumLength)]

@@ -22,7 +22,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
             return View();
         }
 
-        [HttpPost]     
+        [HttpPost]
         public async Task<IActionResult> Create(CreateAnnouncementInputModel input)
         {
             if (!ModelState.IsValid)
@@ -33,7 +33,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
             if (!await announcementService.CreateAnnouncementAsync(input))
             {
                 return View(input);
-            }            
+            }
 
             return Redirect(redirectAnnuncementsAllAndOrder);
         }

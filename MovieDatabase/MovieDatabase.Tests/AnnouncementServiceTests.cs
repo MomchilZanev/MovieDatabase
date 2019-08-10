@@ -113,7 +113,7 @@ namespace MovieDatabase.Tests
         public void OrderAnnouncementsShouldReturnAnnouncementsOrderedByNewest()
         {
             var input = new List<AnnouncementViewModel>()
-            {                
+            {
                 new AnnouncementViewModel
                 {
                     Creator = "creator2",
@@ -164,7 +164,7 @@ namespace MovieDatabase.Tests
                     ImageLink = "image2",
                     Date = DateTime.Parse("21 July 2019"),
                     OfficialArticleLink = "article2"
-                },                
+                },
             };
 
             var announcementService = new AnnouncementService(dbContext, mapper);

@@ -22,7 +22,7 @@ namespace MovieDatabase.Web.ViewComponents
             {
                 return View(artistNamesAllViewModel);
             }
-            
+
             var selected = artistNamesAllViewModel.Single(x => x.FullName == selectedArtistName);
             var index = artistNamesAllViewModel.IndexOf(selected);
             var first = artistNamesAllViewModel[0];

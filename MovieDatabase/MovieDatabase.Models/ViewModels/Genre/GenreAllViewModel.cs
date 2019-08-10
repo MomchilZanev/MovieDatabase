@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MovieDatabase.Models.ViewModels.Genre
+﻿namespace MovieDatabase.Models.ViewModels.Genre
 {
     public class GenreAllViewModel
     {

@@ -21,8 +21,8 @@ namespace MovieDatabase.Services
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
-        }        
-        
+        }
+
         public async Task<List<AnnouncementViewModel>> GetAllAnnouncementsAsync()
         {
             var announcementsFromDb = await dbContext.Announcements.ToListAsync();
@@ -56,7 +56,7 @@ namespace MovieDatabase.Services
 
             await dbContext.Announcements.AddAsync(announcementFromDb);
             await dbContext.SaveChangesAsync();
-            
+
             return true;
         }
 

@@ -325,7 +325,7 @@ namespace MovieDatabase.Tests
                     BirthDate = DateTime.Parse("25 July 2019"),
                     PhotoLink = "photo1",
                     CareerProjects = 2,
-                },                
+                },
             };
 
             var artistService = new ArtistService(dbContext, mapper);
@@ -356,7 +356,7 @@ namespace MovieDatabase.Tests
                     BirthDate = DateTime.Parse("25 July 2018"),
                     PhotoLink = "photo1",
                     CareerProjects = 1,
-                },                
+                },
             };
 
             var artistService = new ArtistService(dbContext, mapper);
@@ -387,7 +387,7 @@ namespace MovieDatabase.Tests
                     BirthDate = DateTime.Parse("25 July 2019"),
                     PhotoLink = "photo1",
                     CareerProjects = 2,
-                },                
+                },
             };
 
             var artistService = new ArtistService(dbContext, mapper);
@@ -481,10 +481,10 @@ namespace MovieDatabase.Tests
         }
 
         [Theory]
-        [InlineData(null, 3)]
-        [InlineData("", 4)]
-        [InlineData("     ", 5)]
-        public async Task CreateArtistAsyncShouldSetPhotoLinkIfNoneIsProvided(string photoLink, int n)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("     ")]
+        public async Task CreateArtistAsyncShouldSetPhotoLinkIfNoneIsProvided(string photoLink)
         {
             var input = new CreateArtistInputModel
             {

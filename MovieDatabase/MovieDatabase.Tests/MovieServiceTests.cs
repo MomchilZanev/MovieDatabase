@@ -684,7 +684,7 @@ namespace MovieDatabase.Tests
             };
             await dbContext.Genres.AddAsync(genre1);
             await dbContext.Artists.AddAsync(artist1);
-            await dbContext.Movies.AddAsync(movie1);            
+            await dbContext.Movies.AddAsync(movie1);
             await dbContext.SaveChangesAsync();
 
             var movieService = new MovieService(dbContext, reviewService.Object, watchlistService.Object, mapper);

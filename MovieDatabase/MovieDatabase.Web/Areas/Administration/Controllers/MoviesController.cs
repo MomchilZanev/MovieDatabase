@@ -27,7 +27,7 @@ namespace MovieDatabase.Web.Areas.Administration.Controllers
             return View();
         }
 
-        [HttpPost]      
+        [HttpPost]
         public async Task<IActionResult> Create(CreateMovieInputModel input)
         {
             if (!ModelState.IsValid)

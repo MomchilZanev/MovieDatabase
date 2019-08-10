@@ -84,7 +84,7 @@ namespace MovieDatabase.Services
                 default:
                     return tvShowsAllViewModel.ToList();
             }
-        }        
+        }
 
         public async Task<TVShowDetailsViewModel> GetTVShowAndDetailsByIdAsync(string tvShowId)
         {
@@ -98,7 +98,7 @@ namespace MovieDatabase.Services
                 {
                     tvShowDetailsViewModel.Seasons.Add(season.Id, season.SeasonNumber);
                 }
-            }            
+            }
 
             return tvShowDetailsViewModel;
         }
@@ -178,7 +178,7 @@ namespace MovieDatabase.Services
 
             return true;
         }
-        
+
         public async Task<bool> AddRoleToTVShowSeasonAsync(AddSeasonRoleInputModel input)
         {
             if (!await dbContext.Seasons.AnyAsync(season => season.Id == input.SeasonId))
@@ -253,7 +253,7 @@ namespace MovieDatabase.Services
             }
 
             var tvShowFromDb = await dbContext.TVShows.SingleOrDefaultAsync(tvShow => tvShow.Name == input.TVShow);
-            
+
             var seasonFromDb = await dbContext.Seasons.SingleOrDefaultAsync(season => season.Id == input.Id);
             if (tvShowFromDb != seasonFromDb.TVShow)
             {

@@ -39,7 +39,7 @@ namespace MovieDatabase.Services
             var allArtistNames = mapper.Map<List<Artist>, List<ArtistNameViewModel>>(artistsFromDb);
 
             return allArtistNames;
-        }   
+        }
 
         public async Task<ArtistFullBioViewModel> GetArtistFullBioByIdAsync(string artistId)
         {
@@ -66,7 +66,7 @@ namespace MovieDatabase.Services
                 {
                     artistDetailsViewModel.SeasonRoles.Add(seasonRole.Season.TVShow.Name + GlobalConstants._Season_ + seasonRole.Season.SeasonNumber, seasonRole.CharacterPlayed);
                 }
-            }            
+            }
 
             return artistDetailsViewModel;
         }

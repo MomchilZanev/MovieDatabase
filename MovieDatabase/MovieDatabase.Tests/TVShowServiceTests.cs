@@ -290,7 +290,7 @@ namespace MovieDatabase.Tests
                     Rating = 0,
                     TotalReviews = 0,
                     Watchlisted = false,
-                },                                
+                },
             };
 
             var actualResult = await tvShowService.GetAllTVShowsAsync();

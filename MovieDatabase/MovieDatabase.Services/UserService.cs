@@ -45,7 +45,7 @@ namespace MovieDatabase.Services
             {
                 return false;
             }
-            
+
             await userManager.RemoveFromRoleAsync(userFromDb, GlobalConstants.userRoleName);
             await userManager.AddToRoleAsync(userFromDb, GlobalConstants.adminRoleName);
 

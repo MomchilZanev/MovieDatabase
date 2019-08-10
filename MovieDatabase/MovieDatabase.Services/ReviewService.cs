@@ -22,7 +22,7 @@ namespace MovieDatabase.Services
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
-        }        
+        }
 
         public async Task<bool> IsValidMovieOrSeasonIdAsync(string itemId)
         {
@@ -97,7 +97,7 @@ namespace MovieDatabase.Services
             return seasonReviewInputModel;
         }
 
-        public async Task<bool> CreateMovieReviewAsync(string userId , CreateReviewInputModel input)
+        public async Task<bool> CreateMovieReviewAsync(string userId, CreateReviewInputModel input)
         {
             if (await dbContext.MovieReviews.AnyAsync(movieReview => movieReview.MovieId == input.Id && movieReview.UserId == userId))
             {
@@ -199,6 +199,6 @@ namespace MovieDatabase.Services
             await dbContext.SaveChangesAsync();
 
             return true;
-        }    
+        }
     }
 }

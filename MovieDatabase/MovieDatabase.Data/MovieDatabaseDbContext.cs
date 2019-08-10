@@ -18,7 +18,7 @@ namespace MovieDatabase.Data
         public DbSet<MovieReview> MovieReviews { get; set; }
         public DbSet<MovieRole> MovieRoles { get; set; }
         public DbSet<MovieUser> MovieUsers { get; set; }
-        public DbSet<Season> Seasons { get; set; }        
+        public DbSet<Season> Seasons { get; set; }
         public DbSet<SeasonReview> SeasonReviews { get; set; }
         public DbSet<SeasonRole> SeasonRoles { get; set; }
         public DbSet<TVShow> TVShows { get; set; }

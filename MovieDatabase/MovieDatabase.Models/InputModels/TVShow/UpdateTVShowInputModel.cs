@@ -17,7 +17,7 @@ namespace MovieDatabase.Models.InputModels.TVShow
 
         [Required]
         [StringLength(ValidationConstants.tvShowDescriptionMaximumLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = ValidationConstants.tvShowDescriptionMinimumLength)]
-        public string Description { get; set; }     
+        public string Description { get; set; }
 
         [Display(Name = "Cover Image Link")]
         public string CoverImageLink { get; set; }

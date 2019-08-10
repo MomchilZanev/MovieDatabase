@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieDatabase.Models", "Mov
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieDatabase.Common", "MovieDatabase.Common\MovieDatabase.Common.csproj", "{EE0E1A11-8E84-40A5-9B96-B51B455E7DCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieDatabase.Tests", "MovieDatabase.Tests\MovieDatabase.Tests.csproj", "{07E1738E-8024-444C-BDCC-C2C93C3688AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieDatabase.Tests", "MovieDatabase.Tests\MovieDatabase.Tests.csproj", "{07E1738E-8024-444C-BDCC-C2C93C3688AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

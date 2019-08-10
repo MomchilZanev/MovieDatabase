@@ -13,7 +13,7 @@ namespace MovieDatabase.Services.Contracts
 
         Task<ArtistDetailsViewModel> GetArtistAndDetailsByIdAsync(string artistId);
 
-        Task<ArtistFullBioViewModel> GetArtistFullBioByIdAsync(string artistId);        
+        Task<ArtistFullBioViewModel> GetArtistFullBioByIdAsync(string artistId);
 
         List<ArtistAllViewModel> OrderArtists(List<ArtistAllViewModel> artistsAllViewModel, string orderBy);
 

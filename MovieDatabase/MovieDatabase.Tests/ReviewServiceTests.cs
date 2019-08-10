@@ -759,7 +759,7 @@ namespace MovieDatabase.Tests
                 CoverImageLink = "cover1",
                 TrailerLink = "trailer1",
             };
-            
+
             await dbContext.Movies.AddAsync(movie1);
             await dbContext.SaveChangesAsync();
 
@@ -859,7 +859,7 @@ namespace MovieDatabase.Tests
                 LengthPerEpisode = 29,
                 ReleaseDate = DateTime.Parse("28 October 2016"),
             };
-            
+
             await dbContext.Seasons.AddAsync(season1);
             await dbContext.SaveChangesAsync();
 

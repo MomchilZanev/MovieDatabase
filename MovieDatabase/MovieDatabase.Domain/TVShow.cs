@@ -17,7 +17,7 @@ namespace MovieDatabase.Domain
 
         [Required]
         [StringLength(ValidationConstants.tvShowNameMaximumLength, MinimumLength = ValidationConstants.tvShowNameMinimumLength)]
-        public string Name { get; set; }        
+        public string Name { get; set; }
 
         [Required]
         [StringLength(ValidationConstants.tvShowDescriptionMaximumLength, MinimumLength = ValidationConstants.tvShowDescriptionMinimumLength)]
@@ -43,6 +43,6 @@ namespace MovieDatabase.Domain
         public string CreatorId { get; set; }
         public virtual Artist Creator { get; set; }
 
-        public virtual ICollection<Season> Seasons { get; set; }        
+        public virtual ICollection<Season> Seasons { get; set; }
     }
 }

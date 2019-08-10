@@ -30,7 +30,7 @@ namespace MovieDatabase.Tests
             {
                 cfg.AddProfile(new WatchlistProfile());
             });
-            this.mapper = config.CreateMapper();            
+            this.mapper = config.CreateMapper();
         }
 
         [Fact]
@@ -335,7 +335,7 @@ namespace MovieDatabase.Tests
 
             var userId = user1.Id;
             var movie1Id = movie1.Id;
-            var tvShow1Id = tvShow1.Id;            
+            var tvShow1Id = tvShow1.Id;
 
             var watchlistService = new WatchlistService(dbContext, mapper);
 

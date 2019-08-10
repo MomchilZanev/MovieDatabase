@@ -19,7 +19,7 @@ namespace MovieDatabase.Models.CustomValidationAttributes
             }
 
             var file = value as IFormFile;
-            
+
             return file.Length <= _maxFileSize;
         }
 

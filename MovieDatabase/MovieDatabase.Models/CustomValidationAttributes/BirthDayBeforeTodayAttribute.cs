@@ -15,9 +15,9 @@ namespace MovieDatabase.Models.CustomValidationAttributes
 
             if (parseSucceeded)
             {
-                return birthDay <= DateTime.UtcNow; 
+                return birthDay <= DateTime.UtcNow;
             }
-            
+
             return false;
         }
     }

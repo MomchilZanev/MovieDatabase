@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MovieDatabase.Common;
 using MovieDatabase.Data;
 using MovieDatabase.Domain;
 using MovieDatabase.Services;
@@ -39,7 +40,7 @@ namespace MovieDatabase.Web
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 3;
+                options.Password.RequiredLength = ValidationConstants.userPasswordMinimumLength;
             })
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddDefaultTokenProviders()
